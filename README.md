@@ -155,7 +155,7 @@ List of Packages
 
     dpkg -l
 
-# List all Keybindings
+## List all Keybindings
 
     gsettings list-recursively  org.gnome.desktop.wm.keybindings | sort | more
 
@@ -945,7 +945,7 @@ Go to System "Settings" > "Keyboard" > "Text Entry" and add Georgian layout. Als
 # Ubuntu Fixes
 These are solutions to fix problems I've encountered.
 
-### Sound Indicator Not Showing
+## Sound Indicator Not Showing
 This appears in the top-right menu on Unity. Tested in 14/15.
 
 This will also fix Tweak UI if a sound item is missing.
@@ -972,13 +972,13 @@ If you want the default login a certain one select either lightdm or gdm. If you
 
     sudo dpkg-reconfigure gdm
 
-### Easy Window Resize
+## Easy Window Resize
 Without Compiz, you can resize windows very nicely:
 - Focus on a window
 - Hold <kbd>ALT</kbd> + Middle Mouse Click + Drag
 - Note: Depending on where you position your mouse to will resize up/down/left/right
 
-### Left or Right Close Buttons
+## Left or Right Close Buttons
 Run this simple command in the terminal and you will see the positions change right away.
 
 Move to right (terminal)
@@ -990,12 +990,12 @@ Move to left (terminal)
     gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:'
 
 
-### Fix Gnome Lockscreen
+## Fix Gnome Lockscreen
 In terminal make sure this is false, then try your hotkey `ctrl+alt+l` or if you set it like min `super+l` in the settings:
 
     gsettings set org.gnome.desktop.lockdown disable-lock-screen 'false'
 
-### My Gnome Extensions
+## My Gnome Extensions
 You need to use **Firefox** or **IceWeasle** at https://extensions.gnome.org/ to toggle these items. I suggest creating an account so you have a record.
 
 - **Must Have Extensions**
@@ -1018,7 +1018,7 @@ You need to use **Firefox** or **IceWeasle** at https://extensions.gnome.org/ to
 - [Toggle Touchpad](https://extensions.gnome.org/extension/935/toggle-touchpad/) (For Laptops) :star::star::star::star::star:
 
 
-### Reload Gnome Freeze
+## Reload Gnome Freeze
 This is a rare things for me, it happens much more in unity and requires a lot more "damaging" things. To fix a gnome that seems frozen do the following:
 
 <kbd>ALT + F2</kbd> enter in <kbd>r</kbd> (lowecase) and press <kbd>Enter</kbd>

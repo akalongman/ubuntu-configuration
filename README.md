@@ -14,7 +14,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Networking](#networking)
     - [Order of Grub](#order-of-grub)
 - [Installation Packages](#installation-packages)
-    - [Enable PPA](#enable-ppa)
+    - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
         - [Utilities](#utilities)
         - [RedShift For Eye Strain](#redshift-for-eye-strain)
@@ -178,10 +178,12 @@ Run these commands and tweak them as needed. The `-y` flag installs without a pr
 
     sudo apt-get update && sudo apt-get upgrade
 
-## Enable PPA
-PPA's are provided within categories below, I highly recommend using PPA's or atleast installing this package incase you ever use them.
+## Enable PPAs
+PPA's are provided within cateogories below, I highly recommend using PPA's or atleast installing this package incase you ever use them.
 
-    sudo apt-get install -y python-software-properties
+Enable Canonical partners repository
+
+    sudo add-apt-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner" && sudo apt-get update
 
 ## System Tools
 This is for tweaking the UI
@@ -462,20 +464,11 @@ Or pick a specific version:
 [(Back to top)](#table-of-contents)
 
 ## Google Chrome
-Version 41 has some annoying issues. It's best to revert to version 40, and Ubuntu does not auto update Chrome without you doing a update.
+Add google chrome repository and install
 
-Stable versions at at: http://mirror.pcbeta.com/google/chrome/deb/pool/main/g/google-chrome-stable/
-
-If you have chrome installed, I'd backup anything if you need it, and remove it *(If you are sync'd, you won't lose anything)*:
-
-    sudo apt-get purge google-chrome-stable
-    rm -rf ~/.config/google-chrome
-
-Then install an older version -- This is **40** for a 64-bit OS:
-
-    wget http://mirror.pcbeta.com/google/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_40.0.2214.95-1_amd64.deb
-
-    sudo dpkg -i google-chrome-stable_40.0.2214.95-1_amd64.deb
+    sudo sh -c 'echo "deb http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+    sudo apt-get update && sudo apt-get install google-chrome-stable
 
 Then launch it with `$ google-chrome` and you can pin it to a unity bar.
 ***

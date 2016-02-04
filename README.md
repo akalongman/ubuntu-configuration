@@ -19,6 +19,16 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [VIM Customization](#vim-customization)
     - [Networking](#networking)
     - [Order of Grub](#order-of-grub)
+    - [Misc Tweaks](#misc-tweaks)
+        - [Enable Auto Focus on Opened Applications](#enable-auto-focus-on-opened-applications)
+        - [Enable Normal Scrollbars](#enable-normal-scrollbars)
+        - [Enable User Name in Systray](#enable-user-name-in-systray)
+        - [Change Datetime Format in Systray](#change-datetime-format-in-systray)
+        - [Enable Minimize App on Dash Click](#enable-minimize-app-on-dash-click)
+        - [Disable Window Grouping](#disable-window-grouping)
+        - [Install Custom Wallpaper](#install-custom-wallpaper)
+        - [Change Greeter Background](#change-greeter-background)
+        - [Add Georgian Keyboard](#add-georgian-keyboard)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
@@ -59,6 +69,9 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Fix Mouse Side Buttons in VMWare](#fix-mouse-side-buttons-in-vmware)
     - [Vagrant VBGuest Fix](#vagrant-vbguest-fix)
     - [Windows 8 VirtualBox Fix](#windows-8-virtualbox-fix)
+- [Synchronize Configurations](#synchronize-configurations)
+    - [Sync Sublime Text](#sync-sublime-text)
+    - [Sync FileZilla](#sync-filezilla)
 - [Chrome Addons](#chrome-addons)
 - [Other Applications](#other-applications)
 
@@ -136,12 +149,12 @@ You can use 32Bit applications if you like, sometimes this is useful.
 
     git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
+And copy [.vimrc](os/home/.vimrc) file in your home folder (/home/USERNAME/.vimrc)
+After run
+
     $ vim
     :PluginInstall
 
-**Set Capslock key to Esc**
-
-    $ dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:escape']"
 
 ## Networking
 
@@ -180,6 +193,67 @@ Go to the `General Settings` tab, and you'll see *default entry*.
 ***
 
 [(Back to top)](#table-of-contents)
+
+
+# Misc Tweaks
+
+## Enable Auto Focus on Opened Applications
+In CompizConfig go to "General Options" > "Focus & Raise Behaviour" and set "Focus Prevention Level" to "Off"
+
+## Enable Normal Scrollbars
+    gsettings set com.canonical.desktop.interface scrollbar-mode normal
+
+To revert
+
+    gsettings reset com.canonical.desktop.interface scrollbar-mode
+
+## Enable User Name in Systray
+    gsettings set com.canonical.indicator.session show-real-name-on-panel true
+
+## Change Datetime Format in Systray
+Open dconf-editor and go ```com > canonical > indicator > datetime``` Change time format to CUSTOM and time format type ```%a, %e %b %H:%M %```
+
+## Enable Minimize App on Dash Click
+Open Compizconfig and go to "Desktop" > "Ubuntu Unity Plugin" > "Launcher Tab" and enable "Minimize Single Windows Applications (Unsupported)"
+
+## Disable Window Grouping
+Open Compizconfig and scroll down to "Ubuntu Unity Plugin".
+Choose the tab "Switcher". Disable the alt-tab and shift-alt-tab key bindings.
+("Key to start the switcher" and "Key to switch to the previous window in the Switcher".
+Click the "Back" button. Scroll down to the "Window management" section.
+Here you can select another switcher. I enable the "Static Application Switcher", resolve any potential conflicts by setting the setting for "Static Application Switcher".
+Now you can tweak the switcher by clicking on it.
+I have changed <kbd>alt</kbd>+<kbd>tab</kbd> and <kbd>shift</kbd>+<kbd>alt</kbd>+<kbd>tab</kbd> to "Next window (All windows)" and "Prev window (All windows)"
+
+## Install Custom Wallpaper
+
+For ```convert``` command you need install package ```imagemagick```
+
+    mkdir ~/Pictures/Wallpapers
+    sudo convert ~/Dropbox/images/DSM.jpg ~/Pictures/Wallpapers/DSM.png
+    gsettings set org.gnome.desktop.background picture-uri file:///home/longman/Pictures/Wallpapers/DSM.png
+
+
+## Change Greeter Background
+
+Copy image to ```/usr/share/backgrounds```
+
+    sudo cp ~/Pictures/Wallpapers/DSM.png /usr/share/backgrounds
+
+Check permissions of your file
+
+And after open theme file
+
+    sudo vim /usr/share/glib-2.0/schemas/com.canonical.unity-greeter.gschema.xml
+
+Find the key name ```background``` and change the default to the path of your picture in "/usr/share/backgrounds/".
+For the key name ```draw-user-backgrounds```, change the default value to ```false```.
+
+## Add Georgian Keyboard
+
+Go to System "Settings" > "Keyboard" > "Text Entry" and add Georgian layout. Also enable "Allow different sources for each window"
+
+
 
 # Installation Packages
 
@@ -724,6 +798,20 @@ Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershe
 ***
 
 [(Back to top)](#table-of-contents)
+
+
+# Synchronize Configurations
+
+## Sync Sublime Text
+Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershell`, or `terminal` on linux.
+
+    test command
+
+## Sync FileZilla
+Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershell`, or `terminal` on linux.
+
+    test command
+
 
 # Chrome Addons
 

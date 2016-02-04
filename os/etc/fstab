@@ -1,0 +1,28 @@
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+/dev/mapper/ubuntu--vg-root /               ext4    errors=remount-ro 0       1
+# /boot was on /dev/sda2 during installation
+UUID=50c4ab87-3cc6-47e4-a934-b06d18d6ea81 /boot           ext2    defaults        0       2
+# /boot/efi was on /dev/sda1 during installation
+UUID=1D8D-74B9  /boot/efi       vfat    umask=0077      0       1
+/dev/mapper/ubuntu--vg-swap_1 none            swap    sw              0       0
+
+
+UUID=620606140605E9BD /media/D ntfs-3g defaults,windows_names,locale=en_US.utf8 0 2
+
+UUID=92C614E7C614CCFB /media/E ntfs-3g defaults,windows_names,locale=en_US.utf8 0 2
+
+
+longman@IP:/home/development /media/local fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/longman/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
+
+# Mount avto folder from local
+avto@IP:. /media/avtolocal fuse.sshfs delay_connect,_netdev,idmap=user,noatime,IdentityFile=/home/longman/.ssh/id_rsa,reconnect,allow_other 0 0
+
+
+longman@IP:/home/users /media/FileSharing fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/longman/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
+

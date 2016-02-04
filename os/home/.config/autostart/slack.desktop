@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Slack
+Comment=Slack Desktop
+GenericName=Slack Client for Linux
+Exec=/usr/share/slack/slack %U
+Icon=slack
+Type=Application
+StartupNotify=true
+Categories=GNOME;GTK;Network;InstantMessaging;
+MimeType=text/plain;

@@ -1,0 +1,4 @@
+Bylevien.com
+http://www.levien.com/type/myfonts/inconsolata.html
+
+I'm still working on completing this font, refining the base ASCII set and filling out the Latin 1, 2, and 9 complements. It will be released under the new Open Font License of SIL. Completion of this font is being generously sponsored by the TeX Users Group Development Fund. If you like this font and want to see more sponsored and released freely, please consider donating to TUG.

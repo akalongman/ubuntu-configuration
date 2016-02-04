@@ -11,24 +11,19 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [CPU Info](#cpu-info)
         - [VGA Info](#vga-info)
         - [Memory and Usage Info](#memory-and-usage-info)
-        - [Disk Space](#disk-space)
+        - [Disks](#disks)
         - [GUI Processes](#gui-processes)
+        - [Packages](#packages)
     - [List all KeyBindings](#list-all-keybindings)
     - [Better Local Folder](#better-local-folder)
     - [Use 32Bit on 64bit](#use-32bit-on-64bit)
-    - [VIM Customization](#vim-customization)
     - [Networking](#networking)
     - [Order of Grub](#order-of-grub)
-    - [Misc Tweaks](#misc-tweaks)
-        - [Enable Auto Focus on Opened Applications](#enable-auto-focus-on-opened-applications)
-        - [Enable Normal Scrollbars](#enable-normal-scrollbars)
-        - [Enable User Name in Systray](#enable-user-name-in-systray)
-        - [Change Datetime Format in Systray](#change-datetime-format-in-systray)
-        - [Enable Minimize App on Dash Click](#enable-minimize-app-on-dash-click)
-        - [Disable Window Grouping](#disable-window-grouping)
-        - [Install Custom Wallpaper](#install-custom-wallpaper)
-        - [Change Greeter Background](#change-greeter-background)
-        - [Add Georgian Keyboard](#add-georgian-keyboard)
+    - [Mounting Drives](#mounting-drives)
+        - [Mounting of Local Drives](#mounting-of-local-drives)
+        - [Mounting of Network Drives](#mounting-of-network-drives) @WONTFIX
+    - [Generate a New SSH Key](#generate-a-new-ssh-key)
+    - [Enable Native Virtualization](#enable-native-virtualization)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
@@ -37,9 +32,30 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Utilities](#utilities)
         - [RedShift For Eye Strain](#redshift-for-eye-strain)
         - [Dark Theme](#dark-theme)
+        - [Sun Java](#sun-java)
         - [Wine](#wine)
+    - [Other Tools](#other-tools)
+        - [Google Chrome](#google-chrome)
+        - [PlayOnLinux](#playonlinux)
+        - [Dropbox](#dropbox)
+        - [Sublime Text 3](#sublime-text-3)
+        - [Pidgin](#pidgin)
+        - [DBeaver](#dbeaver)
+        - [VirtualBox](#virtualbox)
+        - [Android Studio](#android-studio)
+        - [Smart Git](#smart-git)
+        - [FileZilla](#filezilla)
+        - [Spotify](#spotify)
+        - [Meld Diff Tool](#meld-diff-tool)
+        - [Vagrant](#vagrant)
+        - [Docker](#docker)
+        - [Audacious Audio Player](#audacious-audio-player)
+        - [Sticky Notes](#sticky-notes)
+        - [Guake](#guake)
+        - [Skype](#skype)
+        - [Telegram](#telegram)
+        - [Gimp](#gimp)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
-    - [Google Chrome](#google-chrome)
     - [LAMP](#lamp)
         - [PHP 5.6](#php-5.6)
         - [PHP 7.0](#php-7.0)
@@ -56,6 +72,18 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Python](#python)
     - [Ruby](#ruby)
     - [NodeJS](#nodejs)
+- [Customizations](#customizations)
+    - [Shortcuts](#shortcuts)
+    - [VIM Customization](#vim-customization)
+    - [Enable Auto Focus on Opened Applications](#enable-auto-focus-on-opened-applications)
+    - [Enable Normal Scrollbars](#enable-normal-scrollbars)
+    - [Enable User Name in Systray](#enable-user-name-in-systray)
+    - [Change Datetime Format in Systray](#change-datetime-format-in-systray)
+    - [Enable Minimize App on Dash Click](#enable-minimize-app-on-dash-click)
+    - [Disable Window Grouping](#disable-window-grouping)
+    - [Install Custom Wallpaper](#install-custom-wallpaper)
+    - [Change Greeter Background](#change-greeter-background)
+    - [Add Georgian Keyboard](#add-georgian-keyboard)
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Sound Indicator Not Showing](#sound-indicator-not-showing)
 - [Install Gnome 3](#install-gnome-3)
@@ -107,14 +135,25 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     vmstat -s
     cat /proc/meminfo   # Lots of info
 
-#### Disk Space
+#### Disks
+Disk Space
 
     df
     df -B MB    # In Megabtyes,  etc
 
+Disks UUID
+
+    ls -al /dev/disk/by-uuid/
+
 #### GUI Processes
 
     gnome-system-monitor
+
+#### Packages
+
+List of Packages
+
+    dpkg -l
 
 # List all Keybindings
 
@@ -143,24 +182,11 @@ You can use 32Bit applications if you like, sometimes this is useful.
 
     sudo apt-get update && sudo apt-get install -y unetbootin
 
-## VIM Customization
-
-**Setup VIM**
-
-    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-
-And copy [.vimrc](os/home/.vimrc) file in your home folder (/home/USERNAME/.vimrc)
-After run
-
-    $ vim
-    :PluginInstall
-
-
 ## Networking
 
 To enable Networking, and make it accessible to all computers such as Windows also first install Samba:
 
-    $ sudo apt-get install samba
+    $ sudo apt-get install -y samba
 
 Then edit the Samba config:
 
@@ -172,15 +198,11 @@ Under `[global]` change the workgroup to what you use, the default is WORKGROUP:
 
 Then you will have to reload your Session.
 
-[(Back to top)](#table-of-contents)
-
-***
-
-# Order of Grub
+## Order of Grub
 If you are running Grub as your default boot-loader, you can use this application to make it easier to change the order.
 
-    sudo add-apt-repository ppa:danielrichter2007/grub-customizer
-    sudo apt-get update && sudo apt-get install grub-customizer
+    sudo add-apt-repository -y ppa:danielrichter2007/grub-customizer
+    sudo apt-get update && sudo apt-get install -y grub-customizer
 
 Load the application either with `<Super>` and look for grub customizer or terminal `gksudo grub-customizer`.
 
@@ -190,69 +212,73 @@ Go to the `General Settings` tab, and you'll see *default entry*.
 - If you are dual booting Windows and want Windows the default, Select the right column for Windows.
 - The reason is if more items are added, perhaps new kernels, then if Position 5 which held Windows will no longer be the default.
 
+## Mounting Drives
+
+### Mounting of Local Drives
+
+Open /etc/fstab
+
+    sudo vim /etc/fstab
+
+Add to /etc/fstab this line (You can get DISK UUID by command ```ls -al /dev/disk/by-uuid/```):
+
+    UUID=[DISK UUID] /media/D ntfs-3g defaults,windows_names,locale=en_US.utf8 0 2
+
+After run
+
+    sudo mount -a
+
+### Mounting of Network Drives
+
+Open /etc/fstab
+
+    sudo vim /etc/fstab
+
+And add:
+
+If needed authorization:
+
+    username@remote_address:/remote/path /local/path fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/USER/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
+
+If not needed: @WONTFIX
+
+    username@remote_address:/remote/path /local/path fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/USER/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
+
+After run
+
+    sudo mount -a
+
+## Generate a new SSH key
+
+    ssh-keygen -t rsa -C "your_email@example.com"
+
+## Enable Native Virtualization
+
+Check if supported by hardware
+
+    sudo egrep '(vmx|svm)' --color=always /proc/cpuinfo
+
+If nothing is displayed, then your processor doesn't support hardware virtualization, and you must stop here.
+
+Run:
+
+    kvm-ok
+
+If you have KVM, you will see: "INFO: Your CPU supports KVM extensions INFO: /dev/kvm exists KVM acceleration can be used"
+
+Next, add your user to the KVM group and libvirtd group. To do so, type:
+
+    sudo adduser $(whoami) kvm
+    sudo adduser $(whoami) libvirtd
+
+After the installation, re-login so that the changes take effect. You can test the installation by typing:
+
+    sudo virsh -c qemu:///system list
+
+
 ***
 
 [(Back to top)](#table-of-contents)
-
-
-# Misc Tweaks
-
-## Enable Auto Focus on Opened Applications
-In CompizConfig go to "General Options" > "Focus & Raise Behaviour" and set "Focus Prevention Level" to "Off"
-
-## Enable Normal Scrollbars
-    gsettings set com.canonical.desktop.interface scrollbar-mode normal
-
-To revert
-
-    gsettings reset com.canonical.desktop.interface scrollbar-mode
-
-## Enable User Name in Systray
-    gsettings set com.canonical.indicator.session show-real-name-on-panel true
-
-## Change Datetime Format in Systray
-Open dconf-editor and go ```com > canonical > indicator > datetime``` Change time format to CUSTOM and time format type ```%a, %e %b %H:%M %```
-
-## Enable Minimize App on Dash Click
-Open Compizconfig and go to "Desktop" > "Ubuntu Unity Plugin" > "Launcher Tab" and enable "Minimize Single Windows Applications (Unsupported)"
-
-## Disable Window Grouping
-Open Compizconfig and scroll down to "Ubuntu Unity Plugin".
-Choose the tab "Switcher". Disable the alt-tab and shift-alt-tab key bindings.
-("Key to start the switcher" and "Key to switch to the previous window in the Switcher".
-Click the "Back" button. Scroll down to the "Window management" section.
-Here you can select another switcher. I enable the "Static Application Switcher", resolve any potential conflicts by setting the setting for "Static Application Switcher".
-Now you can tweak the switcher by clicking on it.
-I have changed <kbd>alt</kbd>+<kbd>tab</kbd> and <kbd>shift</kbd>+<kbd>alt</kbd>+<kbd>tab</kbd> to "Next window (All windows)" and "Prev window (All windows)"
-
-## Install Custom Wallpaper
-
-For ```convert``` command you need install package ```imagemagick```
-
-    mkdir ~/Pictures/Wallpapers
-    sudo convert ~/Dropbox/images/DSM.jpg ~/Pictures/Wallpapers/DSM.png
-    gsettings set org.gnome.desktop.background picture-uri file:///home/longman/Pictures/Wallpapers/DSM.png
-
-
-## Change Greeter Background
-
-Copy image to ```/usr/share/backgrounds```
-
-    sudo cp ~/Pictures/Wallpapers/DSM.png /usr/share/backgrounds
-
-Check permissions of your file
-
-And after open theme file
-
-    sudo vim /usr/share/glib-2.0/schemas/com.canonical.unity-greeter.gschema.xml
-
-Find the key name ```background``` and change the default to the path of your picture in "/usr/share/backgrounds/".
-For the key name ```draw-user-backgrounds```, change the default value to ```false```.
-
-## Add Georgian Keyboard
-
-Go to System "Settings" > "Keyboard" > "Text Entry" and add Georgian layout. Also enable "Allow different sources for each window"
-
 
 
 # Installation Packages
@@ -266,11 +292,11 @@ Run these commands and tweak them as needed. The `-y` flag installs without a pr
     sudo apt-get update && sudo apt-get upgrade
 
 ## Enable PPAs
-PPA's are provided within cateogories below, I highly recommend using PPA's or atleast installing this package incase you ever use them.
+PPA's are provided within categories below, I highly recommend using PPA's or at least installing this package in case you ever use them.
 
 Enable Canonical partners repository
 
-    sudo add-apt-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner" && sudo apt-get update
+    sudo add-apt-repository -y "deb http://archive.canonical.com/ $(lsb_release -sc) partner" && sudo apt-get update
 
 ## System Tools
 This is for tweaking the UI
@@ -290,9 +316,9 @@ Find out the right driver version for your graphics card on http://www.nvidia.co
 
 Install Nvidia Drivers
 
-    sudo add-apt-repository ppa:graphics-drivers/ppa
+    sudo add-apt-repository -y ppa:graphics-drivers/ppa
 
-    sudo apt-get update && sudo apt-get install nvidia-XXX
+    sudo apt-get update && sudo apt-get install -y nvidia-XXX
 
 Type your version instead XXX
 
@@ -318,9 +344,9 @@ Install ATI Drivers
     sudo apt-add-repository ppa:xorg-edgers/ppa
     sudo apt-get update
 
-    sudo apt-get install fglrx
+    sudo apt-get install -y fglrx
     sudo amdconfig --initial
-    sudo apt-get install gksu
+    sudo apt-get install -y gksu
 
 **To Edit Catalyst Settings**; Type the following in the Global Launcher *(Super Key/Windows Key)*:
 
@@ -354,7 +380,7 @@ That will create a `~/.gitconfig` with:
 
 ### RedShift For Eye Strain
 
-    sudo apt-get install redshift
+    sudo apt-get install -y redshift
 
 Create your configuration file:
 
@@ -407,36 +433,235 @@ To revert back software center theme simply enter these commands:
 
     sudo sed -i 's/3c3b37/F4F1F3/g' /usr/share/software-center/ui/gtk3/css/softwarecenter.css
 
+### Sun Java
+
+Install
+
+    sudo apt-add-repository ppa:webupd8team/java
+    sudo apt-get update && sudo apt-get-install oracle-java8-installer
+
+Set Oracle Java as main in system
+
+    sudo vim /etc/environment
+
+Add this line
+
+    JAVA_HOME=/usr/lib/jvm/java-8-oracle
+
+And update alternatives
+    sudo update-alternatives --config java
+
 ### Wine
 To run windows applications Wine is the best option. I often use HeidiSQL with Wine.
 
-    sudo add-apt-repository ppa:ubuntu-wine/ppa && sudo apt-get update
+    sudo add-apt-repository -y ppa:ubuntu-wine/ppa
     sudo apt-get install -y wine1.7-amd64
 
 If you need a 32bit installation:
 
     sudo apt-get install -y wine1.7-i386
 
+***
+[(Back to top)](#table-of-contents)
+
+## Other Tools
+
+### Google Chrome
+    Add google chrome repository and install
+
+        sudo sh -c 'echo "deb http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo apt-get update && sudo apt-get install -y google-chrome-stable
+
+    Then launch it with `$ google-chrome` and you can pin it to a unity bar.
+
+### PlayOnLinux
+
+Installation
+
+    wget -q "http://deb.playonlinux.com/public.gpg" -O- | sudo apt-key add -
+    sudo wget http://deb.playonlinux.com/playonlinux_trusty.list -O /etc/apt/sources.list.d/playonlinux.list
+    sudo apt-get update && sudo apt-get install -y playonlinux
+
+### Dropbox
+
+Installation
+
+    sudo sh -c 'echo "deb http://linux.dropbox.com/ubuntu $(lsb_release -sc) main" >> /etc/apt/sources.list.d/dropbox.list'
+    sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
+    sudo apt-get update && sudo apt-get install -y dropbox
+
+### Sublime Text 3
+
+Download from http://www.sublimetext.com/3dev
+
+Configuration synchronization explained [here](#sync-sublime-text)
+
+### Pidgin
+
+Installation
+
+    sudo apt-get -y install pidgin
+
+Configuring google talk account
+
+Basic
+
+- Protocol: XMPP
+- Username: [username without @]
+- Domain: [username domain after @]
+- Password: [account password]
+
+Advanced
+
+- Connect Port: 5222 Connect Server: talk.google.com
+
+### DBeaver
+
+Download from http://dbeaver.jkiss.org/download/
+
+### VirtualBox
+
+Installation
+
+    sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
+    wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+    sudo apt-get update && sudo apt-get install -y virtualbox-5.0
+
+Suggested to [Enable Native Virtualization](#enable-native-virtualization)
+
+Also you can read [Virtual Machine Related](#virtual-machine-related)
+
+### Android Studio
+
+Installation
+
+    sudo apt-get install -y android-studio
+
+After change PATH
+
+    vim ~/.bashrc
+
+And add lines:
+
+    export PATH=${PATH}:/path-to-android-sdk/tools
+    export PATH=${PATH}:/path-to-android-sdk/platform-tools
+
+### Smart Git
+
+Installation
+
+    sudo apt-get install -y smartgit
+
+### FileZilla
+
+Installation
+
+    sudo apt-get install -y filezilla
+
+### Spotify
+
+Installation
+
+    sudo sh -c 'echo "deb http://repository.spotify.com testing non-free" >> /etc/apt/sources.list.d/spotify.list'
+    sudo apt-get update && sudo apt-get install -y spotify-client
+
+### TeamViewer
+
+Download from http://www.teamviewer.com/en/download/linux.aspx
+
+### Meld Diff Tool
+
+    sudo apt-get install -y meld
+
+### Vagrant
+
+To install Vagrant, you need to download and run the installation kit.
+Before going further, be sure that you have dpkg and Virtual box installed:
+
+    sudo apt-get install -y dpkg-dev virtualbox-dkms
+
+Make sure linux headers already installed
+
+    sudo apt-get install -y linux-headers-$(uname -r)
+
+Go to the http://downloads.vagrantup.com page of Vagrant and check for the latest release.
+After download latest
+
+    wget https://releases.hashicorp.com/vagrant/VERSION/vagrant_VERSION_x86_64.deb
+    dpkg -i vagrant_VERSION_x86_64.deb
+
+Reconfigure the VirtualBox DKMS:
+
+    sudo dpkg-reconfigure virtualbox-dkms
+
+### Docker
+
+Installation
+
+    wget -qO- https://get.docker.com/ | sh
+    sudo usermod -aG docker $(whoami)
+
+Log out and log in from your server to activate your new groups.
+
+    sudo pip install docker-compose
+
+### Audacious Audio Player
+
+Installation
+
+    sudo apt-get install -y audacious
+
+### Sticky Notes
+
+Installation
+
+    sudo apt-add-repository ppa:umang/indicator-stickynotes
+    sudo apt-get update && sudo apt-get install -y indicator-stickynotes
+
+### Guake
+
+Installation
+
+    sudo apt-get install -y guake
+
+### Skype
+
+Installation
+
+    sudo apt-get install -y skype
+
+### Telegram
+
+Installation
+
+    sudo apt-get install -y telegram-desktop
+
+After run:
+
+    sudo chown -R $(whoami):$(whoami) /opt
+
+### Gimp
+
+Installation
+
+    sudo add-apt-repository -y ppa:otto-kesselgulasch/gimp
+
+After run:
+
+    sudo apt-get update && sudo apt-get install -y gimp gimp-data gimp-plugin-registry gimp-data-extras
+
+
 ### USB Maker for Windows ISO on Linux
 You can easily use `Startup Disk Creator` and `UNetbootin` to create Linux to USB. But if you need Windows to USB from your Linux OS use Win USB:
 
-    sudo add-apt-repository ppa:colingille/freshlight
+    sudo add-apt-repository -y ppa:colingille/freshlight
     sudo sh -c "sed -i 's/wily/vivid/g' /etc/apt/sources.list.d/colingille-ubuntu-freshlight-$(lsb_release -sc).list"
     sudo apt-get update && sudo apt-get install -y winusb
 
 We replace the sources.list back to vivid in order to get it to work for ubuntu 15, that is the purpose of the `sed` command.
 
-***
-[(Back to top)](#table-of-contents)
 
-## Google Chrome
-Add google chrome repository and install
-
-    sudo sh -c 'echo "deb http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    sudo apt-get update && sudo apt-get install google-chrome-stable
-
-Then launch it with `$ google-chrome` and you can pin it to a unity bar.
 ***
 [(Back to top)](#table-of-contents)
 
@@ -454,7 +679,7 @@ Linux Apache MySQL PHP
 ### PHP 5.6
 It's important to install **php5-dev** if you want to compile any add-ons later.
 
-    sudo add-apt-repository ppa:ondrej/php5-5.6
+    sudo add-apt-repository -y ppa:ondrej/php5-5.6
     sudo apt-get install -y php5 libpcre3-dev php5-cli php5-cgi php5-common php5-mysql php5-curl php5-gd php5-geoip php5-imagick php5-imap php5-json php5-ldap php5-mcrypt php5-memcache php5-memcached php5-sqlite php5-tidy php5-xdebug php5-xmlrpc php5-xsl php5-dev
 
 If you are looking for more PHP modules try:
@@ -465,7 +690,7 @@ If you are looking for more PHP modules try:
 ### PHP 7.0
 It's important to install **php7.0-dev** if you want to compile any add-ons later.
 
-    sudo add-apt-repository ppa:ondrej/php
+    sudo add-apt-repository -y ppa:ondrej/php
     sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-snmp php7.0-snmp php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl
 
 If you are looking for more PHP modules try:
@@ -533,7 +758,7 @@ To test it run: `$ phalcon`
 We will use the Access Control Lists (ACL) or (Filesystem Access Control List). We will use group permissions for folders so you don't have to make the public writable, because `777` is dangerous.
 
     # Make sure you have ACL installed
-    sudo apt-get install acl
+    sudo apt-get install -y acl
 
 Look for your main partition with:
 
@@ -606,9 +831,9 @@ For Ruby RVM (Version Management)
 ## NodeJS
 I am using a PPA to fix the nodejs path issue(s)
 
-    sudo add-apt-repository ppa:chris-lea/node.js
+    sudo add-apt-repository -y ppa:chris-lea/node.js
     sudo apt-get update
-    sudo apt-get install nodejs
+    sudo apt-get install -y nodejs
     sudo chown -R $(whoami) ~/.npm
     sudo npm install bower gulp grunt-cli -g
 
@@ -637,6 +862,86 @@ Or pick a specific version:
 ***
 [(Back to top)](#table-of-contents)
 
+# Customizations
+
+## VIM Customization
+
+**Setup VIM**
+
+    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+And copy [.vimrc](os/home/.vimrc) file in your home folder (/home/USERNAME/.vimrc)
+After run
+
+    $ vim
+    :PluginInstall
+
+## Shortcuts
+
+- "System Settings" > "Keyboard" > "Shortcuts" > "Custom Shortcuts" <kbd>ctrl</kbd>+<kbd>r</kbd> Terminal ```gnome-terminal```
+- "System Settings" > "Keyboard" > "Shortcuts" > "Custom Shortcuts" <kbd>ctrl</kbd>+<kbd>e</kbd> Files ```nautilus -w```
+
+
+## Enable Auto Focus on Opened Applications
+In CompizConfig go to "General Options" > "Focus & Raise Behaviour" and set "Focus Prevention Level" to "Off"
+
+## Enable Normal Scrollbars
+    gsettings set com.canonical.desktop.interface scrollbar-mode normal
+
+To revert
+
+    gsettings reset com.canonical.desktop.interface scrollbar-mode
+
+## Enable User Name in Systray
+    gsettings set com.canonical.indicator.session show-real-name-on-panel true
+
+## Change Datetime Format in Systray
+Open dconf-editor and go ```com > canonical > indicator > datetime``` Change time format to CUSTOM and time format type ```%a, %e %b %H:%M %```
+
+## Enable Minimize App on Dash Click
+Open Compizconfig and go to "Desktop" > "Ubuntu Unity Plugin" > "Launcher Tab" and enable "Minimize Single Windows Applications (Unsupported)"
+
+## Disable Window Grouping
+Open Compizconfig and scroll down to "Ubuntu Unity Plugin".
+Choose the tab "Switcher". Disable the alt-tab and shift-alt-tab key bindings.
+("Key to start the switcher" and "Key to switch to the previous window in the Switcher".
+Click the "Back" button. Scroll down to the "Window management" section.
+Here you can select another switcher. I enable the "Static Application Switcher", resolve any potential conflicts by setting the setting for "Static Application Switcher".
+Now you can tweak the switcher by clicking on it.
+I have changed <kbd>alt</kbd>+<kbd>tab</kbd> and <kbd>shift</kbd>+<kbd>alt</kbd>+<kbd>tab</kbd> to "Next window (All windows)" and "Prev window (All windows)"
+
+## Install Custom Wallpaper
+
+For ```convert``` command you need install package ```imagemagick```
+
+    mkdir ~/Pictures/Wallpapers
+    sudo convert ~/Dropbox/images/DSM.jpg ~/Pictures/Wallpapers/DSM.png
+    gsettings set org.gnome.desktop.background picture-uri file:///home/longman/Pictures/Wallpapers/DSM.png
+
+
+## Change Greeter Background
+
+Copy image to ```/usr/share/backgrounds```
+
+    sudo cp ~/Pictures/Wallpapers/DSM.png /usr/share/backgrounds
+
+Check permissions of your file
+
+And after open theme file
+
+    sudo vim /usr/share/glib-2.0/schemas/com.canonical.unity-greeter.gschema.xml
+
+Find the key name ```background``` and change the default to the path of your picture in "/usr/share/backgrounds/".
+For the key name ```draw-user-backgrounds```, change the default value to ```false```.
+
+## Add Georgian Keyboard
+
+Go to System "Settings" > "Keyboard" > "Text Entry" and add Georgian layout. Also enable "Allow different sources for each window"
+
+***
+[(Back to top)](#table-of-contents)
+
+
 # Ubuntu Fixes
 These are solutions to fix problems I've encountered.
 
@@ -645,7 +950,7 @@ This appears in the top-right menu on Unity. Tested in 14/15.
 
 This will also fix Tweak UI if a sound item is missing.
 
-    sudo apt-get install indicator-sound
+    sudo apt-get install -y indicator-sound
 
 For Unity (Default)
 
@@ -658,7 +963,7 @@ For Gnome
 # Install Gnome 3
 If you prefer Gnome 3 over the Unity desktop it's easy to install:
 
-    sudo apt-get install ubuntu-gnome-desktop
+    sudo apt-get install -y ubuntu-gnome-desktop
     sudo service gdm restart (Or a reboot is easier)
 
 Unity uses `lightdm` and Gnome uses `gdm`, it's easiest to stick with lightdm.
@@ -772,7 +1077,7 @@ Then Add the Bash script the Gnome Session:
 
 # Virtual Machine Related
 
-This has to do with VirtualBox, not VMWare even though I favor it.
+This has to do with VirtualBox
 
 ## Fix Mouse Side Buttons in VMWare
 Append the following to `yourbox.vmx` with the machine off.
@@ -816,19 +1121,20 @@ Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershe
 # Chrome Addons
 
 - [Chroma Color Picker](https://chrome.google.com/webstore/detail/chroma/gefgglgjdlddcpcapigheknbacbmmggp?utm_source=chrome-app-launcher-info-dialog)
-- [Postman Rest Client](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?utm_source=chrome-app-launcher-info-dialog)
+- [Advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo?utm_source=chrome-app-launcher-info-dialog)
+- [Docs PDF/PowerPoint Viewer](https://chrome.google.com/webstore/detail/docs-pdfpowerpoint-viewer/nnbmlagghjjcbdhgmkedmbmedengocbn?utm_source=chrome-app-launcher-info-dialog)
+- [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?utm_source=chrome-app-launcher-info-dialog)
+- [LastPass: Free Password Manager](https://chrome.google.com/webstore/detail/lastpass-free-password-ma/hdokiejnpimakedhajhdlcegeplioahd?utm_source=chrome-app-launcher-info-dialog)
+- [New Tabs At End](https://chrome.google.com/webstore/detail/new-tabs-at-end/bgogjfbkjgjhonhikkkflpkgpcpfljoa?utm_source=chrome-app-launcher-info-dialog)
+- [Octotree](https://chrome.google.com/webstore/detail/octotree/bkhaagjahfmjljalopjnoealnfndnagc?utm_source=chrome-app-launcher-info-dialog)
+- [Recently Closed Tabs](https://chrome.google.com/webstore/detail/recently-closed-tabs/opefiliglgllmponlmoajkfbcaigocfc?utm_source=chrome-app-launcher-info-dialog)
+- [User-Agent Switcher for Chrome](https://chrome.google.com/webstore/detail/user-agent-switcher-for-c/djflhoibgkdhkhhcedjiklpkjnoahfmg?utm_source=chrome-app-launcher-info-dialog)
 
 ***
 
 [(Back to top)](#table-of-contents)
 
 # Other Applications
-- [Chrome](https://www.google.com/intl/en-US/chrome/browser/)
-- [Sublime Text 3](http://www.sublimetext.com/3)
-- [Skype](http://www.skype.com/en/download-skype/skype-for-computer/)
-- [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
-  - Preferred: [Debian-based Linux distributions](https://www.virtualbox.org/wiki/Linux_Downloads)
-- [Vagrant](http://www.vagrantup.com/)
 - [DragonDisk](http://www.dragondisk.com/) S3
 - Kazam (Screen Recorder)
 - Shutter
@@ -840,8 +1146,6 @@ Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershe
 - Synaptic Package Manager
 - Bleachbit (Trash Cleaner)
 - Preload (Intelligent Bootup Time)
-- [DBeaver](http://dbeaver.jkiss.org/)
-- Numix Theme & Numix Circle Icons
 - PIP
     - fabric
     - virtualenv

@@ -7,6 +7,12 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
 # Table of Contents
 - [Optional Configurations](#optional-configurations)
     - [Get System Details](#get-system-details)
+        - [Operating System](#operating-system)
+        - [CPU Info](#cpu-info)
+        - [VGA Info](#vga-info)
+        - [Memory and Usage Info](#memory-and-usage-info)
+        - [Disk Space](#disk-space)
+        - [GUI Processes](#gui-processes)
     - [List all KeyBindings](#list-all-keybindings)
     - [Better Local Folder](#better-local-folder)
     - [Use 32Bit on 64bit](#use-32bit-on-64bit)
@@ -16,9 +22,11 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
+        - [Install Nvidia Drivers](#install-nvidia-drivers)
+        - [Install ATI Drivers](#install-ati-drivers)
         - [Utilities](#utilities)
         - [RedShift For Eye Strain](#redshift-for-eye-strain)
-        - [Numix Theme](#numix-theme)
+        - [Dark Theme](#dark-theme)
         - [Wine](#wine)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
     - [LAMP](#lamp)
@@ -48,8 +56,6 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Fix Mouse Side Buttons in VMWare](#fix-mouse-side-buttons-in-vmware)
     - [Vagrant VBGuest Fix](#vagrant-vbguest-fix)
     - [Windows 8 VirtualBox Fix](#windows-8-virtualbox-fix)
-    - [Install ATI Drivers](#install-ati-drivers)
-    - [Remove ATI Drivers](#remove-ati-drivers)
 - [Chrome Addons](#chrome-addons)
 - [Other Applications](#other-applications)
 
@@ -61,32 +67,36 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
 
 ### Get System Details
 
-Operating System
+#### Operating System
 
     lsb_release -a
     lsb_release -as     # Short Information
+    lsb_release -sc     # OS Codename
     lsb_release --help
 
-CPU Info
+#### CPU Info
 
     nproc               # How many Processing Units
     cpuid               # Must install cpuid from terminal
     cat /proc/cpuinfo   # Lots of info
 
+#### VGA Info
 
-Memory and Usage Info
+    lspci -vnn | grep -i VGA -A 12
+
+#### Memory and Usage Info
 
     free -h             # Human readable, or do --help for options
     top or htop         # Must install htop
     vmstat -s
     cat /proc/meminfo   # Lots of info
 
-Disk Space
+#### Disk Space
 
     df
     df -B MB    # In Megabtyes,  etc
 
-GUI Processes
+#### GUI Processes
 
     gnome-system-monitor
 
@@ -195,16 +205,66 @@ This is for tweaking the UI
         dconf-editor\
         synaptic
 
-### Utilities
-I prefer Git 2.X, so I'll use a PPA. Otherwise you can simply install git by default.
+### Install Nvidia Drivers
 
-    sudo add-apt-repository ppa:git-core/ppa -y
+You can check your [VGA Info](#vga-info)
+
+Find out the right driver version for your graphics card on http://www.nvidia.com/Download/index.aspx
+
+Install Nvidia Drivers
+
+    sudo add-apt-repository ppa:graphics-drivers/ppa
+
+    sudo apt-get update && sudo apt-get install nvidia-XXX
+
+Type your version instead XXX
+
+And after select your installed driver from drivers tab
+
+    sudo software-properties-gtk
+
+Remove Nvidia Drivers
+
+    sudo add-apt-repository -r ppa:graphics-drivers/ppa
+
+**To Edit Nvidia Settings**; Type the following in the Global Launcher *(Super Key/Windows Key)*:
+
+    nvidia settings
+
+
+### Install ATI Drivers
+
+You can check your [VGA Info](#vga-info)
+
+Install ATI Drivers
+
+    sudo apt-add-repository ppa:xorg-edgers/ppa
+    sudo apt-get update
+
+    sudo apt-get install fglrx
+    sudo amdconfig --initial
+    sudo apt-get install gksu
+
+**To Edit Catalyst Settings**; Type the following in the Global Launcher *(Super Key/Windows Key)*:
+
+    gksu amdcccle
+
+Remove ATI Drivers
+
+    sudo apt-get remove --purge fglrx fglrx_* fglrx-amdcccle* fglrx-dev*
+    sudo rm /etc/X11/xorg.conf
+    sudo apt-get install --reinstall xserver-xorg-core libgl1-mesa-glx libgl1-mesa-dri libgl1-mesa-glx libgl1-mesa-dri
+    sudo dpkg-reconfigure xserver-xorg
+
+
+
+### Utilities
 
 **Install the Utilities:**
 
-    sudo apt-get install -y vim git mercurial meld curl htop xclip unzip terminator gdebi preload bleachbit ubuntu-restricted-extras
+    sudo apt-get install -y vim git mercurial meld curl htop xclip unzip terminator gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager gpgme sshfs mc
 
-To setup the git defaults *(Omit the `push.default` if you are using below 2.X)*
+To setup the git defaults
 
     git config --global user.name your name
     git config --global user.email your@email.com
@@ -253,19 +313,27 @@ Append these lines at the bottom:
 A newer version of redshift will install a desktop file so a Geoclue2 warning won't happen
 on newer systems.
 
-### Numix Theme
+### Dark Theme
+
+I prefer [LongishDark Theme](https://github.com/akalongman/linux-longishdark-theme)
+
+    mkdir ~/.themes
+    git clone git@github.com:akalongman/linux-longishdark-theme.git ~/.themes/LongishDark
 
 Use the **Unity Tweak Tool** to set these. *(Apply Icon & Themes)*
 
-    sudo add-apt-repository ppa:numix/ppa
-    sudo apt-get update
-    sudo apt-get install -y numix-gtk-theme numix-icon-theme numix-icon-theme-circle
+To fix software center text issue enter these commands in terminal:
 
+    sudo sed -i 's/F4F1F3/3c3b37/g' /usr/share/software-center/ui/gtk3/css/softwarecenter.css
+
+To revert back software center theme simply enter these commands:
+
+    sudo sed -i 's/3c3b37/F4F1F3/g' /usr/share/software-center/ui/gtk3/css/softwarecenter.css
 
 ### Wine
 To run windows applications Wine is the best option. I often use HeidiSQL with Wine.
 
-    sudo add-apt-repository ppa:ubuntu-wine/ppa
+    sudo add-apt-repository ppa:ubuntu-wine/ppa && sudo apt-get update
     sudo apt-get install -y wine1.7-amd64
 
 If you need a 32bit installation:
@@ -276,11 +344,22 @@ If you need a 32bit installation:
 You can easily use `Startup Disk Creator` and `UNetbootin` to create Linux to USB. But if you need Windows to USB from your Linux OS use Win USB:
 
     sudo add-apt-repository ppa:colingille/freshlight
-    sudo sh -c "sed -i 's/trusty/saucy/g' /etc/apt/sources.list.d/colingille-freshlight-trusty.list"
-    sudo apt-get update && sudo install -y winusb
+    sudo sh -c "sed -i 's/wily/vivid/g' /etc/apt/sources.list.d/colingille-ubuntu-freshlight-$(lsb_release -sc).list"
+    sudo apt-get update && sudo apt-get install -y winusb
 
-We replace the sources.list back to saucy in order to get it to work for ubuntu 14, that is the purpose of the `sed` command.
+We replace the sources.list back to vivid in order to get it to work for ubuntu 15, that is the purpose of the `sed` command.
 
+***
+[(Back to top)](#table-of-contents)
+
+## Google Chrome
+Add google chrome repository and install
+
+    sudo sh -c 'echo "deb http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+    sudo apt-get update && sudo apt-get install google-chrome-stable
+
+Then launch it with `$ google-chrome` and you can pin it to a unity bar.
 ***
 [(Back to top)](#table-of-contents)
 
@@ -463,17 +542,6 @@ Or pick a specific version:
 ***
 [(Back to top)](#table-of-contents)
 
-## Google Chrome
-Add google chrome repository and install
-
-    sudo sh -c 'echo "deb http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    sudo apt-get update && sudo apt-get install google-chrome-stable
-
-Then launch it with `$ google-chrome` and you can pin it to a unity bar.
-***
-[(Back to top)](#table-of-contents)
-
 # Ubuntu Fixes
 These are solutions to fix problems I've encountered.
 
@@ -631,26 +699,6 @@ Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershe
 
     vboxmanage list vms
     vboxmanage setextradata "The Box Name" VBoxInternal/CPUM/CMPXCHG16B 1
-
-## Install ATI Drivers
-
-    sudo apt-add-repository ppa:xorg-edgers/ppa
-    sudo apt-get update
-
-    sudo apt-get install fglrx
-    sudo amdconfig --initial
-    sudo apt-get install gksu
-
-**To Edit Catalyst Settings**; Type the following in the Global Launcher *(Super Key/Windows Key)*:
-
-    gksu amdcccle
-
-## Remove ATI Drivers
-
-    sudo apt-get remove --purge fglrx fglrx_* fglrx-amdcccle* fglrx-dev*
-    sudo rm /etc/X11/xorg.conf
-    sudo apt-get install --reinstall xserver-xorg-core libgl1-mesa-glx libgl1-mesa-dri libgl1-mesa-glx libgl1-mesa-dri
-    sudo dpkg-reconfigure xserver-xorg
 
 ***
 

@@ -29,8 +29,12 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Dark Theme](#dark-theme)
         - [Wine](#wine)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
+    - [Google Chrome](#google-chrome)
     - [LAMP](#lamp)
-        - [PHP5](#php5)
+        - [PHP 5.6](#php-5.6)
+        - [PHP 7.0](#php-7.0)
+        - [Composer](#composer)
+        - [PHPUnit](#phpunit)
         - [Apache](#apache)
         - [Nginx](#nginx)
         - [MySQL](#mysql)
@@ -42,7 +46,6 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Python](#python)
     - [Ruby](#ruby)
     - [NodeJS](#nodejs)
-    - [Google Chrome](#google-chrome)
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Sound Indicator Not Showing](#sound-indicator-not-showing)
 - [Install Gnome 3](#install-gnome-3)
@@ -374,16 +377,34 @@ Linux Apache MySQL PHP
 - Redis
 - and Header Files.
 
-### PHP5
-It's important to install **php5-dev** if you want to compile any add-ons later. We also want composer (PHP Package Manager) to be installed globally and accessible via `$ composer`
+### PHP 5.6
+It's important to install **php5-dev** if you want to compile any add-ons later.
 
-    sudo apt-get install -y php5 php5-dev php5-curl libpcre3-dev
-
-    curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
+    sudo add-apt-repository ppa:ondrej/php5-5.6
+    sudo apt-get install -y php5 libpcre3-dev php5-cli php5-cgi php5-common php5-mysql php5-curl php5-gd php5-geoip php5-imagick php5-imap php5-json php5-ldap php5-mcrypt php5-memcache php5-memcached php5-sqlite php5-tidy php5-xdebug php5-xmlrpc php5-xsl php5-dev
 
 If you are looking for more PHP modules try:
 
     sudo apt-cache search php5-
+
+
+### PHP 7.0
+It's important to install **php7.0-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository ppa:ondrej/php
+    sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-snmp php7.0-snmp php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php7.0-
+
+### Composer
+
+    curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
+
+### PHPUnit
+
+    wget https://phar.phpunit.de/phpunit.phar && chmod +x phpunit.phar && sudo mv phpunit.phar /usr/local/bin/phpunit
 
 ### Apache
 

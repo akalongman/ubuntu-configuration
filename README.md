@@ -73,6 +73,9 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Ruby](#ruby)
     - [NodeJS](#nodejs)
 - [Customizations](#customizations)
+    - [System Tweaks](#system-tweaks)
+        - [Increase Inotify Watches Limit](#increase-inotify-watches-limit)
+        - [Disable Git Certificate Verification](#disable-git-certificate-verification)
     - [Shortcuts](#shortcuts)
     - [VIM Customization](#vim-customization)
     - [Enable Auto Focus on Opened Applications](#enable-auto-focus-on-opened-applications)
@@ -102,6 +105,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Sync FileZilla](#sync-filezilla)
 - [Chrome Addons](#chrome-addons)
 - [Other Applications](#other-applications)
+- [Clean System](#clean-system)
 
 ***
 
@@ -600,10 +604,14 @@ Reconfigure the VirtualBox DKMS:
 Installation
 
     wget -qO- https://get.docker.com/ | sh
+
+Working with Docker is a pain if your user is not configured correctly, so add your user to the docker group with the following command.
+
     sudo usermod -aG docker $(whoami)
 
 Log out and log in from your server to activate your new groups.
 
+    sudo apt-get -y install python-pip
     sudo pip install docker-compose
 
 ### Audacious Audio Player
@@ -613,6 +621,7 @@ Installation
     sudo apt-get install -y audacious
 
 ### Sticky Notes
+Just like Google Keep and Windows Sticky Notes, it allows you to jot down thoughts, lists, and reminders on desktop.
 
 Installation
 
@@ -620,6 +629,8 @@ Installation
     sudo apt-get update && sudo apt-get install -y indicator-stickynotes
 
 ### Guake
+Guake is a dropdown terminal made for the GNOME desktop environment.
+Guake's style of window is based on an FPS game, and one of its goals is to be easy to reach.
 
 Installation
 
@@ -669,7 +680,8 @@ We replace the sources.list back to vivid in order to get it to work for ubuntu 
 Linux Apache MySQL PHP
 
 **- Installation for the following:**
-- PHP 5.5+ (and Modules)
+- PHP 5.6 (and Modules)
+- PHP 7.0 (and Modules)
 - Apache 2 (and Modules)
 - Nginx *(Optional)*
 - MySQL
@@ -708,6 +720,15 @@ If you are looking for more PHP modules try:
 ### Apache
 
     sudo apt-get install -y apache2 libapache2-mod-php5
+
+Enable php-mcrypt
+
+    sudo php5enmod mcrypt && sudo service apache2 restart
+
+Tweak Apache (Remove apache warning about server's fully qualified domain name)
+
+    echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
+    sudo a2enconf fqdn && sudo service apache2 reload
 
 If you are looking for more Apache modules try:
 
@@ -795,7 +816,7 @@ Otherwise you could always set up a crontab such as:
 
 Then append this to run every five minutes.
 
-    */5 * * * * /home/ramesh/backup.sh chgrp -R www-data /var/www && chmod g+rw /var/www
+    */5 * * * * /home/longman/backup.sh chgrp -R www-data /var/www && chmod g+rw /var/www
 
 Lastly, you could have a deploy script that does this for you, such as Python `Fabfile`, but that's another topic.
 
@@ -808,9 +829,9 @@ Lastly, you could have a deploy script that does this for you, such as Python `F
 
 Python is installed by default on Ubuntu, version 2.7 is suitable. I strongly recommend installing `python-dev` for headers to compile certain PIP packages.
 
-    sudo apt-get install -y python-dev
+    sudo apt-get install -y python-dev libmysqlclient-dev
     sudo apt-get install -y python-pip
-    sudo pip install fabric virtualenv virtualenvwrapper
+    sudo pip install fabric virtualenv virtualenvwrapper django
 
 ***
 [(Back to top)](#table-of-contents)
@@ -864,6 +885,34 @@ Or pick a specific version:
 
 # Customizations
 
+## System Tweaks
+
+### Increase Inotify Watches Limit
+
+Open ```sysctl.conf```
+
+    sudo vim /etc/sysctl.conf
+
+Add this line:
+
+    fs.inotify.max_user_watches = 524288
+
+And after run
+
+    sudo sysctl -p
+
+### Disable Git Certificate Verification
+
+For security reasons, not recommended
+
+    sudo git config --global http.sslVerify false
+
+
+## Shortcuts
+
+- "System Settings" > "Keyboard" > "Shortcuts" > "Custom Shortcuts" <kbd>ctrl</kbd>+<kbd>r</kbd> Terminal ```gnome-terminal```
+- "System Settings" > "Keyboard" > "Shortcuts" > "Custom Shortcuts" <kbd>ctrl</kbd>+<kbd>e</kbd> Files ```nautilus -w```
+
 ## VIM Customization
 
 **Setup VIM**
@@ -875,12 +924,6 @@ After run
 
     $ vim
     :PluginInstall
-
-## Shortcuts
-
-- "System Settings" > "Keyboard" > "Shortcuts" > "Custom Shortcuts" <kbd>ctrl</kbd>+<kbd>r</kbd> Terminal ```gnome-terminal```
-- "System Settings" > "Keyboard" > "Shortcuts" > "Custom Shortcuts" <kbd>ctrl</kbd>+<kbd>e</kbd> Files ```nautilus -w```
-
 
 ## Enable Auto Focus on Opened Applications
 In CompizConfig go to "General Options" > "Focus & Raise Behaviour" and set "Focus Prevention Level" to "Off"
@@ -1108,14 +1151,22 @@ Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershe
 # Synchronize Configurations
 
 ## Sync Sublime Text
-Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershell`, or `terminal` on linux.
+I am using Dropbox for syncing configurations
 
-    test command
+Install Package Control https://packagecontrol.io/installation#st3
+
+After:
+
+    cd ~/.config/sublime-text-3/Packages/
+    rm -rf User
+    ln -s ~/Dropbox/workspace/appdata/sublime-text-3/Packages/User
+
 
 ## Sync FileZilla
-Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershell`, or `terminal` on linux.
 
-    test command
+    cd ~/.config/filezilla
+    rm -f sitemanager.xml
+    ln -s ~/Dropbox/workspace/appdata/filezilla/sitemanager.xml
 
 
 # Chrome Addons
@@ -1138,21 +1189,54 @@ Running Windows 8 in Virtualbox has an odd error, run this in `cmd` or `powershe
 - [DragonDisk](http://www.dragondisk.com/) S3
 - Kazam (Screen Recorder)
 - Shutter
-- Compiz Config
 - gnome-system-tools
 - Terminator
 - Gdeb
 - MySQL Workbench
-- Synaptic Package Manager
 - Bleachbit (Trash Cleaner)
 - Preload (Intelligent Bootup Time)
-- PIP
-    - fabric
-    - virtualenv
-    - virtualenvwrapper
 
 ***
 
-By [Avtandil Kikabidze aka LONGMAN](https://github.com/akalongman)
+[(Back to top)](#table-of-contents)
+
+# Clean System
+
+Remove not neccessary apps from startup
+
+Show system apps in Startup Applications
+
+    sudo sed -i 's/NoDisplay=true/NoDisplay=false/g' /etc/xdg/autostart/*.desktop
+
+Open "Startup Applications" and uncheck apps: Chat, Orca Screen Reader, Zeitgest Datahub
+
+Hide system apps
+
+    sudo sed -i 's/NoDisplay=false/NoDisplay=true/g' /etc/xdg/autostart/*.desktop
+
+Remove Amazon from dash
+
+    sudo apt-get purge unity-webapps-common
+
+Remove rythmbox audio player
+
+    sudo apt-get purge rhythmbox
+
+Remove Totem video player
+
+    sudo apt-get purge totem
+
+Clean System
+
+    sudo apt-get autoremove
+    sudo apt-get clean
+    sudo apt-get autoclean
+
+
+***
 
 [(Back to top)](#table-of-contents)
+
+
+By [Avtandil Kikabidze aka LONGMAN](https://github.com/akalongman)
+

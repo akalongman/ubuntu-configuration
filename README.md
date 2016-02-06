@@ -34,6 +34,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Dark Theme](#dark-theme)
         - [Sun Java](#sun-java)
         - [Wine](#wine)
+        - [Nautilus-Actions](#nautilus-actions)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux)
@@ -464,6 +465,23 @@ To run windows applications Wine is the best option. I often use HeidiSQL with W
 If you need a 32bit installation:
 
     sudo apt-get install -y wine1.7-i386
+
+### Nautilus-Actions
+Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.
+If you don't want to create your own, you can install Nautilus-Actions-Extra to get a package of particularly useful user-created tools.
+
+    sudo apt-get install -y nautilus-actions
+
+After installing it, quit and restart the Nautilus file manager with the following command.
+You can also press Alt+F2 and type this command instead of running it in a terminal.
+
+    nautilus -q
+
+Launch the Nautilus-Actions Configuration Tool from the Dash after installing it.
+
+You also can install some Nautilus extensions
+
+    sudo apt-get install nautilus-admin nautilus-meld nautilus-checksum-menu
 
 ***
 [(Back to top)](#table-of-contents)

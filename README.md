@@ -21,7 +21,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Order of Grub](#order-of-grub)
     - [Mounting Drives](#mounting-drives)
         - [Mounting of Local Drives](#mounting-of-local-drives)
-        - [Mounting of Network Drives](#mounting-of-network-drives) @WONTFIX
+        - [Mounting of Network Drives](#mounting-of-network-drives)
     - [Generate a New SSH Key](#generate-a-new-ssh-key)
     - [Enable Native Virtualization](#enable-native-virtualization)
 - [Installation Packages](#installation-packages)
@@ -245,9 +245,9 @@ If needed authorization:
 
     username@remote_address:/remote/path /local/path fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/USER/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
 
-If not needed: @WONTFIX
+If not needed:
 
-    username@remote_address:/remote/path /local/path fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/USER/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
+    //remote_address/remote/path /local/path cifs guest,iocharset=utf8,uid=1000,gid=1000,file_mode=0777,dir_mode=0777,noperm,_netdev 0 0
 
 After run
 

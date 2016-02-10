@@ -56,6 +56,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Skype](#skype)
         - [Telegram](#telegram)
         - [Gimp](#gimp)
+        - [Httpie](#httpie) (Terminal HTTP client)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
     - [LAMP](#lamp)
         - [PHP 5.6](#php-56)
@@ -679,6 +680,14 @@ Installation
 After run:
 
     sudo apt-get update && sudo apt-get install -y gimp gimp-data gimp-plugin-registry gimp-data-extras
+
+### Httpie
+You can easily use httpie from terminal: ```http get https://google.com```
+
+Installation
+
+    sudo apt-get update && sudo apt-get install -y httpie
+
 
 
 ### USB Maker for Windows ISO on Linux

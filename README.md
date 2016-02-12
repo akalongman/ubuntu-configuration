@@ -14,6 +14,8 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Disks](#disks)
         - [GUI Processes](#gui-processes)
         - [Packages](#packages)
+        - [Other Commands](#other-commands)
+            - [Screenshots](#screenshots)
     - [List all KeyBindings](#list-all-keybindings)
     - [Better Local Folder](#better-local-folder)
     - [Use 32Bit on 64bit](#use-32bit-on-64bit)
@@ -160,6 +162,21 @@ Disks UUID
 List of Packages
 
     dpkg -l
+
+#### Other Commands
+
+##### Screenshots
+To taking screenshot from terminal run this:
+
+    gnome-screenshot
+
+With delay 5 seconds
+
+    gnome-screenshot --delay 5
+
+With delay 5 seconds and only window
+
+    gnome-screenshot -w --delay 5
 
 ## List all Keybindings
 

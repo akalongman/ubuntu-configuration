@@ -813,7 +813,8 @@ and add the following lines to the bottom of file.
     </VirtualHost>
 
 This sets up a catch all for any domain coming in over port 80 (the default port for http traffic, if your using https you will need to use 443 - alternatively you could remove the port restriction).
-The important line here is the VirtualDocumentRoot. The tells Apache where your files will reside on disk. The %0 part takes the whole domain name and inserts it into the path.
+The important line here is the VirtualDocumentRoot. The tells Apache where your files will reside on disk.
+The %0 part takes the whole domain name and inserts it into the path. But I didn't want to have the .dev part of the domain in my folders on disk, otherwise we use %-2+
 To illustrate this if we went to a domain testing.com.dev the VirtualDocumentRoot would be:
 
     /var/www/html/domains/testing.com

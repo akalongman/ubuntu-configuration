@@ -66,6 +66,9 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Composer](#composer)
         - [PHPUnit](#phpunit)
         - [Apache](#apache)
+            - [Installation](#apache-installation)
+            - [Enable php-mcrypt](#apache-enable-php-mcrypt)
+            - [Configure Dynamic Virtualhosts](#apache-configure-dynamic-virtualhosts)
         - [Nginx](#nginx)
         - [MySQL](#mysql)
         - [MyCLI](#mycli) Terminal MySQL Utility
@@ -763,20 +766,60 @@ If you are looking for more PHP modules try:
 
 ### Apache
 
+#### Apache: Installation
+
+For PHP 5.6
+
     sudo apt-get install -y apache2 libapache2-mod-php5
 
-Enable php-mcrypt
+For PHP 7.0
 
-    sudo php5enmod mcrypt && sudo service apache2 restart
+    sudo apt-get install -y apache2 libapache2-mod-php7.0
+
 
 Tweak Apache (Remove apache warning about server's fully qualified domain name)
 
     echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
     sudo a2enconf fqdn && sudo service apache2 reload
 
+#### Apache: Enable php-mcrypt
+
+Enable php-mcrypt
+
+    sudo php5enmod mcrypt && sudo service apache2 restart
+
 If you are looking for more Apache modules try:
 
     sudo apt-cache search libapache2-mod
+
+#### Apache: Configure dynamic virtualhosts
+
+Enable module ```vhost_alias```
+
+    sudo a2enmod vhost_alias
+
+Next, open /etc/apache2/apache2.conf
+
+    sudo vim /etc/apache2/apache2.conf
+
+and add the following lines to the bottom of file.
+
+    NameVirtualHost *:80
+
+    UseCanonicalName Off
+
+    <VirtualHost *:80>
+        VirtualDocumentRoot /var/www/domains/%-2+/public_html
+    </VirtualHost>
+
+This sets up a catch all for any domain coming in over port 80 (the default port for http traffic, if your using https you will need to use 443 - alternatively you could remove the port restriction).
+The important line here is the VirtualDocumentRoot. The tells Apache where your files will reside on disk. The %0 part takes the whole domain name and inserts it into the path.
+To illustrate this if we went to a domain testing.com.dev the VirtualDocumentRoot would be:
+
+    /var/www/html/domains/testing.com
+
+Remember to add the domain testing.com.dev (or testing.com.ANY_EXTENSION) to your hosts file (/etc/hosts)
+
 
 ### Nginx
 Or if you prefer to use nginx

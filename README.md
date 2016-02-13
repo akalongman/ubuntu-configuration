@@ -72,6 +72,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Nginx](#nginx)
         - [MySQL](#mysql)
         - [MyCLI](#mycli) Terminal MySQL Utility
+        - [Memcached](#Memcached)
         - [Redis](#redis)
         - [Phalcon](#phalcon)
         - [Phalcon Dev Tools](#phalcon-dev-tools)
@@ -750,7 +751,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.0-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-snmp php7.0-snmp php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl
+    sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl
 
 If you are looking for more PHP modules try:
 
@@ -808,8 +809,21 @@ and add the following lines to the bottom of file.
 
     UseCanonicalName Off
 
+    LogFormat "%V %h %l %u %t \"%r\" %s %b \"%{Referer}i\" \"%{User-Agent}i\"" dynamic_vhosts
+    CustomLog ${APACHE_LOG_DIR}/access.log dynamic_vhosts
+
     <VirtualHost *:80>
         VirtualDocumentRoot /var/www/domains/%-2+/public_html
+        VirtualScriptAlias  /var/www/domains/%-2+/cgi-bin
+
+        <Directory /var/www/domains>
+                    DirectoryIndex index.html index.php
+                    Options Indexes FollowSymLinks MultiViews
+                    AllowOverride All
+                    Order allow,deny
+                    allow from all
+        </Directory>
+
     </VirtualHost>
 
 This sets up a catch all for any domain coming in over port 80 (the default port for http traffic, if your using https you will need to use 443 - alternatively you could remove the port restriction).
@@ -845,6 +859,10 @@ Usage (See the documents from the git link above for more example):
 ### Redis
 
     sudo apt-get install -y redis-server
+
+### Memcached
+
+    sudo apt-get install -y memcached php-memcached
 
 ### Java Runtime
 

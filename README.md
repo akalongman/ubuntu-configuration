@@ -958,8 +958,7 @@ For Ruby RVM (Version Management)
 ## NodeJS
 I am using a PPA to fix the nodejs path issue(s)
 
-    sudo add-apt-repository -y ppa:chris-lea/node.js
-    sudo apt-get update
+    curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
     sudo apt-get install -y nodejs
     sudo chown -R $(whoami) ~/.npm
     sudo npm install bower gulp grunt-cli -g
@@ -967,24 +966,6 @@ I am using a PPA to fix the nodejs path issue(s)
 If installing coffee-script and typing `$ coffee` produces an error, make sure coffee is not within the $PATH
 
     echo $PATH
-
-**Upgrade NodeJS**
-
-Clear NPM's cache:
-
-    sudo npm cache clean -f
-
-Install a helper called `n`
-
-    sudo npm install -g n
-
-Install latest stable NodeJS version
-
-    sudo n stable
-
-Or pick a specific version:
-
-    sudo n 0.8.20
 
 ***
 [(Back to top)](#table-of-contents)

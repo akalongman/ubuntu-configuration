@@ -860,7 +860,10 @@ Usage (See the documents from the git link above for more example):
     mycli -h localhost -u root -p
 
 ### Redis
+Install redis latest stable version
 
+    sudo add-apt-repository -y ppa:chris-lea/redis-server
+    sudo apt-get update
     sudo apt-get install -y redis-server
 
 ### Memcached

@@ -839,8 +839,16 @@ Remember to add the domain testing.com.dev (or testing.com.ANY_EXTENSION) to you
 ### Nginx
 Or if you prefer to use nginx
 
-    sudo sh -c 'echo "deb http://nginx.org/packages/ubuntu/ $(lsb_release -sc) nginx" >> /etc/apt/sources.list.d/nginx.list'
-    wget -q -O - http://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+For stable version
+
+    sudo add-apt-repository -y ppa:nginx/stable
+
+For latest (recommended)
+
+    sudo add-apt-repository -y ppa:nginx/development
+
+And after install
+
     sudo apt-get update && sudo apt-get install -y nginx
 
 

@@ -328,7 +328,7 @@ Enable Canonical partners repository
 ## System Tools
 This is for tweaking the UI
 
-    sudo apt-get install -y\
+    sudo apt-get update && sudo apt-get install -y\
         unity-tweak-tool\
         compizconfig-settings-manager\
         compiz-plugins\
@@ -484,13 +484,16 @@ To run windows applications Wine is the best option. I often use HeidiSQL with W
     sudo add-apt-repository -y ppa:ubuntu-wine/ppa
     sudo apt-get update
 
+You can check latest version of wine here https://www.winehq.org/
+While writing this article, lastest version was 1.8
+
 If you need a 64bit installation:
 
-    sudo apt-get install -y wine1.7-amd64
+    sudo apt-get install -y wine1.8-amd64
 
 If you need a 32bit installation:
 
-    sudo apt-get install -y wine1.7-i386
+    sudo apt-get install -y wine1.8-i386
 
 ### Nautilus-Actions
 Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.
@@ -541,7 +544,7 @@ Installation
 
 ### Sublime Text 3
 
-Download from http://www.sublimetext.com/3dev
+Download from http://www.sublimetext.com/3
 
 Configuration synchronization explained [here](#sync-sublime-text)
 
@@ -744,7 +747,7 @@ Linux Apache MySQL PHP
 It's important to install **php5-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php5-5.6
-    sudo apt-get install -y php5 libpcre3-dev php5-cli php5-cgi php5-common php5-mysql php5-curl php5-gd php5-geoip php5-imagick php5-imap php5-json php5-ldap php5-mcrypt php5-memcache php5-memcached php5-sqlite php5-tidy php5-xdebug php5-xmlrpc php5-xsl php5-dev
+    sudo apt-get update && sudo apt-get install -y php5 libpcre3-dev php5-cli php5-cgi php5-common php5-mysql php5-curl php5-gd php5-geoip php5-imagick php5-imap php5-json php5-ldap php5-mcrypt php5-memcache php5-memcached php5-sqlite php5-tidy php5-xdebug php5-xmlrpc php5-xsl php5-dev
 
 If you are looking for more PHP modules try:
 
@@ -755,7 +758,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.0-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-sqlite3 php7.0-mbstring php7.0-bcmath php7.0-soap php7.0-zip
+    sudo apt-get update && sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-sqlite3 php7.0-mbstring php7.0-bcmath php7.0-soap php7.0-zip
 
 If you are looking for more PHP modules try:
 
@@ -875,8 +878,7 @@ Usage (See the documents from the git link above for more example):
 Install redis latest stable version
 
     sudo add-apt-repository -y ppa:chris-lea/redis-server
-    sudo apt-get update
-    sudo apt-get install -y redis-server
+    sudo apt-get update && sudo apt-get install -y redis-server
 
 ### Memcached
 

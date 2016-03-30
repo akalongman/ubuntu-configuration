@@ -249,7 +249,13 @@ Open /etc/fstab
 
 Add to /etc/fstab this line (You can get DISK UUID by command ```ls -al /dev/disk/by-uuid/```):
 
+For NTFS disk:
+
     UUID=[DISK UUID] /media/D ntfs-3g defaults,windows_names,locale=en_US.utf8 0 2
+
+For ext4 disk:
+
+    UUID=[DISK UUID] /media/D ext4 defaults 0 2
 
 After run
 
@@ -263,11 +269,11 @@ Open /etc/fstab
 
 And add:
 
-If needed authorization:
+If requires authorization:
 
     username@remote_address:/remote/path /local/path fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/USER/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
 
-If not needed:
+If not requires:
 
     //remote_address/remote/path /local/path cifs guest,iocharset=utf8,uid=1000,gid=1000,file_mode=0777,dir_mode=0777,noperm,_netdev 0 0
 

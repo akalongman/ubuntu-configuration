@@ -287,6 +287,10 @@ After run
 
 ## Enable Native Virtualization
 
+Instal tools
+
+    sudo apt-get install qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
+
 Check if supported by hardware
 
     sudo egrep '(vmx|svm)' --color=always /proc/cpuinfo
@@ -398,7 +402,7 @@ Remove ATI Drivers
 
 **Install the Utilities:**
 
-    sudo apt-get install -y vim git mercurial meld curl htop xclip unzip terminator gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager gpgme sshfs mc
+    sudo apt-get install -y vim git mercurial meld curl htop xclip unzip terminator gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager python-gpgme sshfs mc
 
 To setup the git defaults
 
@@ -471,7 +475,7 @@ To revert back software center theme simply enter these commands:
 Install
 
     sudo apt-add-repository ppa:webupd8team/java
-    sudo apt-get update && sudo apt-get-install oracle-java8-installer
+    sudo apt-get update && sudo apt-get install oracle-java8-installer
 
 Set Oracle Java as main in system
 
@@ -796,11 +800,21 @@ Tweak Apache (Remove apache warning about server's fully qualified domain name)
     echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
     sudo a2enconf fqdn && sudo service apache2 reload
 
-#### Apache: Enable php-mcrypt
+#### Apache: Enable php-mcrypt & mod_rewrite
+
+Enable mod_rewrite
+
+    sudo a2enmod rewrite
 
 Enable php-mcrypt
 
+For PHP 5
+
     sudo php5enmod mcrypt && sudo service apache2 restart
+
+For PHP 7
+
+    sudo phpenmod mcrypt && sudo service apache2 restart
 
 If you are looking for more Apache modules try:
 
@@ -867,7 +881,7 @@ And after install
 
 ### MySQL
 
-    sudo apt-get install -y mysql-server mysql-client php5-mysql
+    sudo apt-get install -y mysql-server mysql-client
     sudo sed -i 's/bind-address/bind-address = 0.0.0.0#/' /etc/mysql/my.cnf
 
 ### MyCLI

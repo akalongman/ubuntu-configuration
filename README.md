@@ -26,6 +26,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Mounting of Network Drives](#mounting-of-network-drives)
     - [Generate a New SSH Key](#generate-a-new-ssh-key)
     - [Enable Native Virtualization](#enable-native-virtualization)
+    - [Write iso Image to USB](#write-iso-image-to-usb)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
@@ -35,26 +36,27 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [RedShift For Eye Strain](#redshift-for-eye-strain)
         - [Dark Theme](#dark-theme)
         - [Sun Java](#sun-java)
-        - [Wine](#wine)
+        - [Wine](#wine) (Windows emulator)
         - [Nautilus-Actions](#nautilus-actions)
+        - [Hardinfo](#hardinfo) (Everest/Aida alternative for linux)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux)
         - [Dropbox](#dropbox)
         - [Sublime Text 3](#sublime-text-3)
         - [Pidgin](#pidgin)
-        - [DBeaver](#dbeaver)
+        - [DBeaver](#dbeaver) (Database management tool)
         - [VirtualBox](#virtualbox)
         - [Android Studio](#android-studio)
-        - [Smart Git](#smart-git)
-        - [FileZilla](#filezilla)
+        - [SmartGit](#smart-git)
+        - [FileZilla](#filezilla) (sFTP Client)
         - [Spotify](#spotify)
         - [Meld Diff Tool](#meld-diff-tool)
         - [Vagrant](#vagrant)
         - [Docker](#docker)
         - [Audacious Audio Player](#audacious-audio-player)
         - [Sticky Notes](#sticky-notes)
-        - [Guake](#guake)
+        - [Guake](#guake) (Quake like Terminal)
         - [Skype](#skype)
         - [Telegram](#telegram)
         - [Gimp](#gimp)
@@ -313,6 +315,20 @@ After the installation, re-login so that the changes take effect. You can test t
     sudo virsh -c qemu:///system list
 
 
+## Write iso Image to USB
+
+Open Disks utility and select the USB device from the list in the left of the program
+and detect where it was mounted: /dev/sd[1 letter][optionally 1 number]. For example, /dev/sdc or /dev/sdc1
+
+Make sure the USB device is unmounted (not safely removed, but unmounted) If it is mounted you can unmount it:
+
+    sudo umount /dev/sd[1 letter][optionally 1 number]
+
+For writing image, open the terminal and run:
+
+    sudo dd bs=4M if=path/to/your/iso/file.iso of=/dev/sd[that 1 letter]
+
+
 ***
 
 [(Back to top)](#table-of-contents)
@@ -520,7 +536,15 @@ Launch the Nautilus-Actions Configuration Tool from the Dash after installing it
 
 You also can install some Nautilus extensions
 
-    sudo apt-get install nautilus-admin nautilus-meld nautilus-checksum-menu
+    sudo apt-get install -y nautilus-admin nautilus-meld nautilus-checksum-menu
+
+
+### Hardinfo
+
+Hardinfo is a Everest/Aida alternative for Linux. Its shows system information
+
+    sudo apt-get install -y hardinfo
+
 
 ***
 [(Back to top)](#table-of-contents)
@@ -830,6 +854,10 @@ Next, open /etc/apache2/apache2.conf
 
     sudo vim /etc/apache2/apache2.conf
 
+Comment line which includes enabled hosts
+
+    #IncludeOptional sites-enabled/*.conf
+
 and add the following lines to the bottom of file.
 
     NameVirtualHost *:80
@@ -860,8 +888,7 @@ To illustrate this if we went to a domain testing.com.dev the VirtualDocumentRoo
 
     /var/www/html/domains/testing.com
 
-Remember to add the domain testing.com.dev (or testing.com.ANY_EXTENSION) to your hosts file (/etc/hosts)
-
+If you have internet access, no need to add *.dev domains to your hosts file (/etc/hosts), anyway works perfectly
 
 ### Nginx
 Or if you prefer to use nginx

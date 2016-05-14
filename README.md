@@ -322,13 +322,17 @@ Enter sudo mode
 
     sudo su
 
-List available disks
+List available disks and detect where it was mounted: /dev/sd[1 letter][optionally 1 number]. For example, /dev/sdc or /dev/sdc1
 
     fdisk -l
 
 or
 
     lsblk
+
+Unmount drive
+
+    umount sd[1 letter][optionally 1 number]
 
 
 Format to FAT32
@@ -344,14 +348,19 @@ Eject drive
 
 ## Write iso Image to USB
 
-Open Disks utility and select the USB device from the list in the left of the program
-and detect where it was mounted: /dev/sd[1 letter][optionally 1 number]. For example, /dev/sdc or /dev/sdc1
+List available disks and detect where it was mounted: /dev/sd[1 letter][optionally 1 number]. For example, /dev/sdc or /dev/sdc1
+
+    fdisk -l
+
+or
+
+    lsblk
 
 Make sure the USB device is unmounted (not safely removed, but unmounted) If it is mounted you can unmount it:
 
     sudo umount /dev/sd[1 letter][optionally 1 number]
 
-For writing image, open the terminal and run:
+For writing image run:
 
     sudo dd bs=4M if=path/to/your/iso/file.iso of=/dev/sd[that 1 letter]
 

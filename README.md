@@ -26,6 +26,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Mounting of Network Drives](#mounting-of-network-drives)
     - [Generate a New SSH Key](#generate-a-new-ssh-key)
     - [Enable Native Virtualization](#enable-native-virtualization)
+    - [Format USB](#format-usb)
     - [Write iso Image to USB](#write-iso-image-to-usb)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
@@ -313,6 +314,32 @@ Next, add your user to the KVM group and libvirtd group. To do so, type:
 After the installation, re-login so that the changes take effect. You can test the installation by typing:
 
     sudo virsh -c qemu:///system list
+
+
+## Format USB
+
+Enter sudo mode
+
+    sudo su
+
+List available disks
+
+    fdisk -l
+
+or
+
+    lsblk
+
+
+Format to FAT32
+
+    mkfs.vfat /dev/sd[1 letter][optionally 1 number]
+
+You can use mkfs.ntfs for NTFS, mkfs.ext4 for EXT4 etc.
+
+Eject drive
+
+    eject /dev/sd[1 letter]
 
 
 ## Write iso Image to USB

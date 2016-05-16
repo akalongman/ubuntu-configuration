@@ -60,6 +60,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Guake](#guake) (Quake like Terminal)
         - [Skype](#skype)
         - [Telegram](#telegram)
+        - [Slack](#slack)
         - [Gimp](#gimp)
         - [Httpie](#httpie) (Terminal HTTP client)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
@@ -551,11 +552,11 @@ While writing this article, lastest version was 1.8
 
 If you need a 64bit installation:
 
-    sudo apt-get install -y wine1.8-amd64
+    sudo apt-get install -y wine1.8-amd64 winetricks
 
 If you need a 32bit installation:
 
-    sudo apt-get install -y wine1.8-i386
+    sudo apt-get install -y wine1.8-i386 winetricks
 
 ### Nautilus-Actions
 Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.
@@ -657,7 +658,12 @@ Also you can read [Virtual Machine Related](#virtual-machine-related)
 
 Installation
 
-    sudo apt-get install -y android-studio
+Download Android Studio from https://developer.android.com/sdk/index.html
+Extract the archive file into an appropriate location for your applications, eg: /opt. Use the filename of your downloaded archive, in my example android-studio-ide-143.2821654-linux.zip
+
+    sudo unzip android-studio-ide-143.2821654-linux.zip -d /opt
+
+To launch Android Studio, navigate to the /opt/android-studio/bin directory in a terminal and execute ./studio.sh
 
 After change PATH
 
@@ -670,9 +676,14 @@ And add lines:
 
 ### Smart Git
 
+Canonical Partner's repository must be enabled for installation via terminal:
+
 Installation
 
     sudo apt-get install -y smartgit
+
+Or download from http://www.syntevo.com/smartgit/download install and run /usr/share/smartgit/bin/smartgit.sh
+
 
 ### FileZilla
 
@@ -768,6 +779,15 @@ Installation
 After run:
 
     sudo chown -R $(whoami):$(whoami) /opt
+
+### Slack
+
+Canonical Partner's repository must be enabled for installation via terminal:
+
+    sudo apt-get install -y slack-desktop
+
+Or download from https://slack.com/downloads and run manually
+
 
 ### Gimp
 

@@ -456,7 +456,7 @@ Remove ATI Drivers
 
 **Install the Utilities:**
 
-    sudo apt-get install -y vim git mercurial meld curl htop xclip unzip terminator gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager python-gpgme sshfs mc
+    sudo apt-get install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager python-gpgme sshfs mc libavcodec-extra libdvd-pkg
 
 To setup the git defaults
 
@@ -783,15 +783,24 @@ Installation
 
     sudo apt-get install -y skype
 
+
+While we're at it, let's also fix Skype on 64bit not using the correct theme,
+by installing the missing dependencies using the following command:
+
+    sudo apt-get install -y gtk2-engines-murrine:i386 gtk2-engines-pixbuf:i386
+
+
 ### Telegram
+
+Add repository
+
+    sudo add-apt-repository -y ppa:atareao/telegram
+
 
 Installation
 
-    sudo apt-get install -y telegram-desktop
+    sudo apt-get update && sudo apt-get install -y telegram
 
-After run:
-
-    sudo chown -R $(whoami):$(whoami) /opt
 
 ### Slack
 

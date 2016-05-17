@@ -40,6 +40,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Wine](#wine) (Windows emulator)
         - [Nautilus-Actions](#nautilus-actions)
         - [Hardinfo](#hardinfo) (Everest/Aida alternative for linux)
+        - [Caffeine](#caffeine) (Prevent the activation of the screensaver when using full-screen windows)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux)
@@ -581,6 +582,18 @@ You also can install some Nautilus extensions
 Hardinfo is a Everest/Aida alternative for Linux. Its shows system information
 
     sudo apt-get install -y hardinfo
+
+
+### Hardinfo
+
+Caffeine is a tool used to temporarily prevent the activation of the screensaver / lock screen / sleep mode,
+when using full-screen windows. The application is useful if you're using a video player that doesn't do this automatically,
+when listening to music, etc.
+
+    sudo apt-get install -y caffeine
+
+__Note__: After the installation, the command-line version of Caffeine is set to start automatically on login.
+If you want the indicator to start automatically, you'll have to add "caffeine-indicator" to your startup applications.
 
 
 ***

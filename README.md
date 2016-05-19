@@ -584,7 +584,7 @@ Hardinfo is a Everest/Aida alternative for Linux. Its shows system information
     sudo apt-get install -y hardinfo
 
 
-### Hardinfo
+### Caffeine
 
 Caffeine is a tool used to temporarily prevent the activation of the screensaver / lock screen / sleep mode,
 when using full-screen windows. The application is useful if you're using a video player that doesn't do this automatically,
@@ -870,7 +870,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.0-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt-get update && sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-sqlite3 php7.0-mbstring php7.0-bcmath php7.0-soap php7.0-zip
+    sudo apt-get update && sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-sqlite3 php7.0-mbstring php7.0-bcmath php7.0-soap php7.0-zip php-xdebug
 
 If you are looking for more PHP modules try:
 
@@ -879,6 +879,17 @@ If you are looking for more PHP modules try:
 ### Composer
 
     curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
+
+Disable XDebug for composer
+
+    sudo phpdismod -s cli xdebug
+
+And add this lines in your .bashrc file:
+
+    # Load xdebug Zend extension with php command
+    alias php='php -dzend_extension=xdebug.so'
+    # PHPUnit needs xdebug for coverage. In this case, just make an alias with php command prefix.
+    alias phpunit='php $(which phpunit)'
 
 ### PHPUnit
 
@@ -1161,6 +1172,7 @@ After run
 In CompizConfig go to "General Options" > "Focus & Raise Behaviour" and set "Focus Prevention Level" to "Off"
 
 ## Enable Normal Scrollbars
+
     gsettings set com.canonical.desktop.interface scrollbar-mode normal
 
 To revert
@@ -1168,6 +1180,7 @@ To revert
     gsettings reset com.canonical.desktop.interface scrollbar-mode
 
 ## Enable User Name in Systray
+
     gsettings set com.canonical.indicator.session show-real-name-on-panel true
 
 ## Change Datetime Format in Systray

@@ -949,8 +949,6 @@ Comment line which includes enabled hosts
 
 and add the following lines to the bottom of file.
 
-    NameVirtualHost *:80
-
     UseCanonicalName Off
 
     LogFormat "%V %h %l %u %t \"%r\" %s %b \"%{Referer}i\" \"%{User-Agent}i\"" dynamic_vhosts

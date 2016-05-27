@@ -966,6 +966,7 @@ and add the following lines to the bottom of file.
                     AllowOverride All
                     Order allow,deny
                     allow from all
+                    Require all granted
         </Directory>
 
     </VirtualHost>

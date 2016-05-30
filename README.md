@@ -24,6 +24,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Mounting Drives](#mounting-drives)
         - [Mounting of Local Drives](#mounting-of-local-drives)
         - [Mounting of Network Drives](#mounting-of-network-drives)
+        - [Mounting Amazon Cloud Drive](#mounting-amazon-cloud-drive)
     - [Generate a New SSH Key](#generate-a-new-ssh-key)
     - [Enable Native Virtualization](#enable-native-virtualization)
     - [Format USB](#format-usb)
@@ -285,6 +286,46 @@ If not requires:
 After run
 
     sudo mount -a
+
+
+### Mounting Amazon Cloud Drive
+
+
+Install Prerequisites
+
+    sudo apt-get install python3 python3-appdirs python3-dateutil python3-requests python3-sqlalchemy python3-pip
+
+Install acd_cli (https://github.com/yadayada/acd_cli)
+
+    cd ~ && sudo pip3 install --upgrade git+https://github.com/yadayada/acd_cli.git
+
+Initiate "sync" which will launch a browser (chrome/lynx/etc) to amazon.com and setup your oauth key.
+
+    acd_cli sync
+
+Copy/Paste and store your oauth data.
+Note: it will most likely have improper newline breaks. Fixup in your favorite text editor.
+
+    vim ~/.cache/acd_cli/oauth_data
+
+Add your user to the "fuse" group to allow mounting
+
+    sudo addgroup <username> fuse
+
+Mount the root of your Amazon Cloud drive to the /media/amazon directory
+
+    mkdir /media/amazon
+    acd_cli mount /media/amazon
+
+Upload
+
+    -d     exclude duplicate files from upload
+    -x     upload threads
+
+e.g. Upload your local /media/videos directory to the root of your Amazon Cloud Drive.
+
+    acd_cli upload -d -x 4 /media/videos /
+
 
 ## Generate a new SSH key
 

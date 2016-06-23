@@ -32,21 +32,21 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
-        - [Install Nvidia Drivers](#install-nvidia-drivers)
+        - [Install Nvidia Drivers](#install-nvidia-drivers) (Install drivers from official repository for Nvidia Drivers)
         - [Install ATI Drivers](#install-ati-drivers)
         - [Utilities](#utilities)
         - [RedShift For Eye Strain](#redshift-for-eye-strain)
         - [Dark Theme](#dark-theme)
         - [Sun Java](#sun-java)
-        - [Wine](#wine) (Windows emulator)
-        - [Nautilus-Actions](#nautilus-actions)
+        - [Wine](#wine) (Windows emulator) (Run Microsoft® Windows® applications on linux)
+        - [Nautilus-Actions](#nautilus-actions) (Graphically create custom context menu options for Ubuntu's Nautilus file manager)
         - [Hardinfo](#hardinfo) (Everest/Aida alternative for linux)
         - [Caffeine](#caffeine) (Prevent the activation of the screensaver when using full-screen windows)
         - [GNU Screen](#gnu-screen) (Full-screen window manager that multiplexes a physical terminal between several processes)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
-        - [PlayOnLinux](#playonlinux)
-        - [Dropbox](#dropbox)
+        - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
+        - [Dropbox](#dropbox) (Allows users to create a special folder on their computers, which Dropbox then synchronizes so that it appears to be the same folder (with the same contents) regardless of which device is used to view it)
         - [Sublime Text 3](#sublime-text-3)
         - [Pidgin](#pidgin)
         - [DBeaver](#dbeaver) (Database management tool)
@@ -59,6 +59,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Vagrant](#vagrant)
         - [Docker](#docker)
         - [Audacious Audio Player](#audacious-audio-player)
+        - [XnViewMP](#xnviewmp) (Powerful cross-platform media browser, viewer and converter)
         - [Sticky Notes](#sticky-notes)
         - [Guake](#guake) (Quake like Terminal)
         - [Skype](#skype)
@@ -814,6 +815,15 @@ Log out and log in from your server to activate your new groups.
 Installation
 
     sudo apt-get install -y audacious
+
+
+### XnViewMP
+
+XnView MP is the enhanced version of XnView Classic.
+It is a powerful cross-platform media browser, viewer and converter.
+Compatible with more than [500 formats](http://www.xnview.com/en/xnviewmp/#formats) such as PSD etc.
+
+Download and install from http://www.xnview.com/en/xnviewmp/#downloads
 
 ### Sticky Notes
 Just like Google Keep and Windows Sticky Notes, it allows you to jot down thoughts, lists, and reminders on desktop.

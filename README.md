@@ -1,4 +1,4 @@
-# Configuration of Ubuntu 16.04
+# Configuration of Ubuntu 16.04 Xenial Xerus
 
 This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop), [Mint](http://www.linuxmint.com/), and [Elementary OS](http://elementaryos.org/). I prefer Ubuntu 15.10
 
@@ -215,13 +215,13 @@ This is less painful when creating a group with rwx permissions for `/usr/local`
 
 You can use 32Bit applications if you like, sometimes this is useful.
 
-    sudo apt-get update && sudo apt-get install -y unetbootin
+    sudo apt update && sudo apt install -y unetbootin
 
 ## Networking
 
 To enable Networking, and make it accessible to all computers such as Windows also first install Samba:
 
-    $ sudo apt-get install -y samba
+    $ sudo apt install -y samba
 
 Then edit the Samba config:
 
@@ -237,7 +237,7 @@ Then you will have to reload your Session.
 If you are running Grub as your default boot-loader, you can use this application to make it easier to change the order.
 
     sudo add-apt-repository -y ppa:danielrichter2007/grub-customizer
-    sudo apt-get update && sudo apt-get install -y grub-customizer
+    sudo apt update && sudo apt install -y grub-customizer
 
 Load the application either with `<Super>` and look for grub customizer or terminal `gksudo grub-customizer`.
 
@@ -295,7 +295,7 @@ After run
 
 Install Prerequisites
 
-    sudo apt-get install python3 python3-appdirs python3-dateutil python3-requests python3-sqlalchemy python3-pip
+    sudo apt install -y python3 python3-appdirs python3-dateutil python3-requests python3-sqlalchemy python3-pip
 
 Install acd_cli (https://github.com/yadayada/acd_cli)
 
@@ -337,7 +337,7 @@ e.g. Upload your local /media/videos directory to the root of your Amazon Cloud 
 
 Instal tools
 
-    sudo apt-get install qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
+    sudo apt install -y qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
 
 Check if supported by hardware
 
@@ -423,19 +423,19 @@ Login to your Linux user and go to your **home** directory,
 
 Run these commands and tweak them as needed. The `-y` flag installs without a prompt. Run these commands from the terminal.
 
-    sudo apt-get update && sudo apt-get upgrade
+    sudo apt update && sudo apt upgrade
 
 ## Enable PPAs
 PPA's are provided within categories below, I highly recommend using PPA's or at least installing this package in case you ever use them.
 
 Enable Canonical partners repository
 
-    sudo add-apt-repository -y "deb http://archive.canonical.com/ $(lsb_release -sc) partner" && sudo apt-get update
+    sudo add-apt-repository -y "deb http://archive.canonical.com/ $(lsb_release -sc) partner" && sudo apt update
 
 ## System Tools
 This is for tweaking the UI
 
-    sudo apt-get update && sudo apt-get install -y\
+    sudo apt update && sudo apt install -y\
         unity-tweak-tool\
         compizconfig-settings-manager\
         compiz-plugins\
@@ -452,7 +452,7 @@ Install Nvidia Drivers
 
     sudo add-apt-repository -y ppa:graphics-drivers/ppa
 
-    sudo apt-get update && sudo apt-get install -y nvidia-XXX
+    sudo apt update && sudo apt install -y nvidia-XXX
 
 Type your version instead XXX
 
@@ -478,7 +478,7 @@ Remove Nvidia Drivers
 
 **Install the Utilities:**
 
-    sudo apt-get install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager python-gpgme sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server
+    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager python-gpgme sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server
 
 To setup the git defaults
 
@@ -493,7 +493,7 @@ That will create a `~/.gitconfig` with:
 
 ### RedShift For Eye Strain
 
-    sudo apt-get install -y redshift
+    sudo apt install -y redshift
 
 Create your configuration file:
 
@@ -536,14 +536,14 @@ I prefer [Vivacious ZBlackout Blue Pro Theme](http://www.noobslab.com/2016/03/vi
 Add repository
 
     sudo add-apt-repository ppa:ravefinity-project/ppa
-    sudo apt-get update
+    sudo apt update
 
 Installation
 
-    sudo apt-get install vivacious-colors-gtk-dark
-    sudo apt-get install vivacious-colors-gtk-light
-    sudo apt-get install vivacious-unity-gtk-dark
-    sudo apt-get install vivacious-unity-gtk-light
+    sudo apt install -y vivacious-colors-gtk-dark
+    sudo apt install -y vivacious-colors-gtk-light
+    sudo apt install -y vivacious-unity-gtk-dark
+    sudo apt install -y vivacious-unity-gtk-light
 
 
 Use the **Unity Tweak Tool** to set vivacious-zblackout-blue-pro
@@ -554,7 +554,7 @@ Use the **Unity Tweak Tool** to set vivacious-zblackout-blue-pro
 Install
 
     sudo apt-add-repository ppa:webupd8team/java
-    sudo apt-get update && sudo apt-get install oracle-java8-installer
+    sudo apt update && sudo apt install -y oracle-java8-installer
 
 Set Oracle Java as main in system
 
@@ -571,24 +571,24 @@ And update alternatives
 To run windows applications Wine is the best option. I often use HeidiSQL with Wine.
 
     sudo add-apt-repository -y ppa:ubuntu-wine/ppa
-    sudo apt-get update
+    sudo apt update
 
 You can check latest version of wine here https://www.winehq.org/
 While writing this article, lastest version was 1.8
 
 If you need a 64bit installation:
 
-    sudo apt-get install -y wine1.8-amd64 winetricks
+    sudo apt install -y wine1.8-amd64 winetricks
 
 If you need a 32bit installation:
 
-    sudo apt-get install -y wine1.8-i386 winetricks
+    sudo apt install -y wine1.8-i386 winetricks
 
 ### Nautilus-Actions
 Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.
 If you don't want to create your own, you can install Nautilus-Actions-Extra to get a package of particularly useful user-created tools.
 
-    sudo apt-get install -y nautilus-actions
+    sudo apt install -y nautilus-actions
 
 After installing it, quit and restart the Nautilus file manager with the following command.
 You can also press Alt+F2 and type this command instead of running it in a terminal.
@@ -599,14 +599,14 @@ Launch the Nautilus-Actions Configuration Tool from the Dash after installing it
 
 You also can install some Nautilus extensions
 
-    sudo apt-get install -y nautilus-admin nautilus-meld nautilus-checksum-menu
+    sudo apt install -y nautilus-admin nautilus-meld nautilus-checksum-menu
 
 
 ### Hardinfo
 
 Hardinfo is a Everest/Aida alternative for Linux. Its shows system information
 
-    sudo apt-get install -y hardinfo
+    sudo apt install -y hardinfo
 
 
 ### Caffeine
@@ -615,7 +615,7 @@ Caffeine is a tool used to temporarily prevent the activation of the screensaver
 when using full-screen windows. The application is useful if you're using a video player that doesn't do this automatically,
 when listening to music, etc.
 
-    sudo apt-get install -y caffeine
+    sudo apt install -y caffeine
 
 __Note__: After the installation, the command-line version of Caffeine is set to start automatically on login.
 If you want the indicator to start automatically, you'll have to add "caffeine-indicator" to your startup applications.
@@ -630,7 +630,7 @@ When screen is called, it creates a single window with a shell in it (or the spe
 Then, at any time, you can create new (full-screen) windows with other programs in them (including more shells), kill the current window, view a list of the active windows, turn output logging on and off, copy text between windows, view the scrollback history, switch between windows, etc. All windows run their programs completely independent of each other.
 Programs continue to run when their window is currently not visible and even when the whole screen session is detached from the users terminal.
 
-    sudo apt-get install -y screen
+    sudo apt install -y screen
 
 
 ***
@@ -643,7 +643,7 @@ Programs continue to run when their window is currently not visible and even whe
 
         sudo sh -c 'echo "deb [arch=amd64] http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-        sudo apt-get update && sudo apt-get install -y google-chrome-stable
+        sudo apt update && sudo apt install -y google-chrome-stable
 
     Then launch it with `$ google-chrome` and you can pin it to a unity bar.
 
@@ -653,7 +653,7 @@ Installation
 
     wget -q "http://deb.playonlinux.com/public.gpg" -O- | sudo apt-key add -
     sudo wget http://deb.playonlinux.com/playonlinux_trusty.list -O /etc/apt/sources.list.d/playonlinux.list
-    sudo apt-get update && sudo apt-get install -y playonlinux
+    sudo apt update && sudo apt install -y playonlinux
 
 ### Dropbox
 
@@ -661,7 +661,7 @@ Installation
 
     sudo sh -c 'echo "deb http://linux.dropbox.com/ubuntu $(lsb_release -sc) main" >> /etc/apt/sources.list.d/dropbox.list'
     sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
-    sudo apt-get update && sudo apt-get install -y dropbox
+    sudo apt update && sudo apt install -y dropbox
 
 ### Sublime Text 3
 
@@ -673,7 +673,7 @@ Configuration synchronization explained [here](#sync-sublime-text)
 
 Installation
 
-    sudo apt-get -y install pidgin
+    sudo apt -y install pidgin
 
 Configuring google talk account
 
@@ -697,8 +697,8 @@ Download from http://dbeaver.jkiss.org/download/
 Installation
 
     sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
-    wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-    sudo apt-get update && sudo apt-get install -y virtualbox-5.0
+    wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc -O- | sudo apt-key add -
+    sudo apt update && sudo apt install -y virtualbox-5.0
 
 Suggested to [Enable Native Virtualization](#enable-native-virtualization)
 
@@ -730,7 +730,7 @@ Canonical Partner's repository must be enabled for installation via terminal:
 
 Installation
 
-    sudo apt-get install -y smartgit
+    sudo apt install -y smartgit
 
 Or download from http://www.syntevo.com/smartgit/download install and run /usr/share/smartgit/bin/smartgit.sh
 
@@ -739,14 +739,14 @@ Or download from http://www.syntevo.com/smartgit/download install and run /usr/s
 
 Installation
 
-    sudo apt-get install -y filezilla
+    sudo apt install -y filezilla
 
 ### Spotify
 
 Installation
 
     sudo sh -c 'echo "deb http://repository.spotify.com testing non-free" >> /etc/apt/sources.list.d/spotify.list'
-    sudo apt-get update && sudo apt-get install -y spotify-client
+    sudo apt update && sudo apt install -y spotify-client
 
 ### TeamViewer
 
@@ -754,18 +754,18 @@ Download from http://www.teamviewer.com/en/download/linux.aspx
 
 ### Meld Diff Tool
 
-    sudo apt-get install -y meld
+    sudo apt install -y meld
 
 ### Vagrant
 
 To install Vagrant, you need to download and run the installation kit.
 Before going further, be sure that you have dpkg and Virtual box installed:
 
-    sudo apt-get install -y dpkg-dev virtualbox-dkms
+    sudo apt install -y dpkg-dev virtualbox-dkms
 
 Make sure linux headers already installed
 
-    sudo apt-get install -y linux-headers-$(uname -r)
+    sudo apt install -y linux-headers-$(uname -r)
 
 Go to the http://downloads.vagrantup.com page of Vagrant and check for the latest release.
 After download latest
@@ -789,14 +789,14 @@ Working with Docker is a pain if your user is not configured correctly, so add y
 
 Log out and log in from your server to activate your new groups.
 
-    sudo apt-get -y install python-pip
+    sudo apt -y install python-pip
     sudo pip install docker-compose
 
 ### Audacious Audio Player
 
 Installation
 
-    sudo apt-get install -y audacious
+    sudo apt install -y audacious
 
 
 ### XnViewMP
@@ -813,7 +813,7 @@ Just like Google Keep and Windows Sticky Notes, it allows you to jot down though
 Installation
 
     sudo apt-add-repository ppa:umang/indicator-stickynotes
-    sudo apt-get update && sudo apt-get install -y indicator-stickynotes
+    sudo apt update && sudo apt install -y indicator-stickynotes
 
 ### Guake
 Guake is a dropdown terminal made for the GNOME desktop environment.
@@ -821,19 +821,19 @@ Guake's style of window is based on an FPS game, and one of its goals is to be e
 
 Installation
 
-    sudo apt-get install -y guake
+    sudo apt install -y guake
 
 ### Skype
 
 Installation
 
-    sudo apt-get install -y skype
+    sudo apt install -y skype
 
 
 While we're at it, let's also fix Skype on 64bit not using the correct theme,
 by installing the missing dependencies using the following command:
 
-    sudo apt-get install -y gtk2-engines-murrine:i386 gtk2-engines-pixbuf:i386
+    sudo apt install -y gtk2-engines-murrine:i386 gtk2-engines-pixbuf:i386
 
 
 ### Telegram
@@ -845,14 +845,14 @@ Add repository
 
 Installation
 
-    sudo apt-get update && sudo apt-get install -y telegram
+    sudo apt update && sudo apt install -y telegram
 
 
 ### Slack
 
 Canonical Partner's repository must be enabled for installation via terminal:
 
-    sudo apt-get install -y slack-desktop
+    sudo apt install -y slack-desktop
 
 Or download from https://slack.com/downloads and run manually
 
@@ -865,14 +865,14 @@ Installation
 
 After run:
 
-    sudo apt-get update && sudo apt-get install -y gimp gimp-data gimp-plugin-registry gimp-data-extras
+    sudo apt update && sudo apt install -y gimp gimp-data gimp-plugin-registry gimp-data-extras
 
 ### Httpie
 You can easily use httpie from terminal: ```http get https://google.com```
 
 Installation
 
-    sudo apt-get update && sudo apt-get install -y httpie
+    sudo apt update && sudo apt install -y httpie
 
 
 
@@ -881,7 +881,7 @@ You can easily use `Startup Disk Creator` and `UNetbootin` to create Linux to US
 
     sudo add-apt-repository -y ppa:colingille/freshlight
     sudo sh -c "sed -i 's/wily/vivid/g' /etc/apt/sources.list.d/colingille-ubuntu-freshlight-$(lsb_release -sc).list"
-    sudo apt-get update && sudo apt-get install -y winusb
+    sudo apt update && sudo apt install -y winusb
 
 We replace the sources.list back to vivid in order to get it to work for ubuntu 15, that is the purpose of the `sed` command.
 
@@ -905,7 +905,7 @@ Linux Apache MySQL PHP
 It's important to install **php5-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php5-5.6
-    sudo apt-get update && sudo apt-get install -y php5 libpcre3-dev php5-cli php5-cgi php5-common php5-mysql php5-curl php5-gd php5-geoip php5-imagick php5-imap php5-json php5-ldap php5-mcrypt php5-memcache php5-memcached php5-sqlite php5-tidy php5-xdebug php5-xmlrpc php5-xsl php5-dev
+    sudo apt update && sudo apt install -y php5 libpcre3-dev php5-cli php5-cgi php5-common php5-mysql php5-curl php5-gd php5-geoip php5-imagick php5-imap php5-json php5-ldap php5-mcrypt php5-memcache php5-memcached php5-sqlite php5-tidy php5-xdebug php5-xmlrpc php5-xsl php5-dev
 
 If you are looking for more PHP modules try:
 
@@ -916,7 +916,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.0-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt-get update && sudo apt-get install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-sqlite3 php7.0-mbstring php7.0-bcmath php7.0-soap php7.0-zip php-xdebug
+    sudo apt update && sudo apt install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-sqlite3 php7.0-mbstring php7.0-bcmath php7.0-soap php7.0-zip php-xdebug
 
 If you are looking for more PHP modules try:
 
@@ -947,11 +947,11 @@ And add this lines in your .bashrc file:
 
 For PHP 5.6
 
-    sudo apt-get install -y apache2 libapache2-mod-php5
+    sudo apt install -y apache2 libapache2-mod-php5
 
 For PHP 7.0
 
-    sudo apt-get install -y apache2 libapache2-mod-php7.0
+    sudo apt install -y apache2 libapache2-mod-php7.0
 
 
 Tweak Apache (Remove apache warning about server's fully qualified domain name)
@@ -1053,12 +1053,12 @@ For latest (recommended)
 
 And after install
 
-    sudo apt-get update && sudo apt-get install -y nginx
+    sudo apt update && sudo apt install -y nginx
 
 
 ### MySQL
 
-    sudo apt-get install -y mysql-server mysql-client
+    sudo apt install -y mysql-server mysql-client
     sudo sed -i 's/bind-address/bind-address = 0.0.0.0#/' /etc/mysql/my.cnf
 
 ### MyCLI
@@ -1075,21 +1075,21 @@ Usage (See the documents from the git link above for more example):
 Install redis latest stable version
 
     sudo add-apt-repository -y ppa:chris-lea/redis-server
-    sudo apt-get update && sudo apt-get install -y redis-server
+    sudo apt update && sudo apt install -y redis-server
 
 ### Memcached
 
-    sudo apt-get install -y memcached php-memcached
+    sudo apt install -y memcached php-memcached
 
 ### Java Runtime
 
-    sudo apt-get install -y default-jre
+    sudo apt install -y default-jre
 
 ### Phalcon
 
     sudo apt-add-repository ppa:phalcon/stable
-    sudo apt-get update
-    sudo apt-get install -y php5-phalcon
+    sudo apt update
+    sudo apt install -y php5-phalcon
 
 ### Phalcon Dev Tools
 This is an easy to use install script that will cleanup after itself. It can also be used for updating:
@@ -1102,7 +1102,7 @@ To test it run: `$ phalcon`
 We will use the Access Control Lists (ACL) or (Filesystem Access Control List). We will use group permissions for folders so you don't have to make the public writable, because `777` is dangerous.
 
     # Make sure you have ACL installed
-    sudo apt-get install -y acl
+    sudo apt install -y acl
 
 Look for your main partition with:
 
@@ -1152,8 +1152,8 @@ Lastly, you could have a deploy script that does this for you, such as Python `F
 
 Python is installed by default on Ubuntu, version 2.7 is suitable. I strongly recommend installing `python-dev` for headers to compile certain PIP packages.
 
-    sudo apt-get install -y python-dev libmysqlclient-dev
-    sudo apt-get install -y python-pip
+    sudo apt install -y python-dev libmysqlclient-dev
+    sudo apt install -y python-pip
     sudo pip install fabric virtualenv virtualenvwrapper django
 
 ***
@@ -1162,7 +1162,7 @@ Python is installed by default on Ubuntu, version 2.7 is suitable. I strongly re
 ## Ruby
 Install Ruby 2.X with header files in `ruby2.0-dev`, this will keep your gems from having issues.
 
-    sudo apt-get install -y ruby2.0 ruby2.0-dev
+    sudo apt install -y ruby2.0 ruby2.0-dev
 
 For Ruby RVM (Version Management)
 
@@ -1176,7 +1176,7 @@ For Ruby RVM (Version Management)
 I am using a PPA to fix the nodejs path issue(s)
 
     curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
-    sudo apt-get install -y nodejs
+    sudo apt install -y nodejs
     sudo chown -R $(whoami) ~/.npm
     sudo npm install bower gulp grunt-cli webpack -g
 
@@ -1299,7 +1299,7 @@ This appears in the top-right menu on Unity. Tested in 14/15.
 
 This will also fix Tweak UI if a sound item is missing.
 
-    sudo apt-get install -y indicator-sound
+    sudo apt install -y indicator-sound
 
 For Unity (Default)
 
@@ -1312,7 +1312,7 @@ For Gnome
 # Install Gnome 3
 If you prefer Gnome 3 over the Unity desktop it's easy to install:
 
-    sudo apt-get install -y ubuntu-gnome-desktop
+    sudo apt install -y ubuntu-gnome-desktop
     sudo service gdm restart (Or a reboot is easier)
 
 Unity uses `lightdm` and Gnome uses `gdm`, it's easiest to stick with lightdm.
@@ -1522,21 +1522,21 @@ Hide system apps
 
 Remove Amazon from dash
 
-    sudo apt-get purge unity-webapps-common
+    sudo apt purge unity-webapps-common
 
 Remove rythmbox audio player
 
-    sudo apt-get purge rhythmbox
+    sudo apt purge rhythmbox
 
 Remove Totem video player
 
-    sudo apt-get purge totem
+    sudo apt purge totem
 
 Clean System
 
-    sudo apt-get autoremove
-    sudo apt-get clean
-    sudo apt-get autoclean
+    sudo apt autoremove
+    sudo apt clean
+    sudo apt autoclean
 
 
 ***

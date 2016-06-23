@@ -895,7 +895,7 @@ Linux Apache MySQL PHP
 **- Installation for the following:**
 - PHP 5.6 (and Modules)
 - PHP 7.0 (and Modules)
-- Apache 2 (and Modules)
+- Apache 2 (and Modules + Dynamic hosts)
 - Nginx *(Optional)*
 - MySQL
 - Redis
@@ -904,7 +904,7 @@ Linux Apache MySQL PHP
 ### PHP 5.6
 It's important to install **php5-dev** if you want to compile any add-ons later.
 
-    sudo add-apt-repository -y ppa:ondrej/php5-5.6
+    sudo add-apt-repository -y ppa:ondrej/php
     sudo apt update && sudo apt install -y php5 libpcre3-dev php5-cli php5-cgi php5-common php5-mysql php5-curl php5-gd php5-geoip php5-imagick php5-imap php5-json php5-ldap php5-mcrypt php5-memcache php5-memcached php5-sqlite php5-tidy php5-xdebug php5-xmlrpc php5-xsl php5-dev
 
 If you are looking for more PHP modules try:

@@ -1,4 +1,4 @@
-# Configuration of Ubuntu 15.10
+# Configuration of Ubuntu 16.04
 
 This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop), [Mint](http://www.linuxmint.com/), and [Elementary OS](http://elementaryos.org/). I prefer Ubuntu 15.10
 
@@ -471,28 +471,7 @@ Remove Nvidia Drivers
 
 ### Install ATI Drivers
 
-You can check your [VGA Info](#vga-info)
-
-Install ATI Drivers
-
-    sudo apt-add-repository ppa:xorg-edgers/ppa
-    sudo apt-get update
-
-    sudo apt-get install -y fglrx
-    sudo amdconfig --initial
-    sudo apt-get install -y gksu
-
-**To Edit Catalyst Settings**; Type the following in the Global Launcher *(Super Key/Windows Key)*:
-
-    gksu amdcccle
-
-Remove ATI Drivers
-
-    sudo apt-get remove --purge fglrx fglrx_* fglrx-amdcccle* fglrx-dev*
-    sudo rm /etc/X11/xorg.conf
-    sudo apt-get install --reinstall xserver-xorg-core libgl1-mesa-glx libgl1-mesa-dri libgl1-mesa-glx libgl1-mesa-dri
-    sudo dpkg-reconfigure xserver-xorg
-
+    TDB
 
 
 ### Utilities
@@ -552,20 +531,23 @@ on newer systems.
 
 ### Dark Theme
 
-I prefer [LongishDark Theme](https://github.com/akalongman/linux-longishdark-theme)
+I prefer [Vivacious ZBlackout Blue Pro Theme](http://www.noobslab.com/2016/03/vivacious-colors-gtk-theme-suite.html)
 
-    mkdir ~/.themes
-    git clone git@github.com:akalongman/linux-longishdark-theme.git ~/.themes/LongishDark
+Add repository
 
-Use the **Unity Tweak Tool** to set these. *(Apply Icon & Themes)*
+    sudo add-apt-repository ppa:ravefinity-project/ppa
+    sudo apt-get update
 
-To fix software center text issue enter these commands in terminal:
+Installation
 
-    sudo sed -i 's/F4F1F3/3c3b37/g' /usr/share/software-center/ui/gtk3/css/softwarecenter.css
+    sudo apt-get install vivacious-colors-gtk-dark
+    sudo apt-get install vivacious-colors-gtk-light
+    sudo apt-get install vivacious-unity-gtk-dark
+    sudo apt-get install vivacious-unity-gtk-light
 
-To revert back software center theme simply enter these commands:
 
-    sudo sed -i 's/3c3b37/F4F1F3/g' /usr/share/software-center/ui/gtk3/css/softwarecenter.css
+Use the **Unity Tweak Tool** to set vivacious-zblackout-blue-pro
+
 
 ### Sun Java
 

@@ -86,8 +86,8 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Phalcon Dev Tools](#phalcon-dev-tools)
         - [Secure Permissions](#secure-permissions)
     - [Python](#python)
-        -[Pip](#pip)
-        -[Virtualenv](#virtualenv)
+        - [Pip](#pip)
+        - [Virtualenv](#virtualenv)
     - [Ruby](#ruby)
     - [NodeJS](#nodejs)
 - [Customizations](#customizations)
@@ -1151,6 +1151,8 @@ Lastly, you could have a deploy script that does this for you, such as Python `F
 [(Back to top)](#table-of-contents)
 
 ## Python
+
+**- Installation packages:**
     - Pip
     - Virtualenv
 
@@ -1172,7 +1174,7 @@ Manually install Python. python installation required packages
     sudo apt -y install libffi-dev 
     sudo apt -y install libgmp-dev
 
-Download and extract Python using following command from [python_](#python) official site. You can also download latest(3.6.0) version in place of specified below.
+Download and extract Python using following command from [python](#python) official site. You can also download latest(3.6.0) version in place of specified below.
     
     wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz && tar -xvf Python-3.5.2.tgz
     sudo mv Python-3.5.2 /opt/ && cd /opt && cd Python-3.5.2
@@ -1188,7 +1190,7 @@ Check the Python version installed, using below command
     python3.5 -V
 
 ### Pip
-[Pip_](#pip) is a tool for installing and managing Python packages. Install Pip with Wget and Python.
+[Pip](#pip) is a tool for installing and managing Python packages. Install Pip with Wget and Python.
     
     wget https://bootstrap.pypa.io/get-pip.py
     sudo python3.5 get-pip.py
@@ -1202,7 +1204,7 @@ Check the version of Pip that is installed
     pip -V
 
 ### Virtualenv
-[Virtualenv_](#virtualenv) is a tool to create isolated Python environments. install the virtualenv package
+[Virtualenv](#virtualenv) is a tool to create isolated Python environments. install the virtualenv package
 
     pip install virtualenv
 
@@ -1608,7 +1610,3 @@ Clean System
 
 
 By [Avtandil Kikabidze aka LONGMAN](https://github.com/akalongman)
-
-.. _python: https://python.org
-.. _pip: https://pip.pypa.io/en/stable/
-.. _virtualenv: https://virtualenv.pypa.io/en/stable/

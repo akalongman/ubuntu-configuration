@@ -86,6 +86,8 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
         - [Phalcon Dev Tools](#phalcon-dev-tools)
         - [Secure Permissions](#secure-permissions)
     - [Python](#python)
+        - [Pip](#pip)
+        - [Virtualenv](#virtualenv)
     - [Ruby](#ruby)
     - [NodeJS](#nodejs)
 - [Customizations](#customizations)
@@ -1150,11 +1152,74 @@ Lastly, you could have a deploy script that does this for you, such as Python `F
 
 ## Python
 
+**- Installation packages:**
+    - Pip
+    - Virtualenv
+
 Python is installed by default on Ubuntu, version 2.7 is suitable. I strongly recommend installing `python-dev` for headers to compile certain PIP packages.
 
     sudo apt install -y python-dev libmysqlclient-dev
     sudo apt install -y python-pip
     sudo pip install fabric virtualenv virtualenvwrapper django
+
+Manually install Python. python installation required packages
+
+    sudo apt -y install build-essential checkinstall
+    sudo apt -y install libreadline-gplv2-dev libncursesw5-dev \
+                                 libsqlite3-dev tk-dev libgdbm-dev libc6-dev 
+    sudo apt -y install libjpeg-dev libpng-dev 
+    sudo apt -y install zlib1g-dev libbz2-dev
+    sudo apt -y install krb5-multidev 
+    sudo apt -y install openssl libssl-dev 
+    sudo apt -y install libffi-dev 
+    sudo apt -y install libgmp-dev
+
+Download and extract Python using following command from [python](#python) official site. You can also download latest(3.6.0) version in place of specified below.
+    
+    wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz && tar -xvf Python-3.5.2.tgz
+    sudo mv Python-3.5.2 /opt/ && cd /opt && cd Python-3.5.2
+
+Use below set of commands to compile python source code on your system using altinstall.
+    
+    ./configure
+    make
+    sudo make altinstall
+
+Check the Python version installed, using below command
+
+    python3.5 -V
+
+### Pip
+[Pip](#pip) is a tool for installing and managing Python packages. Install Pip with Wget and Python.
+    
+    wget https://bootstrap.pypa.io/get-pip.py
+    sudo python3.5 get-pip.py
+
+View a list of helpful commands
+
+    pip --help
+
+Check the version of Pip that is installed
+    
+    pip -V
+
+### Virtualenv
+[Virtualenv](#virtualenv) is a tool to create isolated Python environments. install the virtualenv package
+
+    pip install virtualenv
+
+Create an Environment with virtualenv
+
+    virtualenv -p python3.5 --no-site-packages env
+
+Activate script
+    
+    cd env
+    source bin/activate
+
+Deactivate
+    
+    deactivate
 
 ***
 [(Back to top)](#table-of-contents)
@@ -1545,4 +1610,3 @@ Clean System
 
 
 By [Avtandil Kikabidze aka LONGMAN](https://github.com/akalongman)
-

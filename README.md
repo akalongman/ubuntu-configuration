@@ -420,7 +420,7 @@ For writing image run:
 
 You must download HPLIP software from here: http://hplipopensource.com/hplip-web/gethplip.html
 
-After install .run package [how?](https://help.ubuntu.com/community/InstallingRunPackage) and run.
+After install .run package ([how?](https://help.ubuntu.com/community/InstallingRunPackage)) and run.
 Follow the wizard and add neccessary HP printer
 
 

@@ -29,6 +29,8 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [Enable Native Virtualization](#enable-native-virtualization)
     - [Format USB](#format-usb)
     - [Write iso Image to USB](#write-iso-image-to-usb)
+    - [Adding Printers](adding-printers)
+        - [HP](hp)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
@@ -410,6 +412,16 @@ Make sure the USB device is unmounted (not safely removed, but unmounted) If it 
 For writing image run:
 
     sudo dd bs=4M if=path/to/your/iso/file.iso of=/dev/sd[that 1 letter]
+
+
+## Adding Printers
+
+### HP
+
+You must download HPLIP software from here: http://hplipopensource.com/hplip-web/gethplip.html
+
+After install .run package [how?](https://help.ubuntu.com/community/InstallingRunPackage) and run.
+Follow the wizard and add neccessary HP printer
 
 
 ***
@@ -1166,21 +1178,21 @@ Manually install Python. python installation required packages
 
     sudo apt -y install build-essential checkinstall
     sudo apt -y install libreadline-gplv2-dev libncursesw5-dev \
-                                 libsqlite3-dev tk-dev libgdbm-dev libc6-dev 
-    sudo apt -y install libjpeg-dev libpng-dev 
+                                 libsqlite3-dev tk-dev libgdbm-dev libc6-dev
+    sudo apt -y install libjpeg-dev libpng-dev
     sudo apt -y install zlib1g-dev libbz2-dev
-    sudo apt -y install krb5-multidev 
-    sudo apt -y install openssl libssl-dev 
-    sudo apt -y install libffi-dev 
+    sudo apt -y install krb5-multidev
+    sudo apt -y install openssl libssl-dev
+    sudo apt -y install libffi-dev
     sudo apt -y install libgmp-dev
 
 Download and extract Python using following command from [python](#python) official site. You can also download latest(3.6.0) version in place of specified below.
-    
+
     wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz && tar -xvf Python-3.5.2.tgz
     sudo mv Python-3.5.2 /opt/ && cd /opt && cd Python-3.5.2
 
 Use below set of commands to compile python source code on your system using altinstall.
-    
+
     ./configure
     make
     sudo make altinstall
@@ -1191,7 +1203,7 @@ Check the Python version installed, using below command
 
 ### Pip
 [Pip](#pip) is a tool for installing and managing Python packages. Install Pip with Wget and Python.
-    
+
     wget https://bootstrap.pypa.io/get-pip.py
     sudo python3.5 get-pip.py
 
@@ -1200,7 +1212,7 @@ View a list of helpful commands
     pip --help
 
 Check the version of Pip that is installed
-    
+
     pip -V
 
 ### Virtualenv
@@ -1213,12 +1225,12 @@ Create an Environment with virtualenv
     virtualenv -p python3.5 --no-site-packages env
 
 Activate script
-    
+
     cd env
     source bin/activate
 
 Deactivate
-    
+
     deactivate
 
 ***

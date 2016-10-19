@@ -1252,9 +1252,8 @@ For Ruby RVM (Version Management)
 ## NodeJS
 I am using a PPA to fix the nodejs path issue(s)
 
-    curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     sudo apt install -y nodejs
-    sudo chown -R $(whoami) ~/.npm
     sudo npm install bower gulp grunt-cli webpack -g
 
 If installing coffee-script and typing `$ coffee` produces an error, make sure coffee is not within the $PATH

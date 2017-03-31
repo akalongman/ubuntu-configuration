@@ -94,6 +94,7 @@ This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop),
     - [NodeJS](#nodejs)
 - [Customizations](#customizations)
     - [System Tweaks](#system-tweaks)
+        - [Configure Compiz](#configure-compiz)
         - [Increase Inotify Watches Limit](#increase-inotify-watches-limit)
         - [Disable Git Certificate Verification](#disable-git-certificate-verification)
     - [Shortcuts](#shortcuts)
@@ -1267,6 +1268,10 @@ If installing coffee-script and typing `$ coffee` produces an error, make sure c
 
 ## System Tweaks
 
+### Configure Compiz
+
+Open CompizConfig Settings Manager app and from preferences menu import file `./os/home/compiz/Longish Profile.profile` (included in current repository)
+
 ### Increase Inotify Watches Limit
 
 Open ```sysctl.conf```
@@ -1596,10 +1601,6 @@ Hide system apps
 
     sudo sed -i 's/NoDisplay=false/NoDisplay=true/g' /etc/xdg/autostart/*.desktop
 
-Remove Amazon from dash
-
-    sudo apt purge unity-webapps-common
-
 Remove rythmbox audio player
 
     sudo apt purge rhythmbox
@@ -1607,6 +1608,10 @@ Remove rythmbox audio player
 Remove Totem video player
 
     sudo apt purge totem
+
+Remove Unwanted Lenses
+
+    sudo apt autoremove unity-lens-music unity-lens-photos unity-lens-shopping unity-lens-video
 
 Clean System
 

@@ -176,9 +176,13 @@ Disks UUID
 
 #### Packages
 
-List of Packages
+List all installed Packages
 
     dpkg -l
+
+List only packages which were expressly installed
+
+    aptitude search '~i!~M'
 
 #### Other Commands
 

@@ -414,6 +414,8 @@ or
 
     lsblk
 
+If you want write Windows ISO on the USB, use this method: [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
+
 Make sure the USB device is unmounted (not safely removed, but unmounted) If it is mounted you can unmount it:
 
     sudo umount /dev/sd[1 letter][optionally 1 number]
@@ -898,9 +900,9 @@ Installation
     sudo apt update && sudo apt install -y httpie
 
 
-
 ### USB Maker for Windows ISO on Linux
-You can easily use `Startup Disk Creator` and `UNetbootin` to create Linux to USB. But if you need Windows to USB from your Linux OS use Win USB:
+You can easily use `Startup Disk Creator` and `UNetbootin` to create Linux to USB. 
+But if you need Windows to USB from your Linux OS use Win USB:
 
     sudo add-apt-repository -y ppa:colingille/freshlight
     sudo sh -c "sed -i 's/wily/vivid/g' /etc/apt/sources.list.d/colingille-ubuntu-freshlight-$(lsb_release -sc).list"

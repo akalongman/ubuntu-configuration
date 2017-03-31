@@ -1,6 +1,10 @@
 # Configuration of Ubuntu 16.04 Xenial Xerus
 
-This is for a __Debian__ based OS, such as: [Ubuntu](http://ubuntu.com/desktop), [Mint](http://www.linuxmint.com/), and [Elementary OS](http://elementaryos.org/). I prefer Ubuntu
+This guide is for [Ubuntu](http://ubuntu.com/desktop), but also compatible with a other __Debian__ based OS as well, like [Mint](http://www.linuxmint.com/), [Elementary OS](http://elementaryos.org/), etc.
+
+All commands/configurations is tested (I am currently use this configuration), but anyway, everything you do is "at your own risk".
+
+If you found any issue, please let me know on [Issues Page](https://github.com/akalongman/ubuntu-configuration/issues) or via email akalongman@gmail.com
 
 ***
 

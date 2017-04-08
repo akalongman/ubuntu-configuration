@@ -1047,19 +1047,19 @@ To illustrate this if we went to a domain testing.com.dev the VirtualDocumentRoo
 
     /var/www/html/domains/testing.com
 
-If you have internet access, no need to add *.dev domains to your hosts file (/etc/hosts), anyway works perfectly.
+If you have internet access, no need to add `*.dev` domains to your hosts file (/etc/hosts), should work without it.
 
-But if .dev domains not works, you can add automatic .dev domain resolving on your local machine:
+But if `.dev` domains not works on some reason, you can add automatic `.dev` domain resolving on your local machine:
 
     sudo vim /etc/NetworkManager/dnsmasq.d/dev-tld
 
-And enter:
+And write:
 
     local=/dev/
-    address=/dev/127.0.0.5
+    address=/dev/127.0.0.1
 
-The first command says *.dev requests can't be forwarded to your real DNS server.
-The second says *.dev resolves to 127.0.0.5 which is localhost.
+The first command says `*.dev` requests can't be forwarded to your real DNS server.
+The second says `*.dev` resolves to `127.0.0.1` which is localhost.
 
 And restart network-manager:
 

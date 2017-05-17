@@ -85,6 +85,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
             - [Configure Dynamic Virtualhosts](#apache-configure-dynamic-virtualhosts)
         - [Nginx](#nginx)
         - [MySQL](#mysql)
+        - [PostgreSQL](#postgresql)
         - [MyCLI](#mycli) Terminal MySQL Utility
         - [Memcached](#Memcached)
         - [Redis](#redis)
@@ -1095,6 +1096,10 @@ Usage (See the documents from the git link above for more example):
 
     mycli -h localhost -u root
     mycli -h localhost -u root -p
+
+### PostgreSQL
+
+    sudo apt install -y postgresql libpq-dev
 
 ### Redis
 Install redis latest stable version

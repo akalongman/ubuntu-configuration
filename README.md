@@ -499,8 +499,7 @@ Remove Nvidia Drivers
 
 ### Install ATI Drivers
 
-    TBD
-
+For installing ATI drivers, read this official documentation: http://support.amd.com/en-us/kb-articles/Pages/AMDGPU-PRO-Install.aspx
 
 ### Utilities
 

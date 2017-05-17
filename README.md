@@ -61,6 +61,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [SmartGit](#smart-git)
         - [FileZilla](#filezilla) (sFTP Client)
         - [Spotify](#spotify)
+        - [Google Music Player](#google-music-player)
         - [Meld Diff Tool](#meld-diff-tool)
         - [Vagrant](#vagrant)
         - [Docker](#docker)
@@ -768,6 +769,12 @@ Installation
 
     sudo apt install -y filezilla
 
+### Google Music Player
+
+This is a beautiful cross platform Desktop Player for Google Play Music.
+
+deb file can be downloaded from https://www.googleplaymusicdesktopplayer.com/
+
 ### Spotify
 
 Installation
@@ -902,7 +909,6 @@ Audio CDs, VCDs, and various streaming protocols.
 Installation
 
     sudo apt install -y vlc
-
 
 ### Httpie
 You can easily use httpie from terminal: ```http get https://google.com```

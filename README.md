@@ -74,6 +74,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Slack](#slack)
         - [Gimp](#gimp)
         - [VLC Player](#vlc-player)
+        - [KDEnlive Video Editor](#kdenlive-video-editor)
         - [Httpie](#httpie) (Terminal HTTP client)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
     - [LAMP](#lamp)
@@ -909,6 +910,12 @@ Audio CDs, VCDs, and various streaming protocols.
 Installation
 
     sudo apt install -y vlc
+
+### KDEnlive Video Editor
+
+Installation
+
+    sudo apt install -y kdenlive
 
 ### Httpie
 You can easily use httpie from terminal: ```http get https://google.com```

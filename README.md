@@ -723,7 +723,7 @@ Installation
 
     sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
     wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc -O- | sudo apt-key add -
-    sudo apt update && sudo apt install -y virtualbox-5.0
+    sudo apt update && sudo apt install -y virtualbox-5.1
 
 Suggested to [Enable Native Virtualization](#enable-native-virtualization)
 

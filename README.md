@@ -507,7 +507,7 @@ Remove Nvidia Drivers
 
 **Install the Utilities:**
 
-    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager python-gpgme sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn easy-rsa network-manager-openvpn-gnome
+    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager python-gpgme sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn easy-rsa network-manager-openvpn-gnome libdbusmenu-gtk4:i386
 
 To setup the git defaults
 

@@ -72,6 +72,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Telegram](#telegram)
         - [Slack](#slack)
         - [Gimp](#gimp)
+        - [VLC Player](#vlc-player)
         - [Httpie](#httpie) (Terminal HTTP client)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
     - [LAMP](#lamp)
@@ -892,6 +893,16 @@ Installation
 After run:
 
     sudo apt update && sudo apt install -y gimp gimp-data gimp-plugin-registry gimp-data-extras
+
+### VLC Player
+
+VLC is a free and open source cross-platform multimedia player and framework that plays most multimedia files as well as DVDs, 
+Audio CDs, VCDs, and various streaming protocols.
+
+Installation
+
+    sudo apt install -y vlc
+
 
 ### Httpie
 You can easily use httpie from terminal: ```http get https://google.com```

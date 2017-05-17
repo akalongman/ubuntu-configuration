@@ -114,7 +114,6 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Enable Minimize App on Dash Click](#enable-minimize-app-on-dash-click)
     - [Disable Window Grouping](#disable-window-grouping)
     - [Install Custom Wallpaper](#install-custom-wallpaper)
-    - [Change Greeter Background](#change-greeter-background)
     - [Add Georgian Keyboard](#add-georgian-keyboard)
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Sound Indicator Not Showing](#sound-indicator-not-showing)
@@ -1387,21 +1386,6 @@ For ```convert``` command you need install package ```imagemagick```
     sudo convert ~/Dropbox/images/DSM.jpg ~/Pictures/Wallpapers/DSM.png
     gsettings set org.gnome.desktop.background picture-uri file:///home/longman/Pictures/Wallpapers/DSM.png
 
-
-## Change Greeter Background
-
-Copy image to ```/usr/share/backgrounds```
-
-    sudo cp ~/Pictures/Wallpapers/DSM.png /usr/share/backgrounds
-
-Check permissions of your file
-
-And after open theme file
-
-    sudo vim /usr/share/glib-2.0/schemas/com.canonical.unity-greeter.gschema.xml
-
-Find the key name ```background``` and change the default to the path of your picture in "/usr/share/backgrounds/".
-For the key name ```draw-user-backgrounds```, change the default value to ```false```.
 
 ## Add Georgian Keyboard
 

@@ -497,7 +497,7 @@ Remove Nvidia Drivers
 
 ### Install ATI Drivers
 
-    TDB
+    TBD
 
 
 ### Utilities

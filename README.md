@@ -883,11 +883,19 @@ Installation
 
 ### Slack
 
-Canonical Partner's repository must be enabled for installation via terminal:
+Install via terminal:
 
-    sudo apt install -y slack-desktop
+    wget -O - https://packagecloud.io/slacktechnologies/slack/gpgkey  | sudo apt-key add -
 
-Or download from https://slack.com/downloads and run manually
+Create the file `/etc/apt/sources.list.d/slack.list` with the following content
+
+    deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main
+    
+And run:
+    
+    sudo apt update && sudo apt install -y slack-desktop
+    
+Or download .deb from https://slack.com/downloads and install manually
 
 
 ### Gimp

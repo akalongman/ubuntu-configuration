@@ -101,6 +101,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Go](#go)
     - [Ruby](#ruby)
     - [NodeJS](#nodejs)
+    - [Yarn](#yarn)
 - [Customizations](#customizations)
     - [System Tweaks](#system-tweaks)
         - [Configure Compiz](#configure-compiz)
@@ -1329,6 +1330,18 @@ I am using a PPA to fix the nodejs path issue(s)
 If installing coffee-script and typing `$ coffee` produces an error, make sure coffee is not within the $PATH
 
     echo $PATH
+
+***
+[(Back to top)](#table-of-contents)
+
+## Yarn
+For installation Yarn package manager run:
+
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
+Note: Ubuntu 17.04 comes with cmdtest installed by default. If you’re getting errors from installing yarn, 
+you may want to run `sudo apt remove cmdtest` first. Refer to [this](https://github.com/yarnpkg/yarn/issues/2821) for more information.
 
 ***
 [(Back to top)](#table-of-contents)

@@ -98,6 +98,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Python](#python)
         - [Pip](#pip)
         - [Virtualenv](#virtualenv)
+    - [Go](#go)
     - [Ruby](#ruby)
     - [NodeJS](#nodejs)
 - [Customizations](#customizations)
@@ -1281,6 +1282,29 @@ Deactivate
 
 ***
 [(Back to top)](#table-of-contents)
+
+
+## Go
+Install Golang. You can check latest version of Golang here https://golang.org/dl/#featured
+While writing this article, lastest version was 1.9
+
+    sudo add-apt-repository -y ppa:gophers/archive
+    sudo apt-get -y update && sudo apt-get install golang-1.9
+
+After that your installation will be in the `/usr/lib/go-1.9`
+I recommend create symlink:
+
+    sudo ln -s /usr/lib/go-1.9 /usr/local/go
+
+And Add `/usr/local/go/bin` to the PATH environment variable. 
+You can do this by adding this line to your `/etc/profile` (for a system-wide installation) or `$HOME/.profile`:
+    
+    PATH="$PATH:/usr/local/go/bin"
+
+
+***
+[(Back to top)](#table-of-contents)
+
 
 ## Ruby
 Install Ruby 2.X with header files in `ruby2.0-dev`, this will keep your gems from having issues.

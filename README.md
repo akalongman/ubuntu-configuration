@@ -36,7 +36,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Convert .ISO to .IMG format](#convert-iso-to-img-format)
     - [Add Printers](#add-printers)
         - [HP](#hp)
-    - [Update BIOS on Laptop/PC](#update-bios-on-laptop/pc)
+    - [Update BIOS on Laptop/PC](#update-bios-on-laptoppc)
         - [Lenovo](#update-bios-on-lenovo)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
@@ -640,20 +640,11 @@ And update alternatives
 ### Wine
 To run windows applications Wine is the best option. I often use HeidiSQL with Wine.
 
-    sudo add-apt-repository -y ppa:ubuntu-wine/ppa
-    sudo apt update
-
-You can check latest version of wine here https://www.winehq.org/
-While writing this article, lastest version was 1.8
-
-If you need a 64bit installation:
-
-    sudo apt install -y wine1.8-amd64 winetricks
-
-If you need a 32bit installation:
-
-    sudo apt install -y wine1.8-i386 winetricks
-
+    wget https://dl.winehq.org/wine-builds/Release.key
+    sudo apt-key add Release.key
+    sudo apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/'
+    sudo apt update && sudo apt install -y winehq-stable
+    
 ### Nautilus-Actions
 Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.
 If you don't want to create your own, you can install Nautilus-Actions-Extra to get a package of particularly useful user-created tools.

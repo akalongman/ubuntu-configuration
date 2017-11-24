@@ -80,31 +80,34 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [KDEnlive Video Editor](#kdenlive-video-editor)
         - [Httpie](#httpie) (Terminal HTTP client)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
-    - [LAMP](#lamp)
-        - [PHP 5.6](#php-56)
-        - [PHP 7.0](#php-70)
-        - [Composer](#composer)
-        - [PHPUnit](#phpunit)
-        - [Apache](#apache)
-            - [Installation](#apache-installation)
-            - [Enable php-mcrypt](#apache-enable-php-mcrypt)
-            - [Configure Dynamic Virtualhosts](#apache-configure-dynamic-virtualhosts)
-        - [Nginx](#nginx)
-        - [MySQL](#mysql)
-        - [PostgreSQL](#postgresql)
-        - [MyCLI](#mycli) Terminal MySQL Utility
-        - [Memcached](#Memcached)
-        - [Redis](#redis)
-        - [Phalcon](#phalcon)
-        - [Phalcon Dev Tools](#phalcon-dev-tools)
-        - [Secure Permissions](#secure-permissions)
-    - [Python](#python)
-        - [Pip](#pip)
-        - [Virtualenv](#virtualenv)
-    - [Go](#go)
-    - [Ruby](#ruby)
-    - [NodeJS](#nodejs)
-    - [Yarn](#yarn)
+    - [Development](#development)
+        - [LAMP](#lamp)
+            - [PHP 5.6](#php-56)
+            - [PHP 7.0](#php-70)
+            - [Composer](#composer)
+            - [PHPUnit](#phpunit)
+            - [Apache](#apache)
+                - [Installation](#apache-installation)
+                - [Enable php-mcrypt](#apache-enable-php-mcrypt)
+                - [Configure Dynamic Virtualhosts](#apache-configure-dynamic-virtualhosts)
+            - [Nginx](#nginx)
+            - [MySQL](#mysql)
+            - [PostgreSQL](#postgresql)
+            - [MyCLI](#mycli) Terminal MySQL Utility
+            - [Memcached](#Memcached)
+            - [Redis](#redis)
+            - [Phalcon](#phalcon)
+            - [Phalcon Dev Tools](#phalcon-dev-tools)
+            - [Secure Permissions](#secure-permissions)
+        - [Python](#python)
+            - [Pip](#pip)
+            - [Virtualenv](#virtualenv)
+        - [Go](#go)
+        - [Ruby](#ruby)
+        - [NodeJS](#nodejs)
+        - [Yarn](#yarn)
+    - [Gaming](#gaming)
+        - [Steam](#steam)
 - [Customizations](#customizations)
     - [System Tweaks](#system-tweaks)
         - [Configure Compiz](#configure-compiz)
@@ -983,7 +986,9 @@ We replace the sources.list back to vivid in order to get it to work for ubuntu 
 ***
 [(Back to top)](#table-of-contents)
 
-## LAMP
+## Development
+
+### LAMP
 Linux Apache MySQL PHP
 
 **- Installation for the following:**
@@ -995,7 +1000,7 @@ Linux Apache MySQL PHP
 - Redis
 - and Header Files.
 
-### PHP 5.6
+#### PHP 5.6
 It's important to install **php5-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
@@ -1006,7 +1011,7 @@ If you are looking for more PHP modules try:
     sudo apt-cache search php5-
 
 
-### PHP 7.0
+#### PHP 7.0
 It's important to install **php7.0-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
@@ -1016,7 +1021,7 @@ If you are looking for more PHP modules try:
 
     sudo apt-cache search php7.0-
 
-### Composer
+#### Composer
 
     curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
 
@@ -1031,13 +1036,13 @@ And add this lines in your .bashrc file:
     # PHPUnit needs xdebug for coverage. In this case, just make an alias with php command prefix.
     alias phpunit='php $(which phpunit)'
 
-### PHPUnit
+#### PHPUnit
 
     wget https://phar.phpunit.de/phpunit.phar && chmod +x phpunit.phar && sudo mv phpunit.phar /usr/local/bin/phpunit
 
-### Apache
+#### Apache
 
-#### Apache: Installation
+##### Apache: Installation
 
 For PHP 5.6
 
@@ -1053,7 +1058,7 @@ Tweak Apache (Remove apache warning about server's fully qualified domain name)
     echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
     sudo a2enconf fqdn && sudo service apache2 reload
 
-#### Apache: Enable php-mcrypt & mod_rewrite
+##### Apache: Enable php-mcrypt & mod_rewrite
 
 Enable mod_rewrite
 
@@ -1073,7 +1078,7 @@ If you are looking for more Apache modules try:
 
     sudo apt-cache search libapache2-mod
 
-#### Apache: Configure dynamic virtualhosts
+##### Apache: Configure dynamic virtualhosts
 
 Enable module ```vhost_alias```
 
@@ -1134,7 +1139,7 @@ And restart network-manager:
 
     sudo service network-manager restart
 
-### Nginx
+#### Nginx
 Or if you prefer to use nginx
 
 For stable version
@@ -1150,12 +1155,12 @@ And after install
     sudo apt update && sudo apt install -y nginx
 
 
-### MySQL
+#### MySQL
 
     sudo apt install -y mysql-server mysql-client
     sudo sed -i 's/bind-address/bind-address = 0.0.0.0#/' /etc/mysql/my.cnf
 
-### MyCLI
+#### MyCLI
 This is a very nice utility [https://github.com/dbcli/mycli](https://github.com/dbcli/mycli)
 
     pip install mycli
@@ -1165,38 +1170,38 @@ Usage (See the documents from the git link above for more example):
     mycli -h localhost -u root
     mycli -h localhost -u root -p
 
-### PostgreSQL
+#### PostgreSQL
 
     sudo apt install -y postgresql libpq-dev
 
-### Redis
+#### Redis
 Install redis latest stable version
 
     sudo add-apt-repository -y ppa:chris-lea/redis-server
     sudo apt update && sudo apt install -y redis-server
 
-### Memcached
+#### Memcached
 
     sudo apt install -y memcached php-memcached
 
-### Java Runtime
+#### Java Runtime
 
     sudo apt install -y default-jre
 
-### Phalcon
+#### Phalcon
 
     sudo apt-add-repository ppa:phalcon/stable
     sudo apt update
     sudo apt install -y php5-phalcon
 
-### Phalcon Dev Tools
+#### Phalcon Dev Tools
 This is an easy to use install script that will cleanup after itself. It can also be used for updating:
 
     sudo bash install_phalcon_devtools.sh
 
 To test it run: `$ phalcon`
 
-### Secure Permissions
+#### Secure Permissions
 We will use the Access Control Lists (ACL) or (Filesystem Access Control List). We will use group permissions for folders so you don't have to make the public writable, because `777` is dangerous.
 
     # Make sure you have ACL installed
@@ -1246,7 +1251,7 @@ Lastly, you could have a deploy script that does this for you, such as Python `F
 
 [(Back to top)](#table-of-contents)
 
-## Python
+### Python
 
 **- Installation packages:**
     - Pip
@@ -1285,7 +1290,7 @@ Check the Python version installed, using below command
 
     python3.5 -V
 
-### Pip
+#### Pip
 [Pip](#pip) is a tool for installing and managing Python packages. Install Pip with Wget and Python.
 
     wget https://bootstrap.pypa.io/get-pip.py
@@ -1299,7 +1304,7 @@ Check the version of Pip that is installed
 
     pip -V
 
-### Virtualenv
+#### Virtualenv
 [Virtualenv](#virtualenv) is a tool to create isolated Python environments. install the virtualenv package
 
     pip install virtualenv
@@ -1321,7 +1326,7 @@ Deactivate
 [(Back to top)](#table-of-contents)
 
 
-## Go
+### Go
 Install Golang. You can check latest version of Golang here https://golang.org/dl/#featured
 While writing this article, lastest version was 1.9
 
@@ -1343,7 +1348,7 @@ You can do this by adding this line to your `/etc/profile` (for a system-wide in
 [(Back to top)](#table-of-contents)
 
 
-## Ruby
+### Ruby
 Install Ruby 2.X with header files in `ruby2.0-dev`, this will keep your gems from having issues.
 
     sudo apt install -y ruby2.0 ruby2.0-dev
@@ -1356,7 +1361,7 @@ For Ruby RVM (Version Management)
 ***
 [(Back to top)](#table-of-contents)
 
-## NodeJS
+### NodeJS
 I am using a PPA to fix the nodejs path issue(s)
 
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
@@ -1370,7 +1375,7 @@ If installing coffee-script and typing `$ coffee` produces an error, make sure c
 ***
 [(Back to top)](#table-of-contents)
 
-## Yarn
+### Yarn
 For installation Yarn package manager run:
 
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -1381,6 +1386,14 @@ you may want to run `sudo apt remove cmdtest` first. Refer to [this](https://git
 
 ***
 [(Back to top)](#table-of-contents)
+
+
+## Gaming
+
+### Steam
+Ultimate entertainment platform. http://store.steampowered.com/
+
+    sudo apt install -y steam
 
 # Customizations
 

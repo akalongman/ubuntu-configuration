@@ -861,8 +861,7 @@ Working with Docker is a pain if your user is not configured correctly, so add y
 
 Log out and log in from your server to activate your new groups.
 
-    sudo apt -y install python-pip
-    sudo pip install docker-compose
+    sudo apt install -y docker-compose
 
 ### Audacious Audio Player
 

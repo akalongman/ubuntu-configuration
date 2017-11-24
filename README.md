@@ -754,12 +754,17 @@ Advanced
 Download from http://dbeaver.jkiss.org/download/
 
 ### VirtualBox
+VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use.
+
+Check latest version number on https://www.virtualbox.org/wiki/Downloads
+
+During writing this manual, latest version was 5.2
 
 Installation
 
     sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
     wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc -O- | sudo apt-key add -
-    sudo apt update && sudo apt install -y virtualbox-5.1
+    sudo apt update && sudo apt install -y virtualbox-5.2
 
 Suggested to [Enable Native Virtualization](#enable-native-virtualization)
 

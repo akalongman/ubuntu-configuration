@@ -52,6 +52,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Hardinfo](#hardinfo) (Everest/Aida alternative for linux)
         - [Caffeine](#caffeine) (Prevent the activation of the screensaver when using full-screen windows)
         - [GNU Screen](#gnu-screen) (Full-screen window manager that multiplexes a physical terminal between several processes)
+        - [Neofetch](#neofetch) (A fast, highly customizable system info script)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
@@ -695,6 +696,19 @@ Then, at any time, you can create new (full-screen) windows with other programs 
 Programs continue to run when their window is currently not visible and even when the whole screen session is detached from the users terminal.
 
     sudo apt install -y screen
+
+
+### Neofetch
+A fast, highly customizable system info script
+
+Neofetch is a CLI system information tool written in BASH. 
+Neofetch displays information about your system next to an image, your OS logo, or any ASCII file of your choice. 
+The main purpose of Neofetch is to be used in screenshots to show other users what OS/Distro you're running, what Theme/Icons you're using etc.
+
+Installation:
+
+    sudo add-apt-repository ppa:dawidd0811/neofetch
+    sudo apt update && sudo apt install -y neofetch
 
 
 ***

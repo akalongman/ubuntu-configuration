@@ -1442,7 +1442,7 @@ Install emulator:
 
     sudo apt install -y pcsxr
 
-pscxr can simulate a bios file. However if you need to use a bios, [download](files/pcsxr/SCPH1001.BIN) and move the file into `~/.pcsx/bios/`.
+pscxr can simulate a bios file. However if you need to use a bios, [download](files/pcsxr/SCPH1001.BIN?raw=1) and move the file into `~/.pcsx/bios/`.
 
 Download games from http://redump.org/discs/system/psx/ or https://rutracker.org/forum/viewtopic.php?t=4496017 and put under `~/.pcsx/games/`
 

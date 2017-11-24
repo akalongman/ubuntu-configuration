@@ -33,6 +33,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Enable Native Virtualization](#enable-native-virtualization)
     - [Format USB](#format-usb)
     - [Write iso Image to USB](#write-iso-image-to-usb)
+    - [Convert .ISO to .IMG format](#convert-iso-to-img-format)
     - [Adding Printers](#adding-printers)
         - [HP](#hp)
 - [Installation Packages](#installation-packages)
@@ -428,6 +429,17 @@ Make sure the USB device is unmounted (not safely removed, but unmounted) If it 
 For writing image run:
 
     sudo dd bs=4M if=path/to/your/iso/file.iso of=/dev/sd[that 1 letter]
+
+
+## Convert .ISO to .IMG format
+
+Install the `genisoimage`
+
+    sudo apt install -y genisoimage
+
+And after run
+
+    geteltorito -o dest.img source.iso
 
 
 ## Adding Printers

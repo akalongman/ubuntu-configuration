@@ -34,8 +34,10 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Format USB](#format-usb)
     - [Write iso Image to USB](#write-iso-image-to-usb)
     - [Convert .ISO to .IMG format](#convert-iso-to-img-format)
-    - [Adding Printers](#adding-printers)
+    - [Add Printers](#add-printers)
         - [HP](#hp)
+    - [Update BIOS on Laptop/PC](#update-bios-on-laptop-pc)
+        - [Lenovo](#update-bios-on-lenovo)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
@@ -442,7 +444,7 @@ And after run
     geteltorito -o dest.img source.iso
 
 
-## Adding Printers
+## Add Printers
 
 ### HP
 
@@ -450,6 +452,33 @@ You must download HPLIP software from here: http://hplipopensource.com/hplip-web
 
 After install .run package ([how?](https://help.ubuntu.com/community/InstallingRunPackage)) and run.
 Follow the wizard and add neccessary HP printer
+
+## Update BIOS on Laptop/PC
+
+### Update BIOS on Lenovo
+
+- Go to support.lenovo.com (or better use a search engine because the Lenovo website is ugly) 
+and search for the BIOS upgrade of your laptop model.
+
+- Download the most recent ISO file. Look for "BIOS bootable update CD".
+
+- Convert the ISO image to IMG format via `geteltorito -o bios.img g2uj18us.iso` [Convert .ISO to .IMG format](#convert-iso-to-img-format)
+
+- Insert any USB stick into your laptop. The image file is just ~50 MB in size so even USB sticks with low capacity will work. 
+Keep in mind that the stick will be completely overwritten.
+
+- If you are in a graphical environment then unmount the USB stick.
+
+- Find out the device name of the stick. For example `/dev/sdb`. 
+Don't just assume it's sdb. If it's on another device on your laptop then you will destroy your data.
+
+- Copy the image to the USB stick: `dd if=bios.img of=/dev/sdb bs=1M`
+
+- Reboot your laptop and press F12 for booting device from your stick.
+
+- Make sure your laptop has its power supply plugged in. (It will refuse to update otherwise.)
+
+- Follow the instructions.
 
 
 ***

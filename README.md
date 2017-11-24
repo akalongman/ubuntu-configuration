@@ -839,11 +839,11 @@ Make sure linux headers already installed
 
     sudo apt install -y linux-headers-$(uname -r)
 
-Go to the http://downloads.vagrantup.com page of Vagrant and check for the latest release.
-After download latest
-
-    wget https://releases.hashicorp.com/vagrant/VERSION/vagrant_VERSION_x86_64.deb
-    dpkg -i vagrant_VERSION_x86_64.deb
+Go to the https://www.vagrantup.com/downloads.html page of Vagrant and check for the latest release.
+During writing this manual, last version was 2.0.1
+    
+    wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
+    sudo dpkg -i vagrant_2.0.1_x86_64.deb
 
 Reconfigure the VirtualBox DKMS:
 

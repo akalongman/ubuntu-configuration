@@ -57,7 +57,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
         - [Dropbox](#dropbox) (Allows users to create a special folder on their computers, which Dropbox then synchronizes so that it appears to be the same folder (with the same contents) regardless of which device is used to view it)
-        - [Sublime Text 3](#sublime-text-3)
+        - [Sublime Text 3](#sublime-text-3) (A sophisticated text editor for code, markup and prose)
         - [Pidgin](#pidgin)
         - [DBeaver](#dbeaver) (Database management tool)
         - [VirtualBox](#virtualbox)
@@ -80,6 +80,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [VLC Player](#vlc-player)
         - [KDEnlive Video Editor](#kdenlive-video-editor)
         - [Httpie](#httpie) (Terminal HTTP client)
+        - [Peek](#peek) (Simple animated GIF screen recorder with an easy to use interface)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
     - [Development](#development)
         - [LAMP](#lamp)
@@ -742,10 +743,26 @@ Installation
     sudo apt update && sudo apt install -y dropbox
 
 ### Sublime Text 3
+A sophisticated text editor for code, markup and prose
 
-Download from http://www.sublimetext.com/3
+Add repository:
 
-Configuration synchronization explained [here](#sync-sublime-text)
+    wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+    sudo apt-get install apt-transport-https
+    
+Stable version:
+
+    echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+    
+Dev version:
+
+    echo "deb https://download.sublimetext.com/ apt/dev/" | sudo tee /etc/apt/sources.list.d/sublime-text.list    
+    
+Install:
+    
+    sudo apt-get update && sudo apt-get install -y sublime-text
+    
+Configuration of synchronization between devices explained [here](#sync-sublime-text)
 
 ### Pidgin
 
@@ -979,11 +996,19 @@ Installation
     sudo apt install -y kdenlive
 
 ### Httpie
-You can easily use httpie from terminal: ```http get https://google.com```
+You can easily use httpie from terminal: `http get https://google.com`
 
 Installation
 
     sudo apt update && sudo apt install -y httpie
+
+### Peek
+Simple animated GIF screen recorder with an easy to use interface
+
+Installation
+
+    sudo add-apt-repository ppa:peek-developers/stable
+    sudo apt update && sudo apt install -y peek
 
 
 ### USB Maker for Windows ISO on Linux

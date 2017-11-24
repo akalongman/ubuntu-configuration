@@ -457,28 +457,28 @@ Follow the wizard and add neccessary HP printer
 
 ### Update BIOS on Lenovo
 
-- Go to support.lenovo.com (or better use a search engine because the Lenovo website is ugly) 
+1. Go to support.lenovo.com (or better use a search engine because the Lenovo website is ugly) 
 and search for the BIOS upgrade of your laptop model.
 
-- Download the most recent ISO file. Look for "BIOS bootable update CD".
+2. Download the most recent ISO file. Look for "BIOS bootable update CD".
 
-- Convert the ISO image to IMG format via `geteltorito -o bios.img g2uj18us.iso` [Convert .ISO to .IMG format](#convert-iso-to-img-format)
+3. Convert the ISO image to IMG format via `geteltorito -o bios.img g2uj18us.iso` [Convert .ISO to .IMG format](#convert-iso-to-img-format)
 
-- Insert any USB stick into your laptop. The image file is just ~50 MB in size so even USB sticks with low capacity will work. 
+4. Insert any USB stick into your laptop. The image file is just ~50 MB in size so even USB sticks with low capacity will work. 
 Keep in mind that the stick will be completely overwritten.
 
-- If you are in a graphical environment then unmount the USB stick.
+5. If you are in a graphical environment then unmount the USB stick.
 
-- Find out the device name of the stick. For example `/dev/sdb`. 
+6. Find out the device name of the stick. For example `/dev/sdb`. 
 Don't just assume it's sdb. If it's on another device on your laptop then you will destroy your data.
 
-- Copy the image to the USB stick: `dd if=bios.img of=/dev/sdb bs=1M`
+7. Copy the image to the USB stick: `dd if=bios.img of=/dev/sdb bs=1M`
 
-- Reboot your laptop and press F12 for booting device from your stick.
+8. Reboot your laptop and press F12 for booting device from your stick.
 
-- Make sure your laptop has its power supply plugged in. (It will refuse to update otherwise.)
+9. Make sure your laptop has its power supply plugged in. (It will refuse to update otherwise.)
 
-- Follow the instructions.
+10. Follow the instructions.
 
 
 ***

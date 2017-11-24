@@ -53,6 +53,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Caffeine](#caffeine) (Prevent the activation of the screensaver when using full-screen windows)
         - [GNU Screen](#gnu-screen) (Full-screen window manager that multiplexes a physical terminal between several processes)
         - [Neofetch](#neofetch) (A fast, highly customizable system info script)
+        - [GParted](#gparted) (Partition editor for graphically managing disk partitions)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
@@ -712,6 +713,11 @@ Installation:
     sudo add-apt-repository ppa:dawidd0811/neofetch
     sudo apt update && sudo apt install -y neofetch
 
+### GParted
+Partition editor for graphically managing disk partitions https://gparted.sourceforge.io/
+
+    sudo apt install -y gparted
+
 
 ***
 [(Back to top)](#table-of-contents)
@@ -749,7 +755,7 @@ A sophisticated text editor for code, markup and prose
 Add repository:
 
     wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-    sudo apt-get install apt-transport-https
+    sudo apt install apt-transport-https
     
 Stable version:
 
@@ -761,7 +767,7 @@ Dev version:
     
 Install:
     
-    sudo apt-get update && sudo apt-get install -y sublime-text
+    sudo apt update && sudo apt install -y sublime-text
     
 Configuration of synchronization between devices explained [here](#sync-sublime-text)
 
@@ -1371,7 +1377,7 @@ Install Golang. You can check latest version of Golang here https://golang.org/d
 While writing this article, lastest version was 1.9
 
     sudo add-apt-repository -y ppa:gophers/archive
-    sudo apt-get -y update && sudo apt-get install golang-1.9
+    sudo apt -y update && sudo apt install golang-1.9
 
 After that your installation will be in the `/usr/lib/go-1.9`
 I recommend create symlink:

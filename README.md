@@ -36,7 +36,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Convert .ISO to .IMG format](#convert-iso-to-img-format)
     - [Add Printers](#add-printers)
         - [HP](#hp)
-    - [Update BIOS on Laptop/PC](#update-bios-on-laptop-pc)
+    - [Update BIOS on Laptop/PC](#update-bios-on-laptop/pc)
         - [Lenovo](#update-bios-on-lenovo)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)

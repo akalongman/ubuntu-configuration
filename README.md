@@ -109,7 +109,8 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [NodeJS](#nodejs)
         - [Yarn](#yarn)
     - [Gaming](#gaming)
-        - [Steam](#steam)
+        - [Steam](#steam) (Ultimate entertainment platform)
+        - [PCSXR](#pcsxr) (PlayStation 1 Emulator)
 - [Customizations](#customizations)
     - [System Tweaks](#system-tweaks)
         - [Configure Compiz](#configure-compiz)
@@ -1433,6 +1434,19 @@ you may want to run `sudo apt remove cmdtest` first. Refer to [this](https://git
 Ultimate entertainment platform. http://store.steampowered.com/
 
     sudo apt install -y steam
+
+### PCSXR
+PCSX-Reloaded - PlayStation 1 Emulator. https://pcsxr.codeplex.com/
+
+Install emulator:
+
+    sudo apt install -y pcsxr
+
+pscxr can simulate a bios file. However if you need to use a bios, [download](files/pcsxr/SCPH1001.BIN) and move the file into `~/.pcsx/bios/`.
+
+Download games from http://redump.org/discs/system/psx/ or https://rutracker.org/forum/viewtopic.php?t=4496017 and put under `~/.pcsx/games/`
+
+After that run PCSX, configure and play
 
 # Customizations
 

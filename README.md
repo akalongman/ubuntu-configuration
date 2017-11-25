@@ -17,6 +17,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Memory and Usage Info](#memory-and-usage-info)
         - [Disks](#disks)
         - [GUI Processes](#gui-processes)
+        - [Startup Times](#startup-times) (Find out the Culprit of a Slow Boot)
         - [Packages](#packages)
         - [Other Commands](#other-commands)
             - [Screenshots](#screenshots)
@@ -192,6 +193,16 @@ Disks UUID
 #### GUI Processes
 
     gnome-system-monitor
+
+#### Startup Times
+You can find out which service takes how much time to finish 
+starting up by entering the following command in terminal:
+
+    systemd-analyze blame
+
+Overall startup time you can find via:
+
+    systemd-analyze time
 
 #### Packages
 

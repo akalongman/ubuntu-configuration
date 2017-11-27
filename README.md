@@ -30,7 +30,12 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Mounting of Local Drives](#mounting-of-local-drives)
         - [Mounting of Network Drives](#mounting-of-network-drives)
         - [Mounting Amazon Cloud Drive](#mounting-amazon-cloud-drive)
-    - [Generate a New SSH Key](#generate-a-new-ssh-key)
+    - [SSH](#ssh)
+        - [Generate a New Key](#generate-a-new-key)
+        - [Connecting to a Host](#connecting-to-a-host)
+        - [.ssh Folder Permissions](#ssh-folder-permissions)
+        - [Using the Config File](#using-the-config-file)
+        - [Convert SSH to PEM](#convert-ssh-to-pem)
     - [Enable Native Virtualization](#enable-native-virtualization)
     - [Format USB](#format-usb)
     - [Write iso Image to USB](#write-iso-image-to-usb)
@@ -368,10 +373,54 @@ e.g. Upload your local /media/videos directory to the root of your Amazon Cloud 
     acd_cli upload -d -x 4 /media/videos /
 
 
-## Generate a new SSH key
+## SSH
+
+### Generate a New Key
 
     ssh-keygen -t rsa -C "your_email@example.com"
 
+### Connecting to a Host
+
+    ssh user@host.com  (default port is 22)
+    ssh user@host.com -p 8000 (connect to specific port)
+    ssh user@host.com -i ~/.ssh/id_rsa (connect with specific ssh key)
+
+### .ssh Folder Permissions
+
+    chmod 700 ~/.ssh
+    chmod 644 ~/.ssh/id_rsa.pub
+    chmod 600 ~/.ssh/id_rsa
+    chmod 600 ~/.ssh/known_hosts
+    chmod 600 ~/.ssh/authorized_keys
+
+### Using the Config File
+
+You can also create a ~/.ssh/config file and store entries such as:
+
+    Host aws
+    Hostname host.amazonaws.com
+    Port 22
+    Identityfile ~/.ssh/id_rsa
+    User myusername
+    
+    Host my-vps
+    Hostname 34.16.67.129
+    Port 22
+    User root
+   
+You can then simply type:
+    
+    ssh aws
+    ssh my-vps
+
+### Convert SSH to PEM
+
+Sometimes you may need a PEM format SSH Key. You can easily add this alongside your other SSH keys.
+
+    openssl rsa -in ~/.ssh/keyname_rsa -outform pem > keyname_rsa.pem
+    chmod 700 keyname_rsa.pem
+    
+    
 ## Enable Native Virtualization
 
 Instal tools

@@ -134,12 +134,13 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Install Custom Wallpaper](#install-custom-wallpaper)
     - [Add Georgian Keyboard](#add-georgian-keyboard)
 - [Ubuntu Fixes](#ubuntu-fixes)
+    - [Ubuntu Infinite Login](#ubuntu-infinite-login)
     - [Sound Indicator Not Showing](#sound-indicator-not-showing)
 - [Install Gnome 3](#install-gnome-3)
     - [Easy Window Resize](#easy-window-resize)
     - [Left or Right Close Buttons](#left-or-right-close-buttons)
     - [Fix Gnome Lockscreen](#fix-gnome-lockscreen)
-    - [My Gnome Extensions](#my-gnome-extensions)
+    - [Gnome Extensions](#gnome-extensions)
     - [Reload Gnome Freeze](#reload-gnome-freeze)
 - [Adjust Mouse and Devices](#adjust-mouse-and-devices)
 - [Virtual Machine Related](#virtual-machine-related)
@@ -1610,6 +1611,51 @@ Go to System "Settings" > "Keyboard" > "Text Entry" and add Georgian layout. Als
 # Ubuntu Fixes
 These are solutions to fix problems I've encountered.
 
+## Ubuntu Infinite Login
+
+When you try to login to Ubuntu and it relogs you back into the login screen, this is an infinite loop. 
+The only way I was able to fix it despite all the guides was combining a few of these together.
+
+The first step is to login to a terminal.
+
+    CTRL + ALT + F1  (Or F3)
+    
+Next, Login as your user who must be able to run sudo.    
+
+- **Home Folder Permissions**
+  - `ls -ld ~` should have these permission exactly as: `drwxr-xr-x`
+  - The user:group must be your, e.g. `john:john`
+  - To Fix: `sudo chmod 755 ~` and `sudo chown -R john:john ~`
+- **Temp Folder Permissions**
+  - `ls -ld /tmp` should have these permission exactly as: `drwxrwxrwt`
+  - The user:group must be `root:root` on `/tmp`
+  - To Fix: `sudo chmod a+wt /tmp`
+- **Xauthority Ownership**
+  - `ls -lta | grep .Xa` should be owned by your user, for example `john john`
+   - If it is `root root` or anything than your user/group it's wrong
+   - To Fix: `sudo chown jesse:jesse .Xauthority`
+- **Xsession Errors**
+  - This is just to make sure there are no syntax errors for your reference:
+    - To Check: `cat ~/.xsession-errors`
+    - You don't need to do anything if there are syntax errors, we will move the file
+- **Try Moving XAuthority**
+  - Sometimes it's as easy to moving Xauthority so a new is generated at login
+  - To Fix: `sudo ~/.Xauthority ~/.Xauthority.bak`
+- **Try Reconfiguring LightDM**
+  - Fix: `dpkg-reconfigure lightdm`, then select lightdm in the menu
+  - Lastly restart lightdm: `sudo service lightdm restart`
+- **Apt Auto Remove Problem**
+  - I read that it's possible `apt-autoremove` may accidentally remove `xubuntu-desktop`, `ubuntu-desktop` and LightDM reports no errors.
+    - The `ubuntu-desktop` will load the Unity interface
+    - The `xubuntu-desktop` will load a different interface I'm not familiar with
+    - To Fix: `sudo apt-get install ubuntu-desktop`
+  - **If you are using Gnome**, try following the post at [OMGUbuntu](http://www.omgubuntu.co.uk/2016/05/install-gnome-3-20-ubuntu-16-04-lts)
+    - After the Above Try: `sudo apt-get autoremove gnome-software && sudo apt-get install gnome-software`
+    - I was able to get Gnome-Classic working but not Gnome
+- **How to Ensure it Works**
+  - You might be able to login after one of the steps above if you don't reboot. However, to be certain, 
+    you want to reboot to ensure it is fixed, otherwise you'll be doing this over and over   
+
 ## Sound Indicator Not Showing
 This appears in the top-right menu on Unity. Tested in 14/15.
 
@@ -1619,11 +1665,11 @@ This will also fix Tweak UI if a sound item is missing.
 
 For Unity (Default)
 
-   killall unity-panel-service
+    sudo killall unity-panel-service
 
 For Gnome
 
-    killall gnome-panel
+    sudo killall gnome-panel
 
 # Install Gnome 3
 If you prefer Gnome 3 over the Unity desktop it's easy to install:
@@ -1656,12 +1702,13 @@ Move to left (terminal)
 
 
 ## Fix Gnome Lockscreen
-In terminal make sure this is false, then try your hotkey `ctrl+alt+l` or if you set it like min `super+l` in the settings:
+In terminal make sure this is false, then try your hotkey `ctrl+alt+l` or if you set it like `super+l` in the settings:
 
     gsettings set org.gnome.desktop.lockdown disable-lock-screen 'false'
 
-## My Gnome Extensions
-You need to use **Firefox** or **IceWeasle** at https://extensions.gnome.org/ to toggle these items. I suggest creating an account so you have a record.
+## Gnome Extensions
+You need to use **Firefox** or **IceWeasle** at https://extensions.gnome.org/ to toggle these items. 
+I suggest creating an account so you have a record.
 
 - **Must Have Extensions**
 - [Dash to Dock](https://extensions.gnome.org/extension/307/dash-to-dock/) :star::star::star::star::star:
@@ -1682,9 +1729,8 @@ You need to use **Firefox** or **IceWeasle** at https://extensions.gnome.org/ to
 - [Disconnect Wifi](https://extensions.gnome.org/extension/904/disconnect-wifi/) :star::star::star::star::star:
 - [Toggle Touchpad](https://extensions.gnome.org/extension/935/toggle-touchpad/) (For Laptops) :star::star::star::star::star:
 
-
 ## Reload Gnome Freeze
-This is a rare things for me, it happens much more in unity and requires a lot more "damaging" things. To fix a gnome that seems frozen do the following:
+This is a rare things, it happens much more in unity and requires a lot more "damaging" things. To fix a gnome that seems frozen do the following:
 
 <kbd>ALT + F2</kbd> enter in <kbd>r</kbd> (lowecase) and press <kbd>Enter</kbd>
 

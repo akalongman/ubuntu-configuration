@@ -44,6 +44,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [HP](#hp)
     - [Update BIOS on Laptop/PC](#update-bios-on-laptoppc)
         - [Lenovo](#update-bios-on-lenovo)
+    - [Sniff Local Traffic](#sniff-local-traffic)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
@@ -548,6 +549,25 @@ Don't just assume it's sdb. If it's on another device on your laptop then you wi
 
 10. Follow the instructions.
 
+
+
+## Sniff Local Traffic
+BetterCAP is a powerful, flexible and portable tool created to perform various types of MITM attacks against a network, 
+manipulate HTTP, HTTPS and TCP traffic in realtime, sniff for credentials and much more. 
+Full documentation https://www.bettercap.org
+
+Install dependencies
+
+    sudo apt install -y build-essential ruby-dev libpcap-dev
+
+And install BetterCAP
+
+    sudo gem install bettercap
+
+You can run sniffing via
+
+    sudo bettercap --sniffer
+    
 
 ***
 

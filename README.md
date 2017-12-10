@@ -1243,24 +1243,22 @@ and add the following lines to the bottom of file.
 
 This sets up a catch all for any domain coming in over port 80 (the default port for http traffic, if your using https you will need to use 443 - alternatively you could remove the port restriction).
 The important line here is the VirtualDocumentRoot. The tells Apache where your files will reside on disk.
-The %0 part takes the whole domain name and inserts it into the path. But I didn't want to have the .dev part of the domain in my folders on disk, otherwise we use %-2+
-To illustrate this if we went to a domain testing.com.dev the VirtualDocumentRoot would be:
+The %0 part takes the whole domain name and inserts it into the path. But I didn't want to have the `.test` part of the domain in my folders on disk, otherwise we use %-2+
+To illustrate this if we went to a domain somesite.com.test the VirtualDocumentRoot would be:
 
     /var/www/html/domains/testing.com
 
-If you have internet access, no need to add `*.dev` domains to your hosts file (/etc/hosts), should work without it.
+Now you have to add automatic `.test` domain resolving on your local machine:
 
-But if `.dev` domains not works on some reason, you can add automatic `.dev` domain resolving on your local machine:
-
-    sudo vim /etc/NetworkManager/dnsmasq.d/dev-tld
+    sudo vim /etc/NetworkManager/dnsmasq.d/test-tld
 
 And write:
 
-    local=/dev/
-    address=/dev/127.0.0.1
+    local=/test/
+    address=/test/127.0.0.1
 
-The first command says `*.dev` requests can't be forwarded to your real DNS server.
-The second says `*.dev` resolves to `127.0.0.1` which is localhost.
+The first command says `*.test` requests can't be forwarded to your real DNS server.
+The second says `*.test` resolves to `127.0.0.1` which is localhost.
 
 And restart network-manager:
 

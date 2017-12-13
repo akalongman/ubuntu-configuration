@@ -1173,7 +1173,6 @@ If you are looking for more PHP modules try:
     sudo apt-cache search php7.2-
 
 
-
 #### Composer
 
     curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
@@ -1201,9 +1200,9 @@ For PHP 5.6
 
     sudo apt install -y apache2 libapache2-mod-php5
 
-For PHP 7.0
+For PHP 7.*
 
-    sudo apt install -y apache2 libapache2-mod-php7.0
+    sudo apt install -y apache2 libapache2-mod-php7.*
 
 
 Tweak Apache (Remove apache warning about server's fully qualified domain name)
@@ -1233,7 +1232,7 @@ If you are looking for more Apache modules try:
 
 ##### Apache: Configure dynamic virtualhosts
 
-Enable module ```vhost_alias```
+Enable module `vhost_alias`
 
     sudo a2enmod vhost_alias
 

@@ -92,8 +92,11 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
     - [Development](#development)
         - [LAMP](#lamp)
-            - [PHP 5.6](#php-56)
-            - [PHP 7.0](#php-70)
+            - [PHP](#php)
+                - [PHP 5.6](#php-56)
+                - [PHP 7.0](#php-70)
+                - [PHP 7.1](#php-71)
+                - [PHP 7.2](#php-72)
             - [Composer](#composer)
             - [PHPUnit](#phpunit)
             - [Apache](#apache)
@@ -1119,15 +1122,16 @@ We replace the sources.list back to vivid in order to get it to work for ubuntu 
 Linux Apache MySQL PHP
 
 **- Installation for the following:**
-- PHP 5.6 (and Modules)
-- PHP 7.0 (and Modules)
+- PHP 5.6/7.0/7.1/7.2 (and Modules)
 - Apache 2 (and Modules + Dynamic hosts)
 - Nginx *(Optional)*
 - MySQL
 - Redis
 - and Header Files.
 
-#### PHP 5.6
+#### PHP
+
+##### PHP 5.6
 It's important to install **php5-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
@@ -1138,7 +1142,7 @@ If you are looking for more PHP modules try:
     sudo apt-cache search php5-
 
 
-#### PHP 7.0
+##### PHP 7.0
 It's important to install **php7.0-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
@@ -1147,6 +1151,28 @@ It's important to install **php7.0-dev** if you want to compile any add-ons late
 If you are looking for more PHP modules try:
 
     sudo apt-cache search php7.0-
+
+##### PHP 7.1
+It's important to install **php7.1-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt update && sudo apt install -y php7.1-bz2 php7.1-cgi php7.1-cli php7.1-common php7.1-curl php7.1-dev php7.1-enchant php7.1-fpm php7.1-gd php7.1-gmp php7.1-imap php7.1-intl php7.1-json php7.1-ldap php7.1-mcrypt php7.1-mysql php7.1-odbc php7.1-opcache php7.1-pgsql php7.1-phpdbg php7.1-pspell php7.1-readline php7.1-recode php7.1-sybase php7.1-tidy php7.1-xmlrpc php7.1-xsl php7.1-sqlite3 php7.1-mbstring php7.1-bcmath php7.1-soap php7.1-zip php-xdebug
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php7.1-
+
+##### PHP 7.2
+It's important to install **php7.2-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt update && sudo apt install -y php7.2-bz2 php7.2-cgi php7.2-cli php7.2-common php7.2-curl php7.2-dev php7.2-enchant php7.2-fpm php7.2-gd php7.2-gmp php7.2-imap php7.2-intl php7.2-json php7.2-ldap php7.2-mcrypt php7.2-mysql php7.2-odbc php7.2-opcache php7.2-pgsql php7.2-phpdbg php7.2-pspell php7.2-readline php7.2-recode php7.2-sybase php7.2-tidy php7.2-xmlrpc php7.2-xsl php7.2-sqlite3 php7.2-mbstring php7.2-bcmath php7.2-soap php7.2-zip php-xdebug
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php7.2-
+
+
 
 #### Composer
 

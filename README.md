@@ -89,7 +89,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [KDEnlive Video Editor](#kdenlive-video-editor)
         - [Httpie](#httpie) (Terminal HTTP client)
         - [Peek](#peek) (Simple animated GIF screen recorder with an easy to use interface)
-        - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
+        - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-iso-on-linux)
     - [Development](#development)
         - [LAMP](#lamp)
             - [PHP](#php)
@@ -494,7 +494,7 @@ or
 
     lsblk
 
-If you want write Windows ISO on the USB, use this method: [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-on-linux)
+If you want write Windows ISO on the USB, use this method: [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-iso-on-linux)
 
 Make sure the USB device is unmounted (not safely removed, but unmounted) If it is mounted you can unmount it:
 

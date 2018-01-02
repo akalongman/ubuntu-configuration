@@ -822,7 +822,7 @@ Partition editor for graphically managing disk partitions https://gparted.source
 Installation
 
     wget -q "http://deb.playonlinux.com/public.gpg" -O- | sudo apt-key add -
-    sudo wget http://deb.playonlinux.com/playonlinux_trusty.list -O /etc/apt/sources.list.d/playonlinux.list
+    sudo wget http://deb.playonlinux.com/playonlinux_xenial.list -O /etc/apt/sources.list.d/playonlinux.list
     sudo apt update && sudo apt install -y playonlinux
 
 ### Dropbox

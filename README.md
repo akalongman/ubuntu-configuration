@@ -504,6 +504,7 @@ If you want to use GUI clients for committing, you have to add some options to y
     gpg --import-ownertrust ownertrust-gpg.txt
 
 
+
 ## Enable Native Virtualization
 
 Instal tools

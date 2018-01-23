@@ -52,6 +52,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Update BIOS on Laptop/PC](#update-bios-on-laptoppc)
         - [Lenovo](#update-bios-on-lenovo)
     - [Sniff Local Traffic](#sniff-local-traffic)
+    - [Play Sound Through Multiple Outputs](#play-sound-through-multiple-outputs)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [System Tools](#system-tools)
@@ -649,7 +650,20 @@ And install BetterCAP
 You can run sniffing via
 
     sudo bettercap --sniffer
+
     
+## Play Sound Through Multiple Outputs
+Install `paprefs` package
+
+    sudo apt install -y paprefs
+
+Go to the `PulseAudio Preferences` and on the `Simultaneous Output` tab check `Add virtual output device for simultaneous output on all local sound cards`
+
+After that restart pulseaudio
+
+    pulseaudio -k
+
+Then go to your sound settings and you will see the option to output to multiple sound devices.
 
 ***
 

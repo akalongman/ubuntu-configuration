@@ -1645,6 +1645,7 @@ For installation Yarn package manager run:
 
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    sudo apt update && sudo apt install -y yarn
 
 Note: Ubuntu 17.04 comes with cmdtest installed by default. If you’re getting errors from installing yarn, 
 you may want to run `sudo apt remove cmdtest` first. Refer to [this](https://github.com/yarnpkg/yarn/issues/2821) for more information.

@@ -117,6 +117,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
             - [MyCLI](#mycli) Terminal MySQL Utility
             - [Memcached](#Memcached)
             - [Redis](#redis)
+            - [Letsencrypt](#letsencrypt)
             - [Phalcon](#phalcon)
             - [Phalcon Dev Tools](#phalcon-dev-tools)
             - [Secure Permissions](#secure-permissions)
@@ -1417,15 +1418,36 @@ Usage (See the documents from the git link above for more example):
 
     sudo apt install -y postgresql libpq-dev
 
+#### Memcached
+
+    sudo apt install -y memcached php-memcached
+
 #### Redis
 Install redis latest stable version
 
     sudo add-apt-repository -y ppa:chris-lea/redis-server
     sudo apt update && sudo apt install -y redis-server
 
-#### Memcached
+#### Letsencrypt
 
-    sudo apt install -y memcached php-memcached
+Install certbot (https://certbot.eff.org)
+
+    sudo add-apt-repository ppa:certbot/certbot
+    sudo apt-get update
+    
+Generating for nginx:
+    
+    sudo apt-get install -y python-certbot-nginx 
+    sudo certbot --nginx
+    
+Generating for apache:
+    
+    sudo apt-get install -y python-certbot-apache 
+    sudo certbot --apache
+
+You can test automatic renewal for your certificates by running this command:
+
+    sudo certbot renew --dry-run
 
 #### Java Runtime
 

@@ -205,6 +205,10 @@ Disk Space
     df
     df -B MB    # In Megabtyes,  etc
 
+Or install `ncdu` and run 
+
+    ncdu /
+
 Disks UUID
 
     ls -al /dev/disk/by-uuid/

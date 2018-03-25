@@ -14,6 +14,8 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Operating System](#operating-system)
         - [CPU Info](#cpu-info)
         - [VGA Info](#vga-info)
+        - [Motherboard Info](#motherboard-info)
+        - [BIOS Info](#bios-info)
         - [Memory and Usage Info](#memory-and-usage-info)
         - [Disks](#disks)
         - [GUI Processes](#gui-processes)
@@ -184,6 +186,10 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
 
 #### CPU Info
 
+    sudo dmidecode -t processor
+    
+Or
+
     nproc               # How many Processing Units
     cpuid               # Must install cpuid from terminal
     cat /proc/cpuinfo   # Lots of info
@@ -191,6 +197,14 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
 #### VGA Info
 
     lspci -vnn | grep -i VGA -A 12
+
+#### Motherboard Info
+
+    sudo dmidecode -t baseboard
+
+#### BIOS Info
+
+    sudo dmidecode -t bios
 
 #### Memory and Usage Info
 
@@ -612,6 +626,8 @@ Follow the wizard and add neccessary HP printer
 
 ## Update BIOS on Laptop/PC
 
+You can see BIOS version via [BIOS Info](#bios-info) command
+
 ### Update BIOS on Lenovo
 
 1. Go to support.lenovo.com (or better use a search engine because the Lenovo website is ugly) 
@@ -626,10 +642,10 @@ Keep in mind that the stick will be completely overwritten.
 
 5. If you are in a graphical environment then unmount the USB stick.
 
-6. Find out the device name of the stick. For example `/dev/sdb`. 
+6. Find out the device name of the stick. For example `/dev/sdb` (show devices via `sudo fdisk -l`). 
 Don't just assume it's sdb. If it's on another device on your laptop then you will destroy your data.
 
-7. Copy the image to the USB stick: `dd if=bios.img of=/dev/sdb bs=1M`
+7. Copy the image to the USB stick: `sudo dd if=bios.img of=/dev/sdb bs=1M`
 
 8. Reboot your laptop and press F12 for booting device from your stick.
 

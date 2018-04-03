@@ -119,6 +119,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
             - [MyCLI](#mycli) Terminal MySQL Utility
             - [Memcached](#Memcached)
             - [Redis](#redis)
+            - [ELK Stack](#elk-stack) ELK Stack: Elasticsearch, Logstash, and Kibana
             - [Letsencrypt](#letsencrypt)
             - [Phalcon](#phalcon)
             - [Phalcon Dev Tools](#phalcon-dev-tools)
@@ -1241,7 +1242,7 @@ Linux Apache MySQL PHP
 - Nginx *(Optional)*
 - MySQL
 - Redis
-- and Header Files.
+- and more.
 
 #### PHP
 
@@ -1447,6 +1448,14 @@ Install redis latest stable version
 
     sudo add-apt-repository -y ppa:chris-lea/redis-server
     sudo apt update && sudo apt install -y redis-server
+
+#### ELK Stack
+Install ELK stack: Elasticsearch, Logstash, and Kibana
+
+    wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+    sudo apt install -y apt-transport-https
+    echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+    sudo apt update && sudo apt install -y elasticsearch
 
 #### Letsencrypt
 

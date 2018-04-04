@@ -197,7 +197,7 @@ Or
 
 #### VGA Info
 
-    lspci -vnn | grep -i VGA -A 12
+    sudo lshw -C display
 
 #### Motherboard Info
 

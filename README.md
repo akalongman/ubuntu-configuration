@@ -1355,11 +1355,7 @@ Next, open /etc/apache2/apache2.conf
 
     sudo vim /etc/apache2/apache2.conf
 
-Comment line which includes enabled hosts
-
-    #IncludeOptional sites-enabled/*.conf
-
-and add the following lines to the bottom of file.
+and add the following lines before `IncludeOptional sites-enabled/*.conf` line.
 
     UseCanonicalName Off
 
@@ -1381,12 +1377,16 @@ and add the following lines to the bottom of file.
 
     </VirtualHost>
 
+If you want to disable all configured virtual hosts, then comment this line in your config file:
+
+    #IncludeOptional sites-enabled/*.conf
+
 This sets up a catch all for any domain coming in over port 80 (the default port for http traffic, if your using https you will need to use 443 - alternatively you could remove the port restriction).
 The important line here is the VirtualDocumentRoot. The tells Apache where your files will reside on disk.
 The %0 part takes the whole domain name and inserts it into the path. But I didn't want to have the `.test` part of the domain in my folders on disk, otherwise we use %-2+
 To illustrate this if we went to a domain somesite.com.test the VirtualDocumentRoot would be:
 
-    /var/www/html/domains/testing.com
+    /var/www/html/domains/somesite.com
 
 Now you have to add automatic `.test` domain resolving on your local machine:
 

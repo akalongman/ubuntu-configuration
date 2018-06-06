@@ -99,6 +99,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [KDEnlive Video Editor](#kdenlive-video-editor)
         - [Httpie](#httpie) (Terminal HTTP client)
         - [Peek](#peek) (Simple animated GIF screen recorder with an easy to use interface)
+        - [OBS](#obs) (Video recording and live streaming)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-iso-on-linux)
     - [Development](#development)
         - [LAMP](#lamp)
@@ -1215,6 +1216,15 @@ Installation
 
     sudo add-apt-repository ppa:peek-developers/stable
     sudo apt update && sudo apt install -y peek
+
+### OBS
+
+Free and open source software for video recording and live streaming https://obsproject.com/.
+
+Installation
+
+    sudo add-apt-repository ppa:obsproject/obs-studio
+    sudo apt update && sudo apt install -y obs-studio
 
 
 ### USB Maker for Windows ISO on Linux

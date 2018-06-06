@@ -622,7 +622,7 @@ And after run
 
 ### HP
 
-You must download HPLIP software from here: http://hplipopensource.com/hplip-web/gethplip.html
+You must download HPLIP software from here: https://developers.hp.com/hp-linux-imaging-and-printing
 
 After install .run package ([how?](https://help.ubuntu.com/community/InstallingRunPackage)) and run.
 Follow the wizard and add neccessary HP printer

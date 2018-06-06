@@ -101,6 +101,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Peek](#peek) (Simple animated GIF screen recorder with an easy to use interface)
         - [OBS](#obs) (Video recording and live streaming)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-iso-on-linux)
+        - [StarUML](#staruml) (A sophisticated software modeler for agile and concise modeling)
     - [Development](#development)
         - [LAMP](#lamp)
             - [PHP](#php)
@@ -1236,6 +1237,14 @@ But if you need Windows to USB from your Linux OS use Win USB:
     sudo apt update && sudo apt install -y winusb
 
 We replace the sources.list back to vivid in order to get it to work for ubuntu 15, that is the purpose of the `sed` command.
+
+### StarUML
+
+A sophisticated software modeler for agile and concise modeling (http://staruml.io/)
+
+You can download .AppImage file from http://staruml.io/download
+
+Make downloaded file executable and run.
 
 
 ***

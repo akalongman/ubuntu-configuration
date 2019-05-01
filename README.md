@@ -1,6 +1,8 @@
-# Configuration of Ubuntu 16.04 Xenial Xerus
+# Configuration of Ubuntu 18.04 LTS (Bionic Beaver)
 
 This guide is for [Ubuntu](http://ubuntu.com/desktop), but also compatible with a other __Debian__ based OS as well, like [Mint](http://www.linuxmint.com/), [Elementary OS](http://elementaryos.org/), etc.
+
+There are configurations for other versions such as [15.10](tree/15.10), [16.04](tree/16.04)
 
 All commands/configurations is tested (I am currently use this configuration), but anyway, everything you do is "at your own risk".
 
@@ -530,7 +532,7 @@ If you want to use GUI clients for committing, you have to add some options to y
 
 ## Enable Native Virtualization
 
-Instal tools
+Install tools
 
     sudo apt install -y qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
 
@@ -715,9 +717,7 @@ Enable Canonical partners repository
 This is for tweaking the UI
 
     sudo apt update && sudo apt install -y\
-        unity-tweak-tool\
-        compizconfig-settings-manager\
-        compiz-plugins\
+        gnome-tweak-tool\
         dconf-editor\
         synaptic
 
@@ -756,7 +756,7 @@ For installing ATI drivers, read this official documentation: http://support.amd
 
 **Install the Utilities:**
 
-    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager python-gpgme sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn easy-rsa network-manager-openvpn-gnome libdbusmenu-gtk4:i386 exfat-fuse exfat-utils
+    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn easy-rsa network-manager-openvpn-gnome libdbusmenu-gtk4:i386 exfat-fuse exfat-utils apt-transport-https
 
 To setup the git defaults
 
@@ -809,26 +809,21 @@ on newer systems.
 
 ### Dark Theme
 
-I prefer [Vivacious ZBlackout Blue Pro Theme](http://www.noobslab.com/2016/03/vivacious-colors-gtk-theme-suite.html)
+I prefer [Material Design](https://github.com/nana-4/materia-theme)
 
-Add repository
+First install `gnome-themes-extra`
 
-    sudo add-apt-repository ppa:ravefinity-project/ppa
-    sudo apt update
+    sudo apt install -y gnome-themes-extra
 
 Installation
 
-    sudo apt install -y vivacious-colors-gtk-dark
-    sudo apt install -y vivacious-colors-gtk-light
-    sudo apt install -y vivacious-unity-gtk-dark
-    sudo apt install -y vivacious-unity-gtk-light
+    sudo apt install -y materia-gtk-theme
 
 
-Use the **Unity Tweak Tool** to set vivacious-zblackout-blue-pro
+Use the **Gnome Tweaks** to set material-theme
 
 
 ### Sun Java
-
 Install
 
     sudo apt-add-repository ppa:webupd8team/java
@@ -843,28 +838,30 @@ Add this line
     JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 And update alternatives
+
     sudo update-alternatives --config java
 
 ### Wine
 To run windows applications Wine is the best option. I often use HeidiSQL with Wine.
 
-    wget https://dl.winehq.org/wine-builds/Release.key
-    sudo apt-key add Release.key
-    sudo apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/'
-    sudo apt update && sudo apt install -y winehq-stable
+    sudo dpkg --add-architecture i386
+    wget -qO- https://dl.winehq.org/wine-builds/Release.key | sudo apt-key add -
+    sudo apt-add-repository 'deb http://dl.winehq.org/wine-builds/ubuntu/ artful main'
+    sudo apt-get install --install-recommends -y winehq-stable
     
 ### Nautilus-Actions
 Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.
-If you don't want to create your own, you can install Nautilus-Actions-Extra to get a package of particularly useful user-created tools.
 
-    sudo apt install -y nautilus-actions
+    sudo add-apt-repository ppa:daniel-marynicz/filemanager-actions
+    sudo apt install -y filemanager-actions-nautilus-extension
+
 
 After installing it, quit and restart the Nautilus file manager with the following command.
 You can also press Alt+F2 and type this command instead of running it in a terminal.
 
     nautilus -q
 
-Launch the Nautilus-Actions Configuration Tool from the Dash after installing it.
+After installation you can launch `fma-config-tool`.
 
 You also can install some Nautilus extensions
 
@@ -926,22 +923,20 @@ Partition editor for graphically managing disk partitions https://gparted.source
 ## Other Tools
 
 ### Google Chrome
-    Add google chrome repository and install
+Add google chrome repository and install
 
         sudo sh -c 'echo "deb [arch=amd64] http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update && sudo apt install -y google-chrome-stable
 
-    Then launch it with `$ google-chrome` and you can pin it to a unity bar.
+Then launch it with `$ google-chrome` and you can pin it to a unity bar.
 
 ### PlayOnLinux
 
 Installation
 
-    wget -q "http://deb.playonlinux.com/public.gpg" -O- | sudo apt-key add -
-    sudo wget http://deb.playonlinux.com/playonlinux_xenial.list -O /etc/apt/sources.list.d/playonlinux.list
-    sudo apt update && sudo apt install -y playonlinux
-
+    sudo apt install playonlinux
+    
 ### Dropbox
 
 Installation
@@ -1306,6 +1301,16 @@ If you are looking for more PHP modules try:
 
     sudo apt-cache search php7.2-
 
+##### PHP 7.3
+It's important to install **php7.3-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt update && sudo apt install -y php7.3-bz2 php7.3-cgi php7.3-cli php7.3-common php7.3-curl php7.3-dev php7.3-enchant php7.3-fpm php7.3-gd php7.3-gmp php7.3-imap php7.3-intl php7.3-json php7.3-ldap php7.3-mysql php7.3-odbc php7.3-opcache php7.3-pgsql php7.3-phpdbg php7.3-pspell php7.3-readline php7.3-recode php7.3-sybase php7.3-tidy php7.3-xmlrpc php7.3-xsl php7.3-sqlite3 php7.3-mbstring php7.3-bcmath php7.3-soap php7.3-zip php-xdebug php-redis php-igbinary
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php7.3-
+
 
 #### Composer
 
@@ -1441,8 +1446,28 @@ And after install
 
 #### MySQL
 
-    sudo apt install -y mysql-server mysql-client
+##### Installation
+
+    wget https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb
+    sudo dpkg -i mysql-apt-config_0.8.13-1_all.deb
+    sudo apt update & sudo apt install -y mysql-server
+
+##### Allow remote access for root:
+
+Login in MySQL shell and run:
+
+    CREATE USER 'root'@'%' IDENTIFIED BY 'secret';
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+
+Also Update mysql server config:
+
+For MySQL 5.*
+
     sudo sed -i 's/bind-address/bind-address = 0.0.0.0#/' /etc/mysql/my.cnf
+
+For MySQL 8.*
+
+    sudo echo 'bind-address    = *' >> /etc/mysql/mysql.conf.d/mysqld.cnf
 
 #### MyCLI
 This is a very nice utility [https://github.com/dbcli/mycli](https://github.com/dbcli/mycli)

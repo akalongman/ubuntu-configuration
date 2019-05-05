@@ -1,18 +1,18 @@
 ---
-- name: Deploy ERP
+- name: Set Up PPTP VPN
   hosts: all
   become: true
   vars:
-    pptp_username: user
-    pptp_password: pass
+    pptp_username: vpnuser
+    pptp_password: 123456
   tasks:
-    - name: Updates apt cache
+    - name: APT is updated/upgraded
       apt:
         update_cache: yes
         upgrade: yes
         cache_valid_time: 3600
 
-    - name: Installs necessary packages
+    - name: Necessary packages are installed
       apt: pkg={{ item }} state=latest
       with_items:
         - vim
@@ -37,8 +37,9 @@
         - dos2unix
         - liblz4-tool
         - pptpd
+        - iptables-persistent
 
-    - name: local and remote ip specified in pptpd.conf
+    - name: Local and remote ip specified in pptpd.conf
       lineinfile: dest=/etc/pptpd.conf line="{{ item }}"
       with_items:
         - localip 192.168.0.1
@@ -46,7 +47,7 @@
       notify:
         - restart pptpd
 
-    - name: users in chap-secrets
+    - name: Users added in chap-secrets
       lineinfile: dest=/etc/ppp/chap-secrets line="{{ pptp_username }} pptpd {{ pptp_password }} *"
 
     - name: dns added to pptpd-options
@@ -57,24 +58,39 @@
       notify:
         - restart pptpd
 
-    - name: Setup Forwarding
+    - name: Forwarding is set up
       sysctl: name=net.ipv4.ip_forward value=1 state=present reload=yes
 
-    - name: NAT rule for iptables
-      command: iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    - name: NAT rule is added for iptables
+      iptables:
+        comment: Allow PPTP forwarding
+        action: append
+        table: nat
+        chain: POSTROUTING
+        out_interface: eth0
+        jump: MASQUERADE
       notify:
         - save iptables
 
-    - name: Start and Enable PPTPD
-      systemd:
+    - name: PPTPD service is enabled
+      service:
         name: pptpd
-        state: started
         enabled: yes
-        daemon-reload: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Netfilter Persistent service is enabled
+      service:
+        name: netfilter-persistent
+        enabled: yes
+        state: started
+        daemon_reload: yes
 
   handlers:
     - name: save iptables
-      command: iptables-save
+      command: bash -c "iptables-save > /etc/iptables/rules.v4"
 
     - name: restart pptpd
-      service: name=pptpd state=restarted
+      service:
+        name: pptpd
+        state: restarted

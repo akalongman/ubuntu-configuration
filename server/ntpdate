@@ -1,2 +1,2 @@
- #!/bin/sh
- ntpdate ntp.ubuntu.com
+#!/bin/sh
+ntpdate ntp.ubuntu.com

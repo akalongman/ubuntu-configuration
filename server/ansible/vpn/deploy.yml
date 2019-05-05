@@ -1,0 +1,80 @@
+---
+- name: Deploy ERP
+  hosts: all
+  become: true
+  vars:
+    pptp_username: user
+    pptp_password: pass
+  tasks:
+    - name: Updates apt cache
+      apt:
+        update_cache: yes
+        upgrade: yes
+        cache_valid_time: 3600
+
+    - name: Installs necessary packages
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - vim
+        - git
+        - curl
+        - htop
+        - unzip
+        - cifs-utils
+        - unrar
+        - zip
+        - p7zip-full
+        - p7zip-rar
+        - sharutils
+        - rar
+        - whois
+        - traceroute
+        - nmap
+        - mc
+        - apt-transport-https
+        - ethtool
+        - net-tools
+        - dos2unix
+        - liblz4-tool
+        - pptpd
+
+    - name: local and remote ip specified in pptpd.conf
+      lineinfile: dest=/etc/pptpd.conf line="{{ item }}"
+      with_items:
+        - localip 192.168.0.1
+        - remoteip 192.168.0.100-200
+      notify:
+        - restart pptpd
+
+    - name: users in chap-secrets
+      lineinfile: dest=/etc/ppp/chap-secrets line="{{ pptp_username }} pptpd {{ pptp_password }} *"
+
+    - name: dns added to pptpd-options
+      lineinfile: dest=/etc/ppp/pptpd-options line="{{ item }}"
+      with_items:
+        - ms-dns 8.8.8.8
+        - ms-dns 8.8.4.4
+      notify:
+        - restart pptpd
+
+    - name: Setup Forwarding
+      sysctl: name=net.ipv4.ip_forward value=1 state=present reload=yes
+
+    - name: NAT rule for iptables
+      command: iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      notify:
+        - save iptables
+
+    - name: Start and Enable PPTPD
+      systemd:
+        name: pptpd
+        state: started
+        enabled: yes
+        daemon-reload: yes
+
+  handlers:
+    - name: save iptables
+      command: iptables-save
+
+    - name: restart pptpd
+      service: name=pptpd state=restarted

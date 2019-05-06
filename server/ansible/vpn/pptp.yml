@@ -40,7 +40,9 @@
         - iptables-persistent
 
     - name: Local and remote ip specified in pptpd.conf
-      lineinfile: dest=/etc/pptpd.conf line="{{ item }}"
+      lineinfile:
+        path: /etc/pptpd.conf
+        line: "{{ item }}"
       with_items:
         - localip 192.168.0.1
         - remoteip 192.168.0.100-200
@@ -48,10 +50,14 @@
         - restart pptpd
 
     - name: Users added in chap-secrets
-      lineinfile: dest=/etc/ppp/chap-secrets line="{{ pptp_username }} pptpd {{ pptp_password }} *"
+      lineinfile:
+        path: /etc/ppp/chap-secrets
+        line: "{{ pptp_username }} pptpd {{ pptp_password }} *"
 
     - name: dns added to pptpd-options
-      lineinfile: dest=/etc/ppp/pptpd-options line="{{ item }}"
+      lineinfile:
+        path: /etc/ppp/pptpd-options
+        line: "{{ item }}"
       with_items:
         - ms-dns 8.8.8.8
         - ms-dns 8.8.4.4

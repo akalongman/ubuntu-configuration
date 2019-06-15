@@ -1,0 +1,41 @@
+---
+- name: Set Up Frontend Server
+  hosts: all
+  become: true
+  tasks:
+    - name: APT is updated/upgraded
+      apt:
+        update_cache: yes
+        upgrade: yes
+        cache_valid_time: 3600
+
+    - name: Necessary packages are installed
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - vim
+        - git
+        - curl
+        - htop
+        - unzip
+        - cifs-utils
+        - unrar
+        - zip
+        - p7zip-full
+        - p7zip-rar
+        - sharutils
+        - rar
+        - whois
+        - traceroute
+        - nmap
+        - mc
+        - apt-transport-https
+        - ethtool
+        - net-tools
+        - dos2unix
+        - liblz4-tool
+
+    - name: nvm
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+      args:
+        creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"

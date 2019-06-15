@@ -111,6 +111,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
                 - [PHP 7.0](#php-70)
                 - [PHP 7.1](#php-71)
                 - [PHP 7.2](#php-72)
+                - [PHP 7.3](#php-73)
             - [Composer](#composer)
             - [PHPUnit](#phpunit)
             - [Apache](#apache)
@@ -1251,7 +1252,7 @@ Make downloaded file executable and run.
 Linux Apache MySQL PHP
 
 **- Installation for the following:**
-- PHP 5.6/7.0/7.1/7.2 (and Modules)
+- PHP 5.6/7.0/7.1/7.2/7.3 (and Modules)
 - Apache 2 (and Modules + Dynamic hosts)
 - Nginx *(Optional)*
 - MySQL
@@ -1441,7 +1442,7 @@ For latest (recommended)
 
 And after install
 
-    sudo apt update && sudo apt install -y nginx
+    sudo apt install -y nginx
 
 
 #### MySQL
@@ -1467,7 +1468,11 @@ For MySQL 5.*
 
 For MySQL 8.*
 
-    sudo echo 'bind-address    = *' >> /etc/mysql/mysql.conf.d/mysqld.cnf
+    echo 'bind-address    = *' | sudo tee -a /etc/mysql/mysql.conf.d/mysqld.cnf
+
+Restart the service:
+
+    sudo service mysql restart
 
 #### MyCLI
 This is a very nice utility [https://github.com/dbcli/mycli](https://github.com/dbcli/mycli)
@@ -1491,7 +1496,11 @@ Usage (See the documents from the git link above for more example):
 Install redis latest stable version
 
     sudo add-apt-repository -y ppa:chris-lea/redis-server
-    sudo apt update && sudo apt install -y redis-server
+    sudo apt install -y redis-server
+
+Add to startup:
+
+    sudo systemctl enable redis-server.service
 
 #### ELK Stack
 Install ELK stack: Elasticsearch, Logstash, and Kibana
@@ -1700,15 +1709,10 @@ For Ruby RVM (Version Management)
 [(Back to top)](#table-of-contents)
 
 ### NodeJS
-I am using a PPA to fix the nodejs path issue(s)
+Install
 
-    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
     sudo apt install -y nodejs
-    sudo npm install bower gulp grunt-cli webpack -g
-
-If installing coffee-script and typing `$ coffee` produces an error, make sure coffee is not within the $PATH
-
-    echo $PATH
 
 ***
 [(Back to top)](#table-of-contents)

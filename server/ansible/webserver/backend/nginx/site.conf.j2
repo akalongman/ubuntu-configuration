@@ -1,0 +1,60 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    include snippets/gzip.conf;
+
+    root /var/www/{{ LOCAL_FQDN_NAME }}/current/public;
+
+    index index.php index.html;
+
+    server_name {{ LOCAL_FQDN_NAME }} www.{{ LOCAL_FQDN_NAME }};
+
+    access_log    /var/www/{{ LOCAL_FQDN_NAME }}/logs/nginx_access.log;
+    error_log     /var/www/{{ LOCAL_FQDN_NAME }}/logs/nginx_error.log;
+
+    charset utf-8;
+
+    location ~* \.(?:jpg|jpeg|png|gif|ico|css|js|otf|eot|svg|ttf|woff|woff2)$ {
+        include snippets/cache-static.conf;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location ~ /\.well-known {
+        allow                all;
+        access_log           off;
+        log_not_found        off;
+        root                 /usr/share/nginx/html;
+        autoindex            off;
+        index                index.html; # "no-such-file.txt",if expected protos don't need it
+        #try_files            $uri $uri/ =404;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+
+        fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+        #fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k;
+        fastcgi_connect_timeout 300;
+        fastcgi_send_timeout 300;
+        fastcgi_read_timeout 300;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+}

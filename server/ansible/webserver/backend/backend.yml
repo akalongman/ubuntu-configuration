@@ -1,0 +1,229 @@
+---
+- name: Set Up Backend Server
+  hosts: all
+  become: true
+  become_method: sudo
+  vars:
+    LOCAL_HOSTNAME: 'web01'
+    LOCAL_FQDN_NAME: 'website.com'
+    LOCAL_TIMEZONE: 'Asia/Tbilisi'
+    PHP_VERSION: '7.3'
+    MYSQL_USER: 'db-user'
+    MYSQL_PASSWORD: 'secret'
+    MYSQL_TEST_DB: 'test-db'
+    DEPLOYER_USER: 'deployer'
+  tasks:
+    - name: Set timezone to {{ LOCAL_TIMEZONE }}
+      timezone:
+        name: "{{ LOCAL_TIMEZONE }}"
+
+    - name: Set up a unique hostname
+      hostname: name={{ LOCAL_HOSTNAME }}
+
+    - name: Add PHP repository
+      apt_repository:
+        repo: ppa:ondrej/php
+        state: present
+        filename: php
+
+    - name: Add Nginx repository
+      apt_repository:
+        repo: ppa:nginx/stable
+        state: present
+        filename: nginx
+
+    - name: Add Redis repository
+      apt_repository:
+        repo: ppa:chris-lea/redis-server
+        state: present
+        filename: redis
+
+    - name: Add Certbot repository
+      apt_repository:
+        repo: ppa:certbot/certbot
+        state: present
+        filename: certbot
+
+    - name: Add MySQL Repository
+      apt: deb=http://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb
+
+    - name: APT is updated/upgraded
+      apt:
+        upgrade: True
+        cache_valid_time: 3600
+
+    - name: Necessary packages are installed
+      apt:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+        - aptitude
+        - vim
+        - git
+        - curl
+        - htop
+        - unzip
+        - cifs-utils
+        - unrar
+        - zip
+        - p7zip-full
+        - p7zip-rar
+        - sharutils
+        - rar
+        - whois
+        - traceroute
+        - nmap
+        - mc
+        - apt-transport-https
+        - ethtool
+        - net-tools
+        - dos2unix
+        - python3-mysqldb
+        - php{{ PHP_VERSION }}-*
+        - nginx
+        - mysql-server
+        - redis-server
+        - python3-pip
+        - python-certbot-nginx
+        - python3-certbot-dns-*
+
+    - name: Install supervisor
+      pip:
+        name: supervisor
+
+    - name: Download composer installer
+      get_url:
+        url: https://getcomposer.org/installer
+        dest: /tmp/composer-installer
+
+    - name: Install composer
+      shell: cat /tmp/composer-installer | php && mv composer.phar /usr/local/bin/composer
+
+    - name: Download Gitlab Runner installer
+      get_url:
+        url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
+        dest: /tmp/gitlab-runner-installer
+
+    - name: Install Gitlab Runner
+      shell: cat /tmp/gitlab-runner-installer | bash
+
+    - name: Make composer executable
+      file:
+        path: /usr/local/bin/composer
+        mode: a+x
+        state: file
+
+    - name: PHP service is enabled
+      service:
+        name: php{{ PHP_VERSION }}-fpm
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Nginx service is enabled
+      service:
+        name: nginx
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: MySQL service is enabled
+      service:
+        name: mysql
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Redis service is enabled
+      service:
+        name: redis-server
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Create a test database
+      mysql_db:
+        name={{ MYSQL_TEST_DB }}
+        state=present
+
+    - name: Create a new user for connections
+      mysql_user:
+        name={{ MYSQL_USER }}
+        password={{ MYSQL_PASSWORD }}
+        priv=*.*:ALL
+        host=%
+        state=present
+
+    - name: Make sure we have a 'admins' group
+      group:
+        name: admins
+        state: present
+
+    - name: Allow 'admins' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%admins'
+        line: '%admins ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Add sudoers users to admins group
+      user:
+        name={{ DEPLOYER_USER }}
+        groups=admins,www-data
+        shell=/bin/bash
+        append=yes
+        state=present
+        createhome=yes
+        generate_ssh_key=yes
+
+    - name: Set up authorized keys for the {{ DEPLOYER_USER }} user
+      authorized_key: user={{ DEPLOYER_USER }} key="{{item}}"
+      with_file:
+        - ~/.ssh/id_rsa.pub
+
+    - name: Creates server directory
+      file:
+        path: /var/www/{{ LOCAL_FQDN_NAME }}/current/public
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: 0775
+        recurse: yes
+
+    - name: Creates server logs directory
+      file:
+        path: /var/www/{{ LOCAL_FQDN_NAME }}/logs
+        state: directory
+        mode: 0777
+
+    - name: Copy the nginx config file and restart nginx
+      synchronize:
+        src: nginx/snippets/
+        dest: /etc/nginx/snippets/
+
+    - name: Copy the nginx config file and restart nginx
+      template:
+        src=nginx/site.conf.j2
+        dest=/etc/nginx/sites-available/{{ LOCAL_FQDN_NAME }}.conf
+
+    - name: Create symlink
+      file:
+        src: /etc/nginx/sites-available/{{ LOCAL_FQDN_NAME }}.conf
+        dest: /etc/nginx/sites-enabled/{{ LOCAL_FQDN_NAME }}.conf
+        state: link
+
+    - name: Nginx service is reloaded
+      service:
+        name: nginx
+        state: reloaded
+
+    - name: Remove useless packages from the cache
+      apt:
+        autoclean: yes
+
+
+
+
+

@@ -500,6 +500,8 @@ You can check your keys on the http://keyserver.ubuntu.com/
 
 To configure your Git client to sign commits by default for a local repository, in Git versions 2.0.0 and above, run 
 
+    git config --global user.signingkey {YOUR KEY}
+
     git config commit.gpgsign true
     
 To sign all commits by default in any local repository on your computer, run 
@@ -719,6 +721,8 @@ This is for tweaking the UI
 
     sudo apt update && sudo apt install -y\
         gnome-tweak-tool\
+        chrome-gnome-shell\
+        gnome-shell-extensions\
         dconf-editor\
         synaptic
 
@@ -757,12 +761,15 @@ For installing ATI drivers, read this official documentation: http://support.amd
 
 **Install the Utilities:**
 
-    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn easy-rsa network-manager-openvpn-gnome libdbusmenu-gtk4:i386 exfat-fuse exfat-utils apt-transport-https
+    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full 
+    p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn 
+    easy-rsa network-manager-openvpn-gnome libdbusmenu-gtk4:i386 exfat-fuse exfat-utils apt-transport-https python-dbus ethtool net-tools dos2unix 
+    liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome tree
 
 To setup the git defaults
 
-    git config --global user.name your name
-    git config --global user.email your@email.com
+    git config --global user.name "your name"
+    git config --global user.email "your@email.com"
 
 That will create a `~/.gitconfig` with:
 
@@ -942,10 +949,8 @@ Installation
 
 Installation
 
-    sudo sh -c 'echo "deb http://linux.dropbox.com/ubuntu $(lsb_release -sc) main" >> /etc/apt/sources.list.d/dropbox.list'
-    sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
-    sudo apt update && sudo apt install -y dropbox
-
+    sudo apt install nautilus-dropbox
+    
 ### Sublime Text 3
 A sophisticated text editor for code, markup and prose
 

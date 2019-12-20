@@ -26,7 +26,6 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Other Commands](#other-commands)
             - [Screenshots](#screenshots)
     - [List all KeyBindings](#list-all-keybindings)
-    - [Better Local Folder](#better-local-folder)
     - [Use 32Bit on 64bit](#use-32bit-on-64bit)
     - [Networking](#networking)
     - [Order of Grub](#order-of-grub)
@@ -59,6 +58,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Play Sound Through Multiple Outputs](#play-sound-through-multiple-outputs)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
+    - [Flatpak](#flatpak)
     - [System Tools](#system-tools)
         - [Install Nvidia Drivers](#install-nvidia-drivers) (Install drivers from official repository for Nvidia Drivers)
         - [Install ATI Drivers](#install-ati-drivers)
@@ -73,6 +73,9 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [GNU Screen](#gnu-screen) (Full-screen window manager that multiplexes a physical terminal between several processes)
         - [Neofetch](#neofetch) (A fast, highly customizable system info script)
         - [GParted](#gparted) (Partition editor for graphically managing disk partitions)
+        - [Firewall](#firewall)
+            - [UFW](#ufw)
+            - [GUFW](#gufw)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
@@ -112,6 +115,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
                 - [PHP 7.1](#php-71)
                 - [PHP 7.2](#php-72)
                 - [PHP 7.3](#php-73)
+                - [PHP 7.4](#php-74)
             - [Composer](#composer)
             - [PHPUnit](#phpunit)
             - [Apache](#apache)
@@ -120,8 +124,9 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
                 - [Configure Dynamic Virtualhosts](#apache-configure-dynamic-virtualhosts)
             - [Nginx](#nginx)
             - [MySQL](#mysql)
-            - [PostgreSQL](#postgresql)
+            - [Percona Toolkit](#percona-toolkit)
             - [MyCLI](#mycli) Terminal MySQL Utility
+            - [PostgreSQL](#postgresql)
             - [Memcached](#Memcached)
             - [Redis](#redis)
             - [ELK Stack](#elk-stack) ELK Stack: Elasticsearch, Logstash, and Kibana
@@ -141,7 +146,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [PCSXR](#pcsxr) (PlayStation 1 Emulator)
 - [Customizations](#customizations)
     - [System Tweaks](#system-tweaks)
-        - [Configure Compiz](#configure-compiz)
+        - [Configure Gnome](#configure-gnome)
         - [Increase Inotify Watches Limit](#increase-inotify-watches-limit)
         - [Disable Git Certificate Verification](#disable-git-certificate-verification)
     - [Shortcuts](#shortcuts)
@@ -151,13 +156,12 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Enable User Name in Systray](#enable-user-name-in-systray)
     - [Change Datetime Format in Systray](#change-datetime-format-in-systray)
     - [Enable Minimize App on Dash Click](#enable-minimize-app-on-dash-click)
-    - [Disable Window Grouping](#disable-window-grouping)
     - [Install Custom Wallpaper](#install-custom-wallpaper)
     - [Add Georgian Keyboard](#add-georgian-keyboard)
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Ubuntu Infinite Login](#ubuntu-infinite-login)
     - [Sound Indicator Not Showing](#sound-indicator-not-showing)
-- [Install Gnome 3](#install-gnome-3)
+- [GUI](#gui)
     - [Easy Window Resize](#easy-window-resize)
     - [Left or Right Close Buttons](#left-or-right-close-buttons)
     - [Fix Gnome Lockscreen](#fix-gnome-lockscreen)
@@ -272,6 +276,10 @@ With delay 5 seconds and only window
 
     gnome-screenshot -w --delay 5
 
+For changing default save directory for gnome-screenshot, use the command
+
+    gsettings set org.gnome.gnome-screenshot auto-save-directory "file:///home/$USER/Pictures/"
+
 ## List all Keybindings
 
     gsettings list-recursively  org.gnome.desktop.wm.keybindings | sort | more
@@ -284,15 +292,6 @@ Or for a lot of details:
 
     xev | grep KeyPress
 
-## Better Local Folder
-This is less painful when creating a group with rwx permissions for `/usr/local`
-
-    sudo groupadd local
-    sudo usermod -a -G local jesse
-
-    sudo chgrp -R local /usr/local
-    sudo chmod -R g+rwx /usr/local
-
 ## Use 32Bit on 64bit
 
 You can use 32Bit applications if you like, sometimes this is useful.
@@ -301,7 +300,7 @@ You can use 32Bit applications if you like, sometimes this is useful.
 
 ## Networking
 
-To enable Networking, and make it accessible to all computers such as Windows also first install Samba:
+To enable Networking, and make it accessible to all computers such as Windows also, first install Samba:
 
     $ sudo apt install -y samba
 
@@ -716,6 +715,14 @@ Enable Canonical partners repository
 
     sudo add-apt-repository -y "deb http://archive.canonical.com/ $(lsb_release -sc) partner" && sudo apt update
 
+## Flatpak
+Flatpak is a next-generation technology for building and distributing desktop applications on Linux
+
+    sudo apt install -y flatpak gnome-software-plugin-flatpak
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+And restart the system.
+
 ## System Tools
 This is for tweaking the UI
 
@@ -924,6 +931,40 @@ Partition editor for graphically managing disk partitions https://gparted.source
 
     sudo apt install -y gparted
 
+### Firewall
+
+#### UFW
+
+UFW, or Uncomplicated Firewall, is an interface to iptables that is geared towards simplifying the process of configuring a firewall. 
+While iptables is a solid and flexible tool, it can be difficult for beginners to learn how to use it to properly configure a firewall.
+UFW is installed by default on Ubuntu. If it has been uninstalled for some reason, you can install it with 
+
+    sudo apt install -y ufw
+
+To enable UFW, use this command:
+
+    sudo ufw enable
+
+Configuring examples:
+
+To configure your server to allow incoming SSH connections, you can use this command:
+
+    sudo ufw allow ssh
+    
+However, we can actually write the equivalent rule by specifying the port instead of the service name. For example, this command works the same as the one above:
+
+    sudo ufw allow 22    
+    
+For example, to allow X11 connections, which use ports 6000-6007, use these commands:
+
+    sudo ufw allow 6000:6007/tcp
+    sudo ufw allow 6000:6007/udp
+    
+#### GUFW
+
+GUFW is a GUI for UFW
+
+    sudo apt install -y gufw
 
 ***
 [(Back to top)](#table-of-contents)
@@ -937,7 +978,7 @@ Add google chrome repository and install
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update && sudo apt install -y google-chrome-stable
 
-Then launch it with `$ google-chrome` and you can pin it to a unity bar.
+Then launch it with `$ google-chrome` and you can pin it to a gnome bar.
 
 ### PlayOnLinux
 
@@ -1257,7 +1298,7 @@ Make downloaded file executable and run.
 Linux Apache MySQL PHP
 
 **- Installation for the following:**
-- PHP 5.6/7.0/7.1/7.2/7.3 (and Modules)
+- PHP 5.6/7.0/7.1/7.2/7.3/7.4 (and Modules)
 - Apache 2 (and Modules + Dynamic hosts)
 - Nginx *(Optional)*
 - MySQL
@@ -1317,6 +1358,16 @@ If you are looking for more PHP modules try:
 
     sudo apt-cache search php7.3-
 
+##### PHP 7.4
+It's important to install **php7.4-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt update && sudo apt install -y php7.4-bz2 php7.4-cgi php7.4-cli php7.4-common php7.4-curl php7.4-dev php7.4-enchant php7.4-fpm php7.4-gd php7.4-gmp php7.4-imap php7.4-intl php7.4-json php7.4-ldap php7.4-mysql php7.4-odbc php7.4-opcache php7.4-pgsql php7.4-phpdbg php7.4-pspell php7.4-readline php7.4-recode php7.4-sybase php7.4-tidy php7.4-xmlrpc php7.4-xsl php7.4-sqlite3 php7.4-mbstring php7.4-bcmath php7.4-soap php7.4-zip php-xdebug php-redis php-igbinary
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php7.4-
+
 
 #### Composer
 
@@ -1349,7 +1400,6 @@ For PHP 7.*
 
     sudo apt install -y apache2 libapache2-mod-php7.*
 
-
 Tweak Apache (Remove apache warning about server's fully qualified domain name)
 
     echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
@@ -1367,7 +1417,7 @@ For PHP 5
 
     sudo php5enmod mcrypt && sudo service apache2 restart
 
-For PHP 7
+For PHP 7 (if mcrypt is available)
 
     sudo phpenmod mcrypt && sudo service apache2 restart
 
@@ -1454,9 +1504,15 @@ And after install
 
 ##### Installation
 
+You can get latest version number on https://dev.mysql.com/downloads/repo/apt
+
     wget https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb
     sudo dpkg -i mysql-apt-config_0.8.13-1_all.deb
     sudo apt update & sudo apt install -y mysql-server
+
+For start configuring MySQL server, run:
+
+    sudo mysql_secure_installation
 
 ##### Allow remote access for root:
 
@@ -1478,6 +1534,13 @@ For MySQL 8.*
 Restart the service:
 
     sudo service mysql restart
+
+#### Percona Toolkit
+Percona Toolkit is a collection of advanced open source command-line tools, developed and used by the Percona technical staff, 
+that are engineered to perform a variety of MySQL® and MongoDB® server and system tasks that are too difficult or complex 
+to perform manually – freeing your DBAs for work that helps you achieve your business goals.
+
+    sudo apt install -y percona-toolkit
 
 #### MyCLI
 This is a very nice utility [https://github.com/dbcli/mycli](https://github.com/dbcli/mycli)
@@ -1512,8 +1575,13 @@ Install ELK stack: Elasticsearch, Logstash, and Kibana
 
     wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
     sudo apt install -y apt-transport-https
-    echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+    echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
     sudo apt update && sudo apt install -y elasticsearch
+
+To configure Elasticsearch to start automatically when the system boots up, run the following commands:
+
+    sudo /bin/systemctl daemon-reload
+    sudo /bin/systemctl enable elasticsearch.service
 
 #### Letsencrypt
 
@@ -1760,9 +1828,9 @@ After that run PCSX, configure and play
 
 ## System Tweaks
 
-### Configure Compiz
+### Configure Gnome
 
-Open CompizConfig Settings Manager app and from preferences menu import file `./os/home/compiz/Longish Profile.profile` (included in current repository)
+Open Gnome Tweaks app and configure what you want :)
 
 ### Increase Inotify Watches Limit
 
@@ -1802,9 +1870,6 @@ After run
     $ vim
     :PluginInstall
 
-## Enable Auto Focus on Opened Applications
-In CompizConfig go to "General Options" > "Focus & Raise Behaviour" and set "Focus Prevention Level" to "Off"
-
 ## Enable Normal Scrollbars
 
     gsettings set com.canonical.desktop.interface scrollbar-mode normal
@@ -1821,16 +1886,8 @@ To revert
 Open dconf-editor and go ```com > canonical > indicator > datetime``` Change time format to CUSTOM and time format type ```%a, %e %b %H:%M %```
 
 ## Enable Minimize App on Dash Click
-Open Compizconfig and go to "Desktop" > "Ubuntu Unity Plugin" > "Launcher Tab" and enable "Minimize Single Windows Applications (Unsupported)"
 
-## Disable Window Grouping
-Open Compizconfig and scroll down to "Ubuntu Unity Plugin".
-Choose the tab "Switcher". Disable the alt-tab and shift-alt-tab key bindings.
-("Key to start the switcher" and "Key to switch to the previous window in the Switcher".
-Click the "Back" button. Scroll down to the "Window management" section.
-Here you can select another switcher. I enable the "Static Application Switcher", resolve any potential conflicts by setting the setting for "Static Application Switcher".
-Now you can tweak the switcher by clicking on it.
-I have changed <kbd>alt</kbd>+<kbd>tab</kbd> and <kbd>shift</kbd>+<kbd>alt</kbd>+<kbd>tab</kbd> to "Next window (All windows)" and "Prev window (All windows)"
+    gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 
 ## Install Custom Wallpaper
 
@@ -1887,7 +1944,7 @@ Next, Login as your user who must be able to run sudo.
   - Lastly restart lightdm: `sudo service lightdm restart`
 - **Apt Auto Remove Problem**
   - I read that it's possible `apt-autoremove` may accidentally remove `xubuntu-desktop`, `ubuntu-desktop` and LightDM reports no errors.
-    - The `ubuntu-desktop` will load the Unity interface
+    - The `ubuntu-desktop` will load the Gnome interface
     - The `xubuntu-desktop` will load a different interface I'm not familiar with
     - To Fix: `sudo apt-get install ubuntu-desktop`
   - **If you are using Gnome**, try following the post at [OMGUbuntu](http://www.omgubuntu.co.uk/2016/05/install-gnome-3-20-ubuntu-16-04-lts)
@@ -1898,34 +1955,24 @@ Next, Login as your user who must be able to run sudo.
     you want to reboot to ensure it is fixed, otherwise you'll be doing this over and over   
 
 ## Sound Indicator Not Showing
-This appears in the top-right menu on Unity. Tested in 14/15.
+This appears in the top-right menu on Gnome. Tested in 14/15.
 
 This will also fix Tweak UI if a sound item is missing.
 
     sudo apt install -y indicator-sound
 
-For Unity (Default)
-
-    sudo killall unity-panel-service
-
-For Gnome
+For Gnome (Default)
 
     sudo killall gnome-panel
 
-# Install Gnome 3
-If you prefer Gnome 3 over the Unity desktop it's easy to install:
+For Unity
 
-    sudo apt install -y ubuntu-gnome-desktop
-    sudo service gdm restart (Or a reboot is easier)
+    sudo killall unity-panel-service
 
-Unity uses `lightdm` and Gnome uses `gdm`, it's easiest to stick with lightdm.
-
-If you want the default login a certain one select either lightdm or gdm. If you want to change it later run:
-
-    sudo dpkg-reconfigure gdm
+# GUI
 
 ## Easy Window Resize
-Without Compiz, you can resize windows very nicely:
+You can resize windows very nicely:
 - Focus on a window
 - Hold <kbd>ALT</kbd> + Middle Mouse Click + Drag
 - Note: Depending on where you position your mouse to will resize up/down/left/right
@@ -1948,30 +1995,34 @@ In terminal make sure this is false, then try your hotkey `ctrl+alt+l` or if you
     gsettings set org.gnome.desktop.lockdown disable-lock-screen 'false'
 
 ## Gnome Extensions
-You need to use **Firefox** or **IceWeasle** at https://extensions.gnome.org/ to toggle these items. 
+You can toggle these items at https://extensions.gnome.org
 I suggest creating an account so you have a record.
 
-- **Must Have Extensions**
-- [Dash to Dock](https://extensions.gnome.org/extension/307/dash-to-dock/) :star::star::star::star::star:
-- [Workspace Dock](https://extensions.gnome.org/extension/427/workspaces-to-dock/) :star::star::star::star:
-- [Applications Menu](https://extensions.gnome.org/extension/6/applications-menu/) :star::star::star::star::star:
-- [TaskBar](https://extensions.gnome.org/extension/584/taskbar/) :star::star::star::star::star:
-- [No Topleft Hot Corner](https://extensions.gnome.org/extension/118/no-topleft-hot-corner/) :star::star::star::star::star:
-- [Force Quit](https://extensions.gnome.org/extension/770/force-quit/) :star::star::star::star::star:
-- **Nice Extensions**
-- [Taskbar](https://extensions.gnome.org/extension/584/taskbar/) :star::star::star::star::star:
-- [Small Panel Icon](https://extensions.gnome.org/extension/861/small-panel-icon/) :star::star::star::star::star:
-- [Top Icons](https://extensions.gnome.org/extension/495/topicons/) :star::star::star::star:
-- [MMOD Panel](https://extensions.gnome.org/extension/898/mmod-panel/) :star::star::star::star::star:
-- [Keyboard Modifiers Status](https://extensions.gnome.org/extension/975/keyboard-modifiers-status/) :star::star::star:
-- [Laine](https://extensions.gnome.org/extension/937/laine/) :star::star::star::star:
-- [Disable Workspace Switcher Popup](https://extensions.gnome.org/extension/959/disable-workspace-switcher-popup/) :star::star:
-- [Refresh Wifi Connections](https://extensions.gnome.org/extension/905/refresh-wifi-connections/) :star::star::star::star:
-- [Disconnect Wifi](https://extensions.gnome.org/extension/904/disconnect-wifi/) :star::star::star::star::star:
-- [Toggle Touchpad](https://extensions.gnome.org/extension/935/toggle-touchpad/) (For Laptops) :star::star::star::star::star:
+- [No Title Bar](https://extensions.gnome.org/extension/1267/no-title-bar/)
+- [OpenWeather](https://extensions.gnome.org/extension/750/openweather/)
+- [Clipboard Indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/)
+- [Coverflow Alt-Tab](https://extensions.gnome.org/extension/97/coverflow-alt-tab/)
+- [Gnome Shell Audio Output Switcher](https://extensions.gnome.org/extension/1028/gnome-shell-audio-output-switcher/)
+- [Panel OSD](https://extensions.gnome.org/extension/708/panel-osd/)
+- [Extension Update Notifier](https://extensions.gnome.org/extension/1166/extension-update-notifier/)
+- [Appfolders Management](https://extensions.gnome.org/extension/1217/appfolders-manager/)
+- [Apt Update Indicator](https://extensions.gnome.org/extension/1139/apt-update-indicator/)
+- [Auto Move Windows](https://extensions.gnome.org/extension/16/auto-move-windows/)
+- [CPU Power Manager](https://extensions.gnome.org/extension/945/cpu-power-manager/)
+- [Frippery Move Clock](https://extensions.gnome.org/extension/2/move-clock/)
+- [Hide Activities Button](https://extensions.gnome.org/extension/744/hide-activities-button/)
+- [Places Status Indicator](https://extensions.gnome.org/extension/8/places-status-indicator/)
+- [Refresh Wifi Connections](https://extensions.gnome.org/extension/905/refresh-wifi-connections/)
+- [Remove Dropdown Arrows](https://extensions.gnome.org/extension/800/remove-dropdown-arrows/)
+- [Status Area Horizontal Spacing](https://extensions.gnome.org/extension/355/status-area-horizontal-spacing/)
+- [NoAnnoyance](https://extensions.gnome.org/extension/1236/noannoyance/)
+- [Workspaces to Dock](https://extensions.gnome.org/extension/427/workspaces-to-dock/)
+- [Gno-Menu](https://extensions.gnome.org/extension/608/gnomenu/)
+- [Scale Switcher](https://extensions.gnome.org/extension/1306/scale-switcher/)
+- [Datetime Format](https://extensions.gnome.org/extension/1173/datetime-format/)
 
 ## Reload Gnome Freeze
-This is a rare things, it happens much more in unity and requires a lot more "damaging" things. To fix a gnome that seems frozen do the following:
+This is a rare things, it happens much more in Gnome and requires a lot more "damaging" things. To fix a gnome that seems frozen do the following:
 
 <kbd>ALT + F2</kbd> enter in <kbd>r</kbd> (lowecase) and press <kbd>Enter</kbd>
 
@@ -2138,9 +2189,9 @@ Remove Totem video player
 
     sudo apt purge totem
 
-Remove Unwanted Lenses
+# Remove amazon launcher
 
-    sudo apt autoremove unity-lens-music unity-lens-photos unity-lens-shopping unity-lens-video
+    sudo apt purge ubuntu-web-launchers
 
 Clean System
 

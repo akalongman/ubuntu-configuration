@@ -1362,7 +1362,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.4-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.4-bz2 php7.4-cgi php7.4-cli php7.4-common php7.4-curl php7.4-dev php7.4-enchant php7.4-fpm php7.4-gd php7.4-gmp php7.4-imap php7.4-intl php7.4-json php7.4-ldap php7.4-mysql php7.4-odbc php7.4-opcache php7.4-pgsql php7.4-phpdbg php7.4-pspell php7.4-readline php7.4-recode php7.4-sybase php7.4-tidy php7.4-xmlrpc php7.4-xsl php7.4-sqlite3 php7.4-mbstring php7.4-bcmath php7.4-soap php7.4-zip php-xdebug php-redis php-igbinary
+    sudo apt update && sudo apt install -y php7.4-bz2 php7.4-cgi php7.4-cli php7.4-common php7.4-curl php7.4-dev php7.4-enchant php7.4-fpm php7.4-gd php7.4-gmp php7.4-imap php7.4-intl php7.4-json php7.4-ldap php7.4-mysql php7.4-odbc php7.4-opcache php7.4-pgsql php7.4-phpdbg php7.4-pspell php7.4-readline php7.4-sybase php7.4-tidy php7.4-xmlrpc php7.4-xsl php7.4-sqlite3 php7.4-mbstring php7.4-bcmath php7.4-soap php7.4-zip php-xdebug php-redis php-igbinary
 
 If you are looking for more PHP modules try:
 

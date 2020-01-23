@@ -859,10 +859,19 @@ And update alternatives
 ### Wine
 To run windows applications Wine is the best option. I often use HeidiSQL with Wine.
 
+Install `libfaudio0` package:
+
+    wget https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04/Release.key
+    sudo apt-key add Release.key
+    sudo apt-add-repository 'deb https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04/ ./'
+
+Install wine:
+
     sudo dpkg --add-architecture i386
-    wget -qO- https://dl.winehq.org/wine-builds/Release.key | sudo apt-key add -
-    sudo apt-add-repository 'deb http://dl.winehq.org/wine-builds/ubuntu/ artful main'
-    sudo apt-get install --install-recommends -y winehq-stable
+    wget -nc https://dl.winehq.org/wine-builds/winehq.key
+    sudo apt-key add winehq.key
+    sudo apt-add-repository -y 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main'
+    sudo apt install --install-recommends -y winehq-stable
     
 ### Nautilus-Actions
 Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.

@@ -1906,6 +1906,27 @@ For ```convert``` command you need install package ```imagemagick```
     sudo convert ~/Dropbox/images/DSM.jpg ~/Pictures/Wallpapers/DSM.png
     gsettings set org.gnome.desktop.background picture-uri file:///home/longman/Pictures/Wallpapers/DSM.png
 
+If you want to change wallpaper on login page, open file `/usr/share/gnome-shell/theme/ubuntu.css` in your preferred editor:
+
+    sudo vim /usr/share/gnome-shell/theme/ubuntu.css
+    
+and replace 
+
+```css
+#lockDialogGroup {
+  background: #2c001e url(resource:///org/gnome/shell/theme/noise-texture.png);
+  background-repeat: repeat;
+}
+```    
+with
+```css
+#lockDialogGroup {
+  background: #2c001e url(file:///path/to/your/image.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+```
 
 ## Add Georgian Keyboard
 

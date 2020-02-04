@@ -141,6 +141,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Ruby](#ruby)
         - [NodeJS](#nodejs)
         - [Yarn](#yarn)
+        - [Ansible](#ansible)
     - [Gaming](#gaming)
         - [Steam](#steam) (Ultimate entertainment platform)
         - [PCSXR](#pcsxr) (PlayStation 1 Emulator)
@@ -1812,6 +1813,15 @@ you may want to run `sudo apt remove cmdtest` first. Refer to [this](https://git
 ***
 [(Back to top)](#table-of-contents)
 
+### Ansible
+Add repository:
+
+    sudo apt-add-repository -y ppa:ansible/ansible
+    sudo apt install -y ansible
+
+***
+[(Back to top)](#table-of-contents)
+
 
 ## Gaming
 
@@ -1927,6 +1937,8 @@ with
   background-position: center;
 }
 ```
+
+After that, restart system.
 
 ## Add Georgian Keyboard
 

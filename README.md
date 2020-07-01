@@ -1204,14 +1204,9 @@ by installing the missing dependencies using the following command:
 
 ### Telegram
 
-Add repository
-
-    sudo add-apt-repository -y ppa:atareao/telegram
-
-
 Installation
 
-    sudo apt update && sudo apt install -y telegram
+    sudo apt install -y telegram-desktop
 
 
 ### Slack

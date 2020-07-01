@@ -107,6 +107,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [OBS](#obs) (Video recording and live streaming)
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-iso-on-linux)
         - [StarUML](#staruml) (A sophisticated software modeler for agile and concise modeling)
+        - [Gramps](#gramps) (A geneological tree manager)
     - [Development](#development)
         - [LAMP](#lamp)
             - [PHP](#php)
@@ -1297,6 +1298,15 @@ A sophisticated software modeler for agile and concise modeling (http://staruml.
 You can download .AppImage file from http://staruml.io/download
 
 Make downloaded file executable and run.
+
+### Gramps
+
+Gramps is a free software project and community. 
+It is a genealogy program that is both intuitive for hobbyists and feature-complete for professional genealogists. 
+
+To install, run:
+
+    sudo apt install -y gramps
 
 
 ***

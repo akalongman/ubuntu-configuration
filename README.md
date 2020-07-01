@@ -577,12 +577,12 @@ or
 
 Unmount drive
 
-    umount sd[1 letter][optionally 1 number]
+    umount /dev/sd[1 letter][optionally 1 number]
 
 
 Format to FAT32
 
-    mkfs.vfat /dev/sd[1 letter][optionally 1 number]
+    mkfs.vfat /dev/sd[1 letter]
 
 You can use mkfs.ntfs for NTFS, mkfs.ext4 for EXT4 etc.
 

@@ -108,6 +108,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [USB Maker for Windows ISO on Linux](#usb-maker-for-windows-iso-on-linux)
         - [StarUML](#staruml) (A sophisticated software modeler for agile and concise modeling)
         - [Gramps](#gramps) (A geneological tree manager)
+        - [uGet](#uget) (A download manager)
     - [Development](#development)
         - [LAMP](#lamp)
             - [PHP](#php)
@@ -1307,6 +1308,15 @@ It is a genealogy program that is both intuitive for hobbyists and feature-compl
 To install, run:
 
     sudo apt install -y gramps
+
+### uGet
+
+uGet is a powerful download manager. 
+
+To install, run:
+
+    sudo add-apt-repository ppa:plushuang-tw/uget-stable
+    sudo apt install -y uget
 
 
 ***

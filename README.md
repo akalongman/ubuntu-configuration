@@ -1278,13 +1278,18 @@ Installation
 
 ### USB Maker for Windows ISO on Linux
 You can easily use `Startup Disk Creator` and `UNetbootin` to create Linux to USB. 
-But if you need Windows to USB from your Linux OS use Win USB:
+But if you need to create Windows bootable USB from your Linux OS use woeusb:
 
-    sudo add-apt-repository -y ppa:colingille/freshlight
-    sudo sh -c "sed -i 's/wily/vivid/g' /etc/apt/sources.list.d/colingille-ubuntu-freshlight-$(lsb_release -sc).list"
-    sudo apt update && sudo apt install -y winusb
+    sudo add-apt-repository ppa:nilarimogard/webupd8
+    sudo apt install -y woeusb
 
-We replace the sources.list back to vivid in order to get it to work for ubuntu 15, that is the purpose of the `sed` command.
+The important part here is that you should format usb in NTFS.
+
+After run
+    
+    woeusb \
+        --target-filesystem NTFS \
+        --device Win10_1809Oct_EnglishInternational_x64.iso /dev/sd[1 letter]
 
 ### StarUML
 

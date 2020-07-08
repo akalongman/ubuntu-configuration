@@ -54,6 +54,8 @@
         dest: /etc/ppp/pptpd-options
         regexp: '^require-mppe-128'
         replace: '#require-mppe-128'
+      notify:
+        - restart pptpd
 
     - name: Users added in chap-secrets
       lineinfile:

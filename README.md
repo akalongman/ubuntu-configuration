@@ -1,10 +1,10 @@
-# Configuration of Ubuntu 18.04 LTS (Bionic Beaver)
+# Configuration of Ubuntu 20.04 LTS (Focal Fossa)
 
 This guide is for [Ubuntu](http://ubuntu.com/desktop), but also compatible with a other __Debian__ based OS as well, like [Mint](http://www.linuxmint.com/), [Elementary OS](http://elementaryos.org/), etc.
 
-There are configurations for other versions such as [15.10](tree/15.10), [16.04](tree/16.04)
+There are configurations for other versions such as [18.04](tree/18.04), [16.04](tree/16.04), [15.10](tree/15.10)
 
-All commands/configurations is tested (I am currently use this configuration), but anyway, everything you do is "at your own risk".
+All commands/configurations are tested (I am currently use this configuration), but anyway, everything you do is "at your own risk".
 
 If you found any issue, please let me know on [Issues Page](https://github.com/akalongman/ubuntu-configuration/issues) or via email akalongman@gmail.com
 
@@ -56,6 +56,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Lenovo](#update-bios-on-lenovo)
     - [Sniff Local Traffic](#sniff-local-traffic)
     - [Play Sound Through Multiple Outputs](#play-sound-through-multiple-outputs)
+    - [Terminal Prompt Customizing](terminal-prompt-customizing)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [Flatpak](#flatpak)
@@ -63,9 +64,9 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Install Nvidia Drivers](#install-nvidia-drivers) (Install drivers from official repository for Nvidia Drivers)
         - [Install ATI Drivers](#install-ati-drivers)
         - [Utilities](#utilities)
-        - [RedShift For Eye Strain](#redshift-for-eye-strain)
+        - [RedShift For Eye Strain](#redshift-for-eye-strain) (Redshift adjusts the color temperature of your screen according to your surroundings)
         - [Dark Theme](#dark-theme)
-        - [Sun Java](#sun-java)
+        - [Oracle Java](#oracle-java)
         - [Wine](#wine) (Windows emulator) (Run Microsoft® Windows® applications on linux)
         - [Nautilus-Actions](#nautilus-actions) (Graphically create custom context menu options for Ubuntu's Nautilus file manager)
         - [Hardinfo](#hardinfo) (Everest/Aida alternative for linux)
@@ -99,6 +100,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Skype](#skype)
         - [Telegram](#telegram)
         - [Slack](#slack)
+        - [Viber](#viber)
         - [Gimp](#gimp)
         - [VLC Player](#vlc-player)
         - [KDEnlive Video Editor](#kdenlive-video-editor)
@@ -131,6 +133,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
             - [PostgreSQL](#postgresql)
             - [Memcached](#Memcached)
             - [Redis](#redis)
+                - [Multiple Redis Instances](#multiple-redis-instances)
             - [ELK Stack](#elk-stack) ELK Stack: Elasticsearch, Logstash, and Kibana
             - [Letsencrypt](#letsencrypt)
             - [Phalcon](#phalcon)
@@ -155,22 +158,16 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Shortcuts](#shortcuts)
     - [VIM Customization](#vim-customization)
     - [Enable Auto Focus on Opened Applications](#enable-auto-focus-on-opened-applications)
-    - [Enable Normal Scrollbars](#enable-normal-scrollbars)
-    - [Enable User Name in Systray](#enable-user-name-in-systray)
-    - [Change Datetime Format in Systray](#change-datetime-format-in-systray)
     - [Enable Minimize App on Dash Click](#enable-minimize-app-on-dash-click)
-    - [Install Custom Wallpaper](#install-custom-wallpaper)
     - [Add Georgian Keyboard](#add-georgian-keyboard)
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Ubuntu Infinite Login](#ubuntu-infinite-login)
-    - [Sound Indicator Not Showing](#sound-indicator-not-showing)
 - [GUI](#gui)
     - [Easy Window Resize](#easy-window-resize)
     - [Left or Right Close Buttons](#left-or-right-close-buttons)
     - [Fix Gnome Lockscreen](#fix-gnome-lockscreen)
     - [Gnome Extensions](#gnome-extensions)
     - [Reload Gnome Freeze](#reload-gnome-freeze)
-- [Adjust Mouse and Devices](#adjust-mouse-and-devices)
 - [Virtual Machine Related](#virtual-machine-related)
     - [Fix Mouse Side Buttons in VMWare](#fix-mouse-side-buttons-in-vmware)
     - [Vagrant VBGuest Fix](#vagrant-vbguest-fix)
@@ -696,6 +693,13 @@ After that restart pulseaudio
 
 Then go to your sound settings and you will see the option to output to multiple sound devices.
 
+## Terminal Prompt Customization
+Put the file [ps.ssh](os/etc/profile.d/ps.ssh) in to `/etc/profile.d` directory.
+
+and in the .bashrc file add line:
+
+    source /etc/profile.d/ps.sh
+
 ***
 
 [(Back to top)](#table-of-contents)
@@ -771,10 +775,10 @@ For installing ATI drivers, read this official documentation: http://support.amd
 
 **Install the Utilities:**
 
-    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full 
-    p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn 
-    easy-rsa network-manager-openvpn-gnome libdbusmenu-gtk4:i386 exfat-fuse exfat-utils apt-transport-https python-dbus ethtool net-tools dos2unix 
-    liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome tree duplicity xserver-xorg-input-synaptics screen
+    sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full \
+        p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn \
+        easy-rsa network-manager-openvpn-gnome exfat-fuse exfat-utils apt-transport-https python-dbus ethtool net-tools dos2unix \
+        liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome tree duplicity xserver-xorg-input-synaptics screen lib32z1 lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common
 
 To setup the git defaults
 
@@ -788,6 +792,8 @@ That will create a `~/.gitconfig` with:
         name = your name
 
 ### RedShift For Eye Strain
+It is a program which adjusts the color temperature of your screen with GTK+ integration. 
+Think about daylight and night light difference.
 
     sudo apt install -y redshift
 
@@ -827,33 +833,29 @@ on newer systems.
 
 ### Dark Theme
 
-I prefer [Material Design](https://github.com/nana-4/materia-theme)
+Ubuntu 20.04 ships with a new dark theme option, but it's not enough.
 
-First install `gnome-themes-extra`
+In the Settings > Appearance select Window Colors to Dark.
 
-    sudo apt install -y gnome-themes-extra
+The "problem" stems from the factor that the new "Dark" setting only changes the look and feel of apps that run on the desktop. 
+It does not change the colour of the desktop UI itself.
+To fix this, install the User Themes GNOME Shell extension and GNOME Tweak Tool:
 
-Installation
+    sudo apt install -y gnome-shell-extensions gnome-tweak-tool
 
-    sudo apt install -y materia-gtk-theme
+Open GNOME Extensions app and slide the toggle next to "User Themes" to on.
 
+Restart GNOME Shell (Alt + F2, type r, hit enter)
 
-Use the **Gnome Tweaks** to set material-theme
+Lastly, open the GNOME Tweaks tool and select "Appearance" in the sidebar, locate the Shell section and Select `Yaru Dark` from the menu adjacent.
 
+### Oracle Java
 
-### Sun Java
-Install
+Download deb package from https://www.oracle.com/java/technologies/javase-jdk14-downloads.html
 
-    sudo apt-add-repository ppa:webupd8team/java
-    sudo apt update && sudo apt install -y oracle-java8-installer
+Rename the folder 
 
-Set Oracle Java as main in system
-
-    sudo vim /etc/environment
-
-Add this line
-
-    JAVA_HOME=/usr/lib/jvm/java-8-oracle
+    sudo mv /usr/lib/jvm/jdk-14.0.1 /usr/lib/jvm/jdk-14 
 
 And update alternatives
 
@@ -862,19 +864,21 @@ And update alternatives
 ### Wine
 To run windows applications Wine is the best option. I often use HeidiSQL with Wine.
 
-Install `libfaudio0` package:
+Enable i386 architecture
 
-    wget https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04/Release.key
-    sudo apt-key add Release.key
-    sudo apt-add-repository 'deb https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04/ ./'
+    sudo dpkg --add-architecture i386 
 
-Install wine:
+Download and add the repository key:
+    
+    wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
 
-    sudo dpkg --add-architecture i386
-    wget -nc https://dl.winehq.org/wine-builds/winehq.key
-    sudo apt-key add winehq.key
-    sudo apt-add-repository -y 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main'
-    sudo apt install --install-recommends -y winehq-stable
+Add the repository:
+    
+    sudo add-apt-repository -y 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main'
+    
+Install:
+
+    sudo apt update && sudo apt install -y --install-recommends winehq-stable    
     
 ### Nautilus-Actions
 Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.
@@ -1058,9 +1062,9 @@ During writing this manual, latest version was 5.2
 
 Installation
 
-    sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
+    sudo sh -c 'echo "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
     wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc -O- | sudo apt-key add -
-    sudo apt update && sudo apt install -y virtualbox-5.2
+    sudo apt update && sudo apt install -y virtualbox-6.1
 
 Suggested to [Enable Native Virtualization](#enable-native-virtualization)
 
@@ -1070,32 +1074,20 @@ Also you can read [Virtual Machine Related](#virtual-machine-related)
 
 Installation
 
-Download Android Studio from https://developer.android.com/sdk/index.html
-Extract the archive file into an appropriate location for your applications, eg: /opt. Use the filename of your downloaded archive, in my example android-studio-ide-143.2821654-linux.zip
+I recommend to install JetBrains Toolbox from https://www.jetbrains.com/toolbox-app/ and install Android Studio from toolbox. 
 
-    sudo unzip android-studio-ide-143.2821654-linux.zip -d /opt
-
-To launch Android Studio, navigate to the /opt/android-studio/bin directory in a terminal and execute ./studio.sh
-
-After change PATH
+After downloading android sdk, update PATH variable:
 
     vim ~/.bashrc
 
-And add lines:
+add lines:
 
     export PATH=${PATH}:/path-to-android-sdk/tools
     export PATH=${PATH}:/path-to-android-sdk/platform-tools
 
 ### Smart Git
 
-Canonical Partner's repository must be enabled for installation via terminal:
-
-Installation
-
-    sudo apt install -y smartgit
-
-Or download from http://www.syntevo.com/smartgit/download install and run /usr/share/smartgit/bin/smartgit.sh
-
+Download deb bundle from https://www.syntevo.com/smartgit/download/
 
 ### FileZilla
 
@@ -1165,7 +1157,6 @@ Installation
 
     sudo apt install -y audacious
 
-
 ### XnViewMP
 
 XnView MP is the enhanced version of XnView Classic.
@@ -1194,21 +1185,14 @@ Installation
 
 Installation
 
-    sudo apt install -y skype
-
-
-While we're at it, let's also fix Skype on 64bit not using the correct theme,
-by installing the missing dependencies using the following command:
-
-    sudo apt install -y gtk2-engines-murrine:i386 gtk2-engines-pixbuf:i386
-
+    wget https://go.skype.com/skypeforlinux-64.deb
+    sudo apt install ./skypeforlinux-64.deb
 
 ### Telegram
 
 Installation
 
     sudo apt install -y telegram-desktop
-
 
 ### Slack
 
@@ -1226,16 +1210,44 @@ And run:
     
 Or download .deb from https://slack.com/downloads and install manually
 
+### Viber
 
+Since new versions of Ubuntu are shipped with libssl1.1 or have this package in their repositories, viber.deb can be tinkered to state libssl1.1 as a dependency.
+
+Ensure that libssl1.1 is installed:
+
+    sudo apt install libssl1.1
+    
+Download viber.deb from the [Viber webpage](https://www.viber.com/download/) and copy it to a temp folder. 
+I have used /home/<user>/temp for this.
+
+Now we need to make some changes to the package:
+
+    mkdir viber
+    cd viber 
+    ar x ../viber.deb
+    tar xzf control.tar.gz
+
+Now we need to change dependencies:
+
+- Open the control file with a text editor.
+- Change on line 6: libssl1.0.0 to libssl1.1. (Note: in case of newer version of libssl use the new version).
+- Save the file and exit.
+
+Repackage the .deb file.
+
+    tar --ignore-failed-read -cvzf control.tar.gz {post,pre}{inst,rm} md5sums control
+    ar rcs viber-new.deb debian-binary control.tar.gz data.tar.xz
+    
+Install the new deb:
+
+    sudo dpkg -i viber-new.deb
+     
 ### Gimp
 
 Installation
 
-    sudo add-apt-repository -y ppa:otto-kesselgulasch/gimp
-
-After run:
-
-    sudo apt update && sudo apt install -y gimp gimp-data gimp-plugin-registry gimp-data-extras
+    sudo apt install -y gimp gimp-data gimp-plugin-registry gimp-data-extras
 
 ### VLC Player
 
@@ -1315,7 +1327,6 @@ uGet is a powerful download manager.
 
 To install, run:
 
-    sudo add-apt-repository ppa:plushuang-tw/uget-stable
     sudo apt install -y uget
 
 
@@ -1352,7 +1363,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.0-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-sqlite3 php7.0-mbstring php7.0-bcmath php7.0-soap php7.0-zip php-xdebug
+    sudo apt update && sudo apt install -y php7.0-bz2 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-enchant php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json php7.0-ldap php7.0-mcrypt php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-phpdbg php7.0-pspell php7.0-readline php7.0-recode php7.0-sybase php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-sqlite3 php7.0-mbstring php7.0-bcmath php7.0-soap php7.0-zip php-xdebug php-imagick
 
 If you are looking for more PHP modules try:
 
@@ -1362,7 +1373,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.1-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.1-bz2 php7.1-cgi php7.1-cli php7.1-common php7.1-curl php7.1-dev php7.1-enchant php7.1-fpm php7.1-gd php7.1-gmp php7.1-imap php7.1-intl php7.1-json php7.1-ldap php7.1-mcrypt php7.1-mysql php7.1-odbc php7.1-opcache php7.1-pgsql php7.1-phpdbg php7.1-pspell php7.1-readline php7.1-recode php7.1-sybase php7.1-tidy php7.1-xmlrpc php7.1-xsl php7.1-sqlite3 php7.1-mbstring php7.1-bcmath php7.1-soap php7.1-zip php-xdebug
+    sudo apt update && sudo apt install -y php7.1-bz2 php7.1-cgi php7.1-cli php7.1-common php7.1-curl php7.1-dev php7.1-enchant php7.1-fpm php7.1-gd php7.1-gmp php7.1-imap php7.1-intl php7.1-json php7.1-ldap php7.1-mcrypt php7.1-mysql php7.1-odbc php7.1-opcache php7.1-pgsql php7.1-phpdbg php7.1-pspell php7.1-readline php7.1-recode php7.1-sybase php7.1-tidy php7.1-xmlrpc php7.1-xsl php7.1-sqlite3 php7.1-mbstring php7.1-bcmath php7.1-soap php7.1-zip php-xdebug php-imagick
 
 If you are looking for more PHP modules try:
 
@@ -1372,7 +1383,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.2-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.2-bz2 php7.2-cgi php7.2-cli php7.2-common php7.2-curl php7.2-dev php7.2-enchant php7.2-fpm php7.2-gd php7.2-gmp php7.2-imap php7.2-intl php7.2-json php7.2-ldap php7.2-mysql php7.2-odbc php7.2-opcache php7.2-pgsql php7.2-phpdbg php7.2-pspell php7.2-readline php7.2-recode php7.2-sybase php7.2-tidy php7.2-xmlrpc php7.2-xsl php7.2-sqlite3 php7.2-mbstring php7.2-bcmath php7.2-soap php7.2-zip php-xdebug
+    sudo apt update && sudo apt install -y php7.2-bz2 php7.2-cgi php7.2-cli php7.2-common php7.2-curl php7.2-dev php7.2-enchant php7.2-fpm php7.2-gd php7.2-gmp php7.2-imap php7.2-intl php7.2-json php7.2-ldap php7.2-mysql php7.2-odbc php7.2-opcache php7.2-pgsql php7.2-phpdbg php7.2-pspell php7.2-readline php7.2-recode php7.2-sybase php7.2-tidy php7.2-xmlrpc php7.2-xsl php7.2-sqlite3 php7.2-mbstring php7.2-bcmath php7.2-soap php7.2-zip php-xdebug php-imagick
 
 If you are looking for more PHP modules try:
 
@@ -1382,7 +1393,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.3-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.3-bz2 php7.3-cgi php7.3-cli php7.3-common php7.3-curl php7.3-dev php7.3-enchant php7.3-fpm php7.3-gd php7.3-gmp php7.3-imap php7.3-intl php7.3-json php7.3-ldap php7.3-mysql php7.3-odbc php7.3-opcache php7.3-pgsql php7.3-phpdbg php7.3-pspell php7.3-readline php7.3-recode php7.3-sybase php7.3-tidy php7.3-xmlrpc php7.3-xsl php7.3-sqlite3 php7.3-mbstring php7.3-bcmath php7.3-soap php7.3-zip php-xdebug php-redis php-igbinary
+    sudo apt update && sudo apt install -y php7.3-bz2 php7.3-cgi php7.3-cli php7.3-common php7.3-curl php7.3-dev php7.3-enchant php7.3-fpm php7.3-gd php7.3-gmp php7.3-imap php7.3-intl php7.3-json php7.3-ldap php7.3-mysql php7.3-odbc php7.3-opcache php7.3-pgsql php7.3-phpdbg php7.3-pspell php7.3-readline php7.3-recode php7.3-sybase php7.3-tidy php7.3-xmlrpc php7.3-xsl php7.3-sqlite3 php7.3-mbstring php7.3-bcmath php7.3-soap php7.3-zip php-xdebug php-redis php-igbinary php-imagick
 
 If you are looking for more PHP modules try:
 
@@ -1392,7 +1403,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.4-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.4-bz2 php7.4-cgi php7.4-cli php7.4-common php7.4-curl php7.4-dev php7.4-enchant php7.4-fpm php7.4-gd php7.4-gmp php7.4-imap php7.4-intl php7.4-json php7.4-ldap php7.4-mysql php7.4-odbc php7.4-opcache php7.4-pgsql php7.4-phpdbg php7.4-pspell php7.4-readline php7.4-sybase php7.4-tidy php7.4-xmlrpc php7.4-xsl php7.4-sqlite3 php7.4-mbstring php7.4-bcmath php7.4-soap php7.4-zip php-xdebug php-redis php-igbinary
+    sudo apt update && sudo apt install -y php7.4-bz2 php7.4-cgi php7.4-cli php7.4-common php7.4-curl php7.4-dev php7.4-enchant php7.4-fpm php7.4-gd php7.4-gmp php7.4-imap php7.4-intl php7.4-json php7.4-ldap php7.4-mysql php7.4-odbc php7.4-opcache php7.4-pgsql php7.4-phpdbg php7.4-pspell php7.4-readline php7.4-sybase php7.4-tidy php7.4-xmlrpc php7.4-xsl php7.4-sqlite3 php7.4-mbstring php7.4-bcmath php7.4-soap php7.4-zip php-xdebug php-redis php-igbinary php-imagick
 
 If you are looking for more PHP modules try:
 
@@ -1429,11 +1440,6 @@ For PHP 5.6
 For PHP 7.*
 
     sudo apt install -y apache2 libapache2-mod-php7.*
-
-Tweak Apache (Remove apache warning about server's fully qualified domain name)
-
-    echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
-    sudo a2enconf fqdn && sudo service apache2 reload
 
 ##### Apache: Enable php-mcrypt & mod_rewrite
 
@@ -1500,19 +1506,34 @@ To illustrate this if we went to a domain somesite.com.test the VirtualDocumentR
 
 Now you have to add automatic `.test` domain resolving on your local machine:
 
-    sudo vim /etc/NetworkManager/dnsmasq.d/test-tld
+Edit the file `/etc/NetworkManager/NetworkManager.conf`, and add the line `dns=dnsmasq` to the [main] section, it will look like this:
 
-And write:
+```
+[main]
+plugins=ifupdown,keyfile
+dns=dnsmasq
 
-    local=/test/
-    address=/test/127.0.0.1
+[ifupdown]
+managed=false
 
-The first command says `*.test` requests can't be forwarded to your real DNS server.
-The second says `*.test` resolves to `127.0.0.1` which is localhost.
+[device]
+wifi.scan-rand-mac-address=no
+```
 
-And restart network-manager:
+Let NetworkManager manage /etc/resolv.conf
 
-    sudo service network-manager restart
+    sudo rm /etc/resolv.conf
+    sudo ln -s /var/run/NetworkManager/resolv.conf /etc/resolv.conf
+
+Add custom tld:
+
+    echo 'address=/.test/127.0.0.1' | sudo tee /etc/NetworkManager/dnsmasq.d/test-tld
+
+Reload NetworkManager:
+
+    sudo systemctl reload NetworkManager
+
+Now domain somesite.com.test should work.
 
 #### Nginx
 Or if you prefer to use nginx
@@ -1543,6 +1564,14 @@ You can get latest version number on https://dev.mysql.com/downloads/repo/apt
 For start configuring MySQL server, run:
 
     sudo mysql_secure_installation
+
+If you are not able to login with root user, run:
+
+    sudo mysql
+
+and run:    
+    
+    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'YourPassword';
 
 ##### Allow remote access for root:
 
@@ -1599,6 +1628,98 @@ Install redis latest stable version
 Add to startup:
 
     sudo systemctl enable redis-server.service
+
+##### Multiple Redis Instances
+
+Disable default instance
+
+    sudo systemctl stop redis
+    sudo systemctl disable redis
+
+Repeat these steps to configure a Redis instance for every instance you want to set up:
+
+In this case we set up first instance called "redis_1"
+
+Create folders and configs:
+
+    sudo mkdir /etc/redis/redis_1
+    sudo cp /etc/redis/redis.conf /etc/redis/redis_1/redis.conf 
+    sudo chown -R redis:redis /etc/redis
+
+In the config file edit lines:
+
+    daemonize systemd
+    pidfile /var/run/redis/redis_1.pid
+    logfile /var/log/redis/redis_1.log
+    dir /var/lib/redis/redis_1/
+
+Define a "port" number.
+
+    port 6379
+
+*Warning: Remember that each instance should be running on a different port.*
+
+Create the database directories at the location given in the configuration file.
+
+    sudo mkdir /var/lib/redis/redis_1
+    sudo chown redis:redis /var/lib/redis/redis_1
+    sudo chmod 0750 /var/lib/redis/redis_1
+
+Create the service unit file "/etc/systemd/system/redis@.service" with the following contents:
+
+
+```
+[Unit]
+Description=Redis persistent key-value database
+After=network.target
+
+[Service]
+Type=simple
+User=redis
+Group=redis
+ExecStart=/usr/bin/redis-server /etc/redis/%i/redis.conf
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+PIDFile=/var/run/redis/%i.pid
+RuntimeDirectory=%i
+RuntimeDirectoryMode=2755
+LimitNOFILE=65536
+Restart=always
+TimeoutStopSec=0
+
+UMask=007
+PrivateDevices=yes
+ProtectHome=yes
+ReadOnlyDirectories=/
+ReadWriteDirectories=-/var/lib/redis
+ReadWriteDirectories=-/var/log/redis
+ReadWriteDirectories=-/var/run/redis
+
+NoNewPrivileges=true
+CapabilityBoundingSet=CAP_SETGID CAP_SETUID CAP_SYS_RESOURCE
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryDenyWriteExecute=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# redis-server can write to its own config file when in cluster mode so we
+# permit writing there by default. If you are not using this feature, it is
+# recommended that you replace the following lines with "ProtectSystem=full".
+ProtectSystem=true
+ReadWriteDirectories=-/etc/redis
+
+[Install]
+WantedBy=multi-user.target
+
+```
+
+Start the new redis instance:
+
+    sudo systemctl start redis@redis_1
+    sudo systemctl enable redis@redis_1
 
 #### ELK Stack
 Install ELK stack: Elasticsearch, Logstash, and Kibana
@@ -1814,7 +1935,7 @@ For Ruby RVM (Version Management)
 ### NodeJS
 Install
 
-    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
     sudo apt install -y nodejs
 
 ***
@@ -1887,7 +2008,7 @@ And after run
 
 ### Disable Git Certificate Verification
 
-For security reasons, not recommended
+Note: for security reasons, not recommended
 
     sudo git config --global http.sslVerify false
 
@@ -1909,56 +2030,9 @@ After run
     $ vim
     :PluginInstall
 
-## Enable Normal Scrollbars
-
-    gsettings set com.canonical.desktop.interface scrollbar-mode normal
-
-To revert
-
-    gsettings reset com.canonical.desktop.interface scrollbar-mode
-
-## Enable User Name in Systray
-
-    gsettings set com.canonical.indicator.session show-real-name-on-panel true
-
-## Change Datetime Format in Systray
-Open dconf-editor and go ```com > canonical > indicator > datetime``` Change time format to CUSTOM and time format type ```%a, %e %b %H:%M %```
-
 ## Enable Minimize App on Dash Click
 
     gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
-
-## Install Custom Wallpaper
-
-For ```convert``` command you need install package ```imagemagick```
-
-    mkdir ~/Pictures/Wallpapers
-    sudo convert ~/Dropbox/images/DSM.jpg ~/Pictures/Wallpapers/DSM.png
-    gsettings set org.gnome.desktop.background picture-uri file:///home/longman/Pictures/Wallpapers/DSM.png
-
-If you want to change wallpaper on login page, open file `/usr/share/gnome-shell/theme/ubuntu.css` in your preferred editor:
-
-    sudo vim /usr/share/gnome-shell/theme/ubuntu.css
-    
-and replace 
-
-```css
-#lockDialogGroup {
-  background: #2c001e url(resource:///org/gnome/shell/theme/noise-texture.png);
-  background-repeat: repeat;
-}
-```    
-with
-```css
-#lockDialogGroup {
-  background: #2c001e url(file:///path/to/your/image.png);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-```
-
-After that, restart system.
 
 ## Add Georgian Keyboard
 
@@ -1993,7 +2067,7 @@ Next, Login as your user who must be able to run sudo.
 - **Xauthority Ownership**
   - `ls -lta | grep .Xa` should be owned by your user, for example `john john`
    - If it is `root root` or anything than your user/group it's wrong
-   - To Fix: `sudo chown jesse:jesse .Xauthority`
+   - To Fix: `sudo chown john:john .Xauthority`
 - **Xsession Errors**
   - This is just to make sure there are no syntax errors for your reference:
     - To Check: `cat ~/.xsession-errors`
@@ -2015,21 +2089,6 @@ Next, Login as your user who must be able to run sudo.
 - **How to Ensure it Works**
   - You might be able to login after one of the steps above if you don't reboot. However, to be certain, 
     you want to reboot to ensure it is fixed, otherwise you'll be doing this over and over   
-
-## Sound Indicator Not Showing
-This appears in the top-right menu on Gnome. Tested in 14/15.
-
-This will also fix Tweak UI if a sound item is missing.
-
-    sudo apt install -y indicator-sound
-
-For Gnome (Default)
-
-    sudo killall gnome-panel
-
-For Unity
-
-    sudo killall unity-panel-service
 
 # GUI
 
@@ -2060,81 +2119,25 @@ In terminal make sure this is false, then try your hotkey `ctrl+alt+l` or if you
 You can toggle these items at https://extensions.gnome.org
 I suggest creating an account so you have a record.
 
-- [No Title Bar](https://extensions.gnome.org/extension/1267/no-title-bar/)
-- [OpenWeather](https://extensions.gnome.org/extension/750/openweather/)
-- [Clipboard Indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/)
-- [Coverflow Alt-Tab](https://extensions.gnome.org/extension/97/coverflow-alt-tab/)
-- [Gnome Shell Audio Output Switcher](https://extensions.gnome.org/extension/1028/gnome-shell-audio-output-switcher/)
-- [Panel OSD](https://extensions.gnome.org/extension/708/panel-osd/)
-- [Extension Update Notifier](https://extensions.gnome.org/extension/1166/extension-update-notifier/)
-- [Appfolders Management](https://extensions.gnome.org/extension/1217/appfolders-manager/)
-- [Apt Update Indicator](https://extensions.gnome.org/extension/1139/apt-update-indicator/)
-- [Auto Move Windows](https://extensions.gnome.org/extension/16/auto-move-windows/)
-- [CPU Power Manager](https://extensions.gnome.org/extension/945/cpu-power-manager/)
-- [Frippery Move Clock](https://extensions.gnome.org/extension/2/move-clock/)
-- [Hide Activities Button](https://extensions.gnome.org/extension/744/hide-activities-button/)
-- [Places Status Indicator](https://extensions.gnome.org/extension/8/places-status-indicator/)
-- [Refresh Wifi Connections](https://extensions.gnome.org/extension/905/refresh-wifi-connections/)
-- [Remove Dropdown Arrows](https://extensions.gnome.org/extension/800/remove-dropdown-arrows/)
-- [Status Area Horizontal Spacing](https://extensions.gnome.org/extension/355/status-area-horizontal-spacing/)
-- [NoAnnoyance](https://extensions.gnome.org/extension/1236/noannoyance/)
-- [Workspaces to Dock](https://extensions.gnome.org/extension/427/workspaces-to-dock/)
-- [Gno-Menu](https://extensions.gnome.org/extension/608/gnomenu/)
-- [Scale Switcher](https://extensions.gnome.org/extension/1306/scale-switcher/)
-- [Datetime Format](https://extensions.gnome.org/extension/1173/datetime-format/)
+- [OpenWeather](https://extensions.gnome.org/extension/750/openweather/) - Weather extension to display weather information from https://openweathermap.org/ or https://darksky.net for almost all locations in the world.
+- [No Title Bar](https://extensions.gnome.org/extension/2015/no-title-bar-forked/) - No Title Bar removes the title bar from non-GTK applications and moves the window title and buttons to the top panel.
+- [Extension Update Notifier](https://extensions.gnome.org/extension/1166/extension-update-notifier/) - Shows a notification when extension updates are available.
+- [Hide Activities Button](https://extensions.gnome.org/extension/1128/hide-activities-button/) - Hides the Activities button on the panel
+- [Remove Dropdown Arrows](https://extensions.gnome.org/extension/800/remove-dropdown-arrows/) - Removes the dropdown arrows which were introduced in Gnome 3.10 from the App Menu, System Menu, Input Menu, Access Menu, Places Menu, Applications Menu and any other extension that wants to add dropdown arrows.
+- [Status Area Horizontal Spacing](https://extensions.gnome.org/extension/355/status-area-horizontal-spacing/) - Reduce the horizontal spacing between icons in the top-right status area
+- [NoAnnoyance](https://extensions.gnome.org/extension/1236/noannoyance/) - Disables the “Window Is Ready” notification and changes the policy of the window manager so that new windows are always focused.
+- [Clock Override](https://extensions.gnome.org/extension/1206/clock-override/) - Customize the date and time format displayed in clock in the top bar in GNOME Shell.
+- [Panel OSD](https://extensions.gnome.org/extension/708/panel-osd/) - Configuring where on the (main) screen notifications will appear, instead of just above the message tray.
+- [Draw On You Screen](https://extensions.gnome.org/extension/1683/draw-on-you-screen/) - Start drawing with Super+Alt+D and save your beautiful work by taking a screenshot.
+- [Caffeine](https://extensions.gnome.org/extension/517/caffeine/) - Disable the screensaver and auto suspend.
+- [CPU Power Manager](https://extensions.gnome.org/extension/945/cpu-power-manager/) - Manage Intel_pstate CPU Frequency scaling driver.
+- [Todo.txt](https://extensions.gnome.org/extension/570/todotxt/) - A Gnome shell interface for todo.txt.
+
 
 ## Reload Gnome Freeze
 This is a rare things, it happens much more in Gnome and requires a lot more "damaging" things. To fix a gnome that seems frozen do the following:
 
 <kbd>ALT + F2</kbd> enter in <kbd>r</kbd> (lowecase) and press <kbd>Enter</kbd>
-
-
-***
-[(Back to top)](#table-of-contents)
-
-# Adjust Mouse and Devices
-When using a USB mouse sometimes the speed is just not right, in my case it's too slow often. Here is how to adjust it:
-
-    xinput --list
-
-I get something like this:
-
-    ⎡ Virtual core pointer                      id=2    [master pointer  (3)]
-    ⎜   ↳ Virtual core XTEST pointer                id=4    [slave  pointer  (2)]
-    ⎜   ↳ ETPS/2 Elantech Touchpad                  id=15   [slave  pointer  (2)]
-    ⎜   ↳ Logitech Unifying Device. Wireless PID:101b   id=12   [slave  pointer  (2)]
-    ⎣ Virtual core keyboard                     id=3    [master keyboard (2)]
-        ↳ Virtual core XTEST keyboard               id=5    [slave  keyboard (3)]
-        ↳ Power Button                              id=6    [slave  keyboard (3)]
-        ↳ Video Bus                                 id=7    [slave  keyboard (3)]
-        ↳ Power Button                              id=8    [slave  keyboard (3)]
-    ...
-
-The ID of my mouse is `12`.
-You can see all the properties with:
-
-    $ xinput --list-props 12
-
-Then you can adjust the settings the String value and a value at the end:
-
-    $ xinput --set-prop 12 "Device Accel Constant Deceleration" 2
-
-## Preserve Settings
-
-To keep the settings in Gnome, do the following:
-
-    $ cd ~
-    $ touch gnome-boot.sh && chmod +x gnome-boot.sh
-
-Example of `gnome-boot.sh` file (Note: You can call it whatever you like):
-
-    #!/bin/bash
-    xinput --set-prop 12 "Device Accel Constant Deceleration" 4
-
-
-Then Add the Bash script the Gnome Session:
-
-    $ gnome-session-properties
 
 
 ***
@@ -2243,24 +2246,7 @@ Hide system apps
 
     sudo sed -i 's/NoDisplay=false/NoDisplay=true/g' /etc/xdg/autostart/*.desktop
 
-Remove rythmbox audio player
-
-    sudo apt purge rhythmbox
-
-Remove Totem video player
-
-    sudo apt purge totem
-
-# Remove amazon launcher
-
-    sudo apt purge ubuntu-web-launchers
-
-Clean System
-
-    sudo apt autoremove
-    sudo apt clean
-    sudo apt autoclean
-
+Remove any unwanted applications.
 
 ***
 

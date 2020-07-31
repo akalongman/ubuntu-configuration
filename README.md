@@ -152,17 +152,15 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [PCSXR](#pcsxr) (PlayStation 1 Emulator)
 - [Customizations](#customizations)
     - [System Tweaks](#system-tweaks)
-        - [Configure Gnome](#configure-gnome)
         - [Increase Inotify Watches Limit](#increase-inotify-watches-limit)
         - [Disable Git Certificate Verification](#disable-git-certificate-verification)
     - [Shortcuts](#shortcuts)
     - [VIM Customization](#vim-customization)
-    - [Enable Auto Focus on Opened Applications](#enable-auto-focus-on-opened-applications)
-    - [Enable Minimize App on Dash Click](#enable-minimize-app-on-dash-click)
     - [Add Georgian Keyboard](#add-georgian-keyboard)
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Ubuntu Infinite Login](#ubuntu-infinite-login)
 - [GUI](#gui)
+    - [Move Dock To Bottom](#move-dock-to-bottom)
     - [Easy Window Resize](#easy-window-resize)
     - [Left or Right Close Buttons](#left-or-right-close-buttons)
     - [Fix Gnome Lockscreen](#fix-gnome-lockscreen)
@@ -1989,10 +1987,6 @@ After that run PCSX, configure and play
 
 ## System Tweaks
 
-### Configure Gnome
-
-Open Gnome Tweaks app and configure what you want :)
-
 ### Increase Inotify Watches Limit
 
 Open ```sysctl.conf```
@@ -2030,10 +2024,6 @@ After run
 
     $ vim
     :PluginInstall
-
-## Enable Minimize App on Dash Click
-
-    gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 
 ## Add Georgian Keyboard
 
@@ -2092,6 +2082,17 @@ Next, Login as your user who must be able to run sudo.
     you want to reboot to ensure it is fixed, otherwise you'll be doing this over and over   
 
 # GUI
+
+## Move Dock To Bottom
+
+I prefer dock like Mac. To do this, run commands:
+
+    gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
+    gsettings set org.gnome.shell.extensions.dash-to-dock dock-position BOTTOM
+    gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode FIXED
+    gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 34
+    gsettings set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
+    gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 
 ## Easy Window Resize
 You can resize windows very nicely:

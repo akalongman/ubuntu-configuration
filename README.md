@@ -626,10 +626,11 @@ And after run
 
 ### HP
 
-You must download HPLIP software from here: https://developers.hp.com/hp-linux-imaging-and-printing
+You must install HPLIP software. Read more on https://developers.hp.com/hp-linux-imaging-and-printing
 
-After install .run package ([how?](https://help.ubuntu.com/community/InstallingRunPackage)) and run.
-Follow the wizard and add neccessary HP printer
+    sudo apt install hplip hplip-gui
+
+Find installed HP application and run.
 
 ## Update BIOS on Laptop/PC
 

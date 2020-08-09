@@ -532,31 +532,32 @@ If you want to use GUI clients for committing, you have to add some options to y
 
 ## Enable Native Virtualization
 
-Install tools
-
-    sudo apt install -y qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
-
 Check if supported by hardware
 
-    sudo egrep '(vmx|svm)' --color=always /proc/cpuinfo
+    egrep -c '(vmx|svm)' /proc/cpuinfo
 
-If nothing is displayed, then your processor doesn't support hardware virtualization, and you must stop here.
+If 0 it means that your CPU doesn't support hardware virtualization.
 
-Run:
+If 1 or more it does - but you still need to make sure that virtualization is enabled in the BIOS.
 
-    kvm-ok
+To check if enabled, you may execute:
+
+    kvm-ok 
 
 If you have KVM, you will see: "INFO: Your CPU supports KVM extensions INFO: /dev/kvm exists KVM acceleration can be used"
 
+Install Necessary Packages
+
+    sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
+
 Next, add your user to the KVM group and libvirtd group. To do so, type:
 
-    sudo adduser $(whoami) kvm
-    sudo adduser $(whoami) libvirtd
+    sudo adduser `id -un` libvirt
+    sudo adduser `id -un` kvm
 
-After the installation, re-login so that the changes take effect. You can test the installation by typing:
+Verify Installation:
 
-    sudo virsh -c qemu:///system list
-
+    virsh list --all
 
 ## Format USB
 
@@ -777,7 +778,8 @@ For installing ATI drivers, read this official documentation: http://support.amd
     sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full \
         p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn \
         easy-rsa network-manager-openvpn-gnome exfat-fuse exfat-utils apt-transport-https python-dbus ethtool net-tools dos2unix \
-        liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome tree duplicity xserver-xorg-input-synaptics screen lib32z1 lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common
+        liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome tree duplicity xserver-xorg-input-synaptics screen lib32z1 \
+        lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common cpu-checker
 
 To setup the git defaults
 

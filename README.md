@@ -62,6 +62,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Flatpak](#flatpak)
     - [System Tools](#system-tools)
         - [Install Nvidia Drivers](#install-nvidia-drivers) (Install drivers from official repository for Nvidia Drivers)
+        - [Install Nvidia Cuda Toolkit](#install-nvidia-cuda-toolkit) (Install CUDA toolkit from official repository for Nvidia)
         - [Install ATI Drivers](#install-ati-drivers)
         - [Utilities](#utilities)
         - [RedShift For Eye Strain](#redshift-for-eye-strain) (Redshift adjusts the color temperature of your screen according to your surroundings)
@@ -766,6 +767,17 @@ Remove Nvidia Drivers
 
     nvidia settings
 
+### Install Nvidia Cuda Toolkit
+The NVIDIA® CUDA® Toolkit provides a development environment for creating high performance GPU-accelerated applications.
+
+The toolkit includes GPU-accelerated libraries, debugging and optimization tools, a C/C++ compiler, and a runtime library to deploy your application.
+
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+    sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+    sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+    sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+    sudo apt-get update
+    sudo apt-get -y install cuda
 
 ### Install ATI Drivers
 

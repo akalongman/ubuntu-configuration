@@ -2148,6 +2148,7 @@ I suggest creating an account so you have a record.
 - [Caffeine](https://extensions.gnome.org/extension/517/caffeine/) - Disable the screensaver and auto suspend.
 - [CPU Power Manager](https://extensions.gnome.org/extension/945/cpu-power-manager/) - Manage Intel_pstate CPU Frequency scaling driver.
 - [Todo.txt](https://extensions.gnome.org/extension/570/todotxt/) - A Gnome shell interface for todo.txt.
+- [Jiggle](https://extensions.gnome.org/extension/3438/jiggle/) - Jiggle is a Gnome Shell extension that highlights the cursor position when the mouse is moved rapidly.
 
 
 ## Reload Gnome Freeze

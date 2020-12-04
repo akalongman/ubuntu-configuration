@@ -127,7 +127,9 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
                 - [Installation](#apache-installation)
                 - [Enable php-mcrypt](#apache-enable-php-mcrypt)
                 - [Configure Dynamic Virtualhosts](#apache-configure-dynamic-virtualhosts)
+                - [Configure SSL for Dynamic Virtualhosts](#apache-configure-ssl-for-dynamic-virtualhosts)
             - [Nginx](#nginx)
+            - [Generate SSL certificates for local domains](#generate-ssl-certificates-for-local-domains)
             - [MySQL](#mysql)
             - [Percona Toolkit](#percona-toolkit)
             - [MyCLI](#mycli) Terminal MySQL Utility
@@ -359,7 +361,7 @@ And add:
 
 If requires authorization:
 
-    username@remote_address:/remote/path /local/path fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/USER/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
+    username@remote_address:/remote/path /local/path fuse.sshfs delay_connect,_netdev,idmap=user,uid=1000,gid=1000,noatime,default_permissions,IdentityFile=/home/<user>/.ssh/id_rsa,reconnect,transform_symlinks,allow_other 0 0
 
 If not requires:
 
@@ -791,7 +793,7 @@ For installing ATI drivers, read this official documentation: http://support.amd
         p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn \
         easy-rsa network-manager-openvpn-gnome exfat-fuse exfat-utils apt-transport-https python-dbus ethtool net-tools dos2unix \
         liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome tree duplicity xserver-xorg-input-synaptics screen lib32z1 \
-        lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common cpu-checker
+        lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common cpu-checker libnss3-tools python3-pip
 
 To setup the git defaults
 
@@ -1548,6 +1550,49 @@ Reload NetworkManager:
 
 Now domain somesite.com.test should work.
 
+##### Apache: Configure SSL for dynamic virtualhosts
+
+First of all [Generate SSL certificates for local domains](#generate-ssl-certificates-for-local-domains)
+
+After you can use this small script, for generating SSL certificate for all virtual domains (folders).
+
+```bash
+#!/usr/bin/env bash
+
+cmd_array=( mkcert -key-file key.pem -cert-file cert.pem  )
+for d in /var/www/html/domains/*/ ; do
+    cmd_array+=(`basename "$d"`.test)
+done
+
+"${cmd_array[@]}"
+```    
+
+And add the generated cert.pem and key.pem to the apache configuration file, edit `/etc/apache2.conf`
+
+Add new VirtualHost section:
+
+```
+<VirtualHost *:443>
+    VirtualDocumentRoot /var/www/html/domains/%-2+/public
+
+    SSLEngine on
+    SSLCertificateFile    /path/to/generated/certs/cert.pem
+    SSLCertificateKeyFile /path/to/generated/certs/key.pem
+
+    <Directory /var/www/html/domains>
+                DirectoryIndex index.html index.php
+                Options Indexes FollowSymLinks MultiViews Includes
+                AllowOverride All
+                Order deny,allow
+                Allow from all
+                Require all granted
+    </Directory>
+
+</VirtualHost>
+```
+
+Make sure the mod_ssl is enabled and restart the apache.
+
 #### Nginx
 Or if you prefer to use nginx
 
@@ -1563,6 +1608,30 @@ And after install
 
     sudo apt install -y nginx
 
+#### Generate SSL certificates for local domains
+
+`mkcert` automatically creates and installs a local CA in the system root store, and generates locally-trusted certificates.
+
+Download `mkcert` utility (https://github.com/FiloSottile/mkcert) precompiled binary
+from https://github.com/FiloSottile/mkcert/releases
+
+    wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64
+    chmod +x mkcert
+
+Generate and install root certificates:
+
+    mkcert -install
+
+Root certificates will be placed under `mkcert -CAROOT`. For Ubuntu its `/home/<user>/.local/share/mkcert`
+
+After you can generate certificates for your domains:
+
+    mkcert -key-file key.pem -cert-file cert.pem example.test *.example.test example2.test *.example2.test
+
+Now you can add the generated cert.pem and key.pem to your webserver configuration.
+
+If you use Apache Dynamic Virtualhosts, you can generate certs automatically. 
+Read more in [Configure SSL for Dynamic Virtualhosts](#apache-configure-ssl-for-dynamic-virtualhosts)  
 
 #### MySQL
 
@@ -1826,7 +1895,7 @@ Otherwise you could always set up a crontab such as:
 
 Then append this to run every five minutes.
 
-    */5 * * * * /home/longman/backup.sh chgrp -R www-data /var/www && chmod g+rw /var/www
+    */5 * * * * /home/<user>/backup.sh chgrp -R www-data /var/www && chmod g+rw /var/www
 
 Lastly, you could have a deploy script that does this for you, such as Python `Fabfile`, but that's another topic.
 
@@ -2033,7 +2102,7 @@ Note: for security reasons, not recommended
 
     git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
-And copy [.vimrc](os/home/.vimrc) file in your home folder (/home/USERNAME/.vimrc)
+And copy [.vimrc](os/home/.vimrc) file in your home folder (/home/<user>/.vimrc)
 After run
 
     $ vim

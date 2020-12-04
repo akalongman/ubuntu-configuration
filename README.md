@@ -1612,7 +1612,7 @@ And after install
 
 `mkcert` automatically creates and installs a local CA in the system root store, and generates locally-trusted certificates.
 
-Download `mkcert` utility (https://github.com/FiloSottile/mkcert) precompiled binary
+Download [mkcert](https://github.com/FiloSottile/mkcert) precompiled binary
 from https://github.com/FiloSottile/mkcert/releases
 
     wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64

@@ -58,6 +58,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Sniff Local Traffic](#sniff-local-traffic)
     - [Play Sound Through Multiple Outputs](#play-sound-through-multiple-outputs)
     - [Terminal Prompt Customization](#terminal-prompt-customization)
+    - [Set CPU Governor to Performance](#set-cpu-governor-to-performance)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [Flatpak](#flatpak)
@@ -714,6 +715,27 @@ Put the file [ps.sh](os/etc/profile.d/ps.ssh) under `/etc/profile.d` directory.
 In the ~/.bashrc and /root/.bashrc files add line:
 
     source /etc/profile.d/ps.sh
+
+## Set CPU Governor to Performance
+
+Install `cpufrequtils` and set governor
+
+    sudo apt install -y cpufrequtils
+    echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
+    sudo systemctl restart cpufrequtils
+
+Disable default ondemand governor:
+
+    sudo systemctl disable ondemand
+
+You can check governor via 
+
+    cpufreq-info
+
+Or:
+
+    cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
 
 ***
 

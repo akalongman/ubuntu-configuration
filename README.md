@@ -540,7 +540,10 @@ If you want to use GUI clients for committing, you have to add some options to y
     # or, if you exported the ownertrust
     gpg --import-ownertrust ownertrust-gpg.txt
 
+If you just copy-pasted the .gnupg folder, you should register keys:
 
+    gpg --import pubring.gpg
+    gpg --import secring.gpg
 
 ## Enable Native Virtualization
 

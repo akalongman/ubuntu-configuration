@@ -290,6 +290,13 @@ For changing default save directory for gnome-screenshot, use the command
 
     awk '{print $1*10^-6 " W"}' /sys/class/power_supply/BAT0/power_now
 
+Also, you can install `powertop` for listing consumption per process.
+
+    sudo apt install powertop
+
+You might need calibrate `powertop` before first use. For calibrate, run:
+
+    sudo powertop --calibrate
 
 ## List all Keybindings
 

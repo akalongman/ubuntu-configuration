@@ -812,8 +812,8 @@ The toolkit includes GPU-accelerated libraries, debugging and optimization tools
     sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
     sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
     sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-    sudo apt-get update
-    sudo apt-get -y install cuda
+    sudo apt update
+    sudo apt -y install cuda
 
 ### Install ATI Drivers
 
@@ -1887,16 +1887,16 @@ To configure Elasticsearch to start automatically when the system boots up, run 
 Install certbot (https://certbot.eff.org)
 
     sudo add-apt-repository ppa:certbot/certbot
-    sudo apt-get update
+    sudo apt update
     
 Generating for nginx:
     
-    sudo apt-get install -y python-certbot-nginx 
+    sudo apt install -y python-certbot-nginx 
     sudo certbot --nginx
     
 Generating for apache:
     
-    sudo apt-get install -y python-certbot-apache 
+    sudo apt install -y python-certbot-apache 
     sudo certbot --apache
 
 You can test automatic renewal for your certificates by running this command:
@@ -2220,9 +2220,9 @@ Next, Login as your user who must be able to run sudo.
   - I read that it's possible `apt-autoremove` may accidentally remove `xubuntu-desktop`, `ubuntu-desktop` and LightDM reports no errors.
     - The `ubuntu-desktop` will load the Gnome interface
     - The `xubuntu-desktop` will load a different interface I'm not familiar with
-    - To Fix: `sudo apt-get install ubuntu-desktop`
+    - To Fix: `sudo apt install ubuntu-desktop`
   - **If you are using Gnome**, try following the post at [OMGUbuntu](http://www.omgubuntu.co.uk/2016/05/install-gnome-3-20-ubuntu-16-04-lts)
-    - After the Above Try: `sudo apt-get autoremove gnome-software && sudo apt-get install gnome-software`
+    - After the Above Try: `sudo apt autoremove gnome-software && sudo apt install gnome-software`
     - I was able to get Gnome-Classic working but not Gnome
 - **How to Ensure it Works**
   - You might be able to login after one of the steps above if you don't reboot. However, to be certain, 

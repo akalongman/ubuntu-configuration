@@ -25,6 +25,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Packages](#packages)
         - [Other Commands](#other-commands)
             - [Screenshots](#screenshots)
+            - [Print Power Consumption in Watts](#print-power-consumption-in-watts)
     - [List all KeyBindings](#list-all-keybindings)
     - [Use 32Bit on 64bit](#use-32bit-on-64bit)
     - [Networking](#networking)
@@ -56,7 +57,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Lenovo](#update-bios-on-lenovo)
     - [Sniff Local Traffic](#sniff-local-traffic)
     - [Play Sound Through Multiple Outputs](#play-sound-through-multiple-outputs)
-    - [Terminal Prompt Customizing](terminal-prompt-customizing)
+    - [Terminal Prompt Customization](#terminal-prompt-customization)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [Flatpak](#flatpak)
@@ -78,6 +79,9 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Firewall](#firewall)
             - [UFW](#ufw)
             - [GUFW](#gufw)
+        - [Geekbench](#geekbench) (Geekbench 5 is a cross-platform benchmark that measures your system's performance with the press of a button)
+        - [Clonezilla](#clonezilla) (Clonezilla is a partition and disk imaging/cloning program. It helps you to do system deployment, bare metal backup and recovery.)
+        - [Screen Testing Soft](#screen-testing-soft) (This is a program for testing the quality of CRT/LCD screens. It displays various patterns and allows you to estimate the quality of your CRT/LCD monitor.)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
@@ -280,6 +284,11 @@ With delay 5 seconds and only window
 For changing default save directory for gnome-screenshot, use the command
 
     gsettings set org.gnome.gnome-screenshot auto-save-directory "file:///home/$USER/Pictures/"
+
+##### Print power consumption in watts
+
+    awk '{print $1*10^-6 " W"}' /sys/class/power_supply/BAT0/power_now
+
 
 ## List all Keybindings
 
@@ -697,9 +706,9 @@ After that restart pulseaudio
 Then go to your sound settings and you will see the option to output to multiple sound devices.
 
 ## Terminal Prompt Customization
-Put the file [ps.ssh](os/etc/profile.d/ps.ssh) in to `/etc/profile.d` directory.
+Put the file [ps.sh](os/etc/profile.d/ps.ssh) under `/etc/profile.d` directory.
 
-and in the .bashrc file add line:
+In the ~/.bashrc and /root/.bashrc files add line:
 
     source /etc/profile.d/ps.sh
 
@@ -793,7 +802,7 @@ For installing ATI drivers, read this official documentation: http://support.amd
         p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn \
         easy-rsa network-manager-openvpn-gnome exfat-fuse exfat-utils apt-transport-https python-dbus ethtool net-tools dos2unix \
         liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome tree duplicity xserver-xorg-input-synaptics screen lib32z1 \
-        lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common cpu-checker libnss3-tools python3-pip
+        lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common cpu-checker libnss3-tools python3-pip libcanberra-gtk-module
 
 To setup the git defaults
 
@@ -866,14 +875,12 @@ Lastly, open the GNOME Tweaks tool and select "Appearance" in the sidebar, locat
 
 ### Oracle Java
 
-Download deb package from https://www.oracle.com/java/technologies/javase-jdk14-downloads.html
-
-Rename the folder 
-
-    sudo mv /usr/lib/jvm/jdk-14.0.1 /usr/lib/jvm/jdk-14 
+Download and install deb package from https://www.oracle.com/java/technologies/javase-jdk15-downloads.html
 
 And update alternatives
 
+    sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-15.0.1/bin/java 1
+    sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk-15.0.1/bin/javac 1
     sudo update-alternatives --config java
 
 ### Wine
@@ -997,6 +1004,35 @@ GUFW is a GUI for UFW
 
     sudo apt install -y gufw
 
+### Geekbench
+
+Download archive from https://www.geekbench.com/download/linux/ and extract.
+
+Move folder under /opt
+
+    sudo mv Geekbench-5.3.1-Linux /opt/geekbench5
+
+Now you can run benchmark
+
+    /opt/geekbench5/geekbench5
+
+### Clonezilla
+Clonezilla is a partition and disk imaging/cloning program. It helps you to do system deployment, bare metal backup and recovery. 
+
+Download live USB image: https://clonezilla.org/downloads/download.php?branch=stable
+
+Prepare USB device
+    
+    mkfs.vfat -F 32 /dev/sd[1 letter]
+
+And [Write iso Image to USB](#write-iso-image-to-usb)
+
+### Screen Testing Soft
+This is a program for testing the quality of CRT/LCD screens. It displays various patterns and allows you to estimate the quality of your CRT/LCD monitor.
+
+    sudo apt install -y screentest
+
+
 ***
 [(Back to top)](#table-of-contents)
 
@@ -1073,7 +1109,7 @@ VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterp
 
 Check latest version number on https://www.virtualbox.org/wiki/Downloads
 
-During writing this manual, latest version was 5.2
+During writing this manual, latest version was 6.1
 
 Installation
 
@@ -1342,8 +1378,12 @@ uGet is a powerful download manager.
 
 To install, run:
 
-    sudo apt install -y uget
+    sudo add-apt-repository -y ppa:uget-team/ppa
+    sudo apt install -y uget uget-integrator
 
+You can also install browser extensions for uGet integration: 
+
+- Chrome: https://chrome.google.com/webstore/detail/uget-integration/efjgjleilhflffpbnkaofpmdnajdpepi
 
 ***
 [(Back to top)](#table-of-contents)
@@ -1730,7 +1770,8 @@ Create folders and configs:
 
 In the config file edit lines:
 
-    daemonize systemd
+    daemonize no
+    supervised systemd
     pidfile /var/run/redis/redis_1.pid
     logfile /var/log/redis/redis_1.log
     dir /var/lib/redis/redis_1/
@@ -2037,9 +2078,7 @@ you may want to run `sudo apt remove cmdtest` first. Refer to [this](https://git
 [(Back to top)](#table-of-contents)
 
 ### Ansible
-Add repository:
 
-    sudo apt-add-repository -y ppa:ansible/ansible
     sudo apt install -y ansible
 
 ***
@@ -2211,7 +2250,7 @@ I suggest creating an account so you have a record.
 - [Remove Dropdown Arrows](https://extensions.gnome.org/extension/800/remove-dropdown-arrows/) - Removes the dropdown arrows which were introduced in Gnome 3.10 from the App Menu, System Menu, Input Menu, Access Menu, Places Menu, Applications Menu and any other extension that wants to add dropdown arrows.
 - [Status Area Horizontal Spacing](https://extensions.gnome.org/extension/355/status-area-horizontal-spacing/) - Reduce the horizontal spacing between icons in the top-right status area
 - [NoAnnoyance](https://extensions.gnome.org/extension/1236/noannoyance/) - Disables the “Window Is Ready” notification and changes the policy of the window manager so that new windows are always focused.
-- [Clock Override](https://extensions.gnome.org/extension/1206/clock-override/) - Customize the date and time format displayed in clock in the top bar in GNOME Shell.
+- [Clock Override](https://extensions.gnome.org/extension/1206/clock-override/) - Customize the date and time format displayed in clock in the top bar in GNOME Shell. My format is: `%a | %e %b | %H:%M`
 - [Panel OSD](https://extensions.gnome.org/extension/708/panel-osd/) - Configuring where on the (main) screen notifications will appear, instead of just above the message tray.
 - [Draw On You Screen](https://extensions.gnome.org/extension/1683/draw-on-you-screen/) - Start drawing with Super+Alt+D and save your beautiful work by taking a screenshot.
 - [Caffeine](https://extensions.gnome.org/extension/517/caffeine/) - Disable the screensaver and auto suspend.

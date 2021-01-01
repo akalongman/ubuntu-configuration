@@ -167,6 +167,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Add Georgian Keyboard](#add-georgian-keyboard)
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Ubuntu Infinite Login](#ubuntu-infinite-login)
+    - [PCI Device Is Not Recognized Correctly](#pci-device-is-not-recognized-correctly)
 - [GUI](#gui)
     - [Move Dock To Bottom](#move-dock-to-bottom)
     - [Easy Window Resize](#easy-window-resize)
@@ -2234,6 +2235,27 @@ Next, Login as your user who must be able to run sudo.
 - **How to Ensure it Works**
   - You might be able to login after one of the steps above if you don't reboot. However, to be certain, 
     you want to reboot to ensure it is fixed, otherwise you'll be doing this over and over   
+
+## PCI Device Is Not Recognized Correctly
+
+If your `lspci | grep "VGA"` output looks like this:
+
+    01:00.0 VGA compatible controller: NVIDIA Corporation Device 1f95 (rev a1)
+
+Instead of this:
+
+    01:00.0 VGA compatible controller [0300]: NVIDIA Corporation TU117M [GeForce GTX 1650 Ti Mobile] [10de:1f95] (rev a1)
+
+Then you're affected by the issue.
+
+This can be caused by your `/usr/share/misc/pci.ids\*` files being outdated and you can fix it by running:
+
+    sudo update-pciids
+
+If the list is not updated even after running the command above, that means your PCI device is brand new, and no one has registered your device to the pci-ids repository.
+
+You can submit an issue/contact us through gitter, or you can add it yourself to https://pci-ids.ucw.cz/. 
+Make sure you have the right vendor ID and the device ID by checking `lspci -nn` and read the guidelines.
 
 # GUI
 

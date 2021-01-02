@@ -59,6 +59,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Play Sound Through Multiple Outputs](#play-sound-through-multiple-outputs)
     - [Terminal Prompt Customization](#terminal-prompt-customization)
     - [Set CPU Governor to Performance](#set-cpu-governor-to-performance)
+    - [Run Script on System Startup](#run-script-on-system-startup)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [Flatpak](#flatpak)
@@ -168,6 +169,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Ubuntu Infinite Login](#ubuntu-infinite-login)
     - [PCI Device Is Not Recognized Correctly](#pci-device-is-not-recognized-correctly)
+    - [Restore Screen Brightness and Keyboard backlit on Reboot](#restore-screen-brightness-and-keyboard-backlit-on-reboot)
 - [GUI](#gui)
     - [Move Dock To Bottom](#move-dock-to-bottom)
     - [Easy Window Resize](#easy-window-resize)
@@ -743,6 +745,56 @@ You can check governor via
 Or:
 
     cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+## Run Script on System Startup
+
+The below steps will show you to run an example bash script which reports disk space usage of the `/home` directory and saves the report in the `/root` directory every time the Ubuntu system boots.
+
+Create shell script in `/usr/local/bin/` to run on startup.
+
+    vim /usr/local/bin/disk-space-check.sh
+
+The below is an example of such script:
+
+```bash
+#!/bin/bash
+
+date > /root/disk_space_report.txt
+du -sh /home/ >> /root/disk_space_report.txt
+```
+
+Create Systemd service file under `/etc/systemd/system/` folder.
+
+    sudo vim /etc/systemd/system/disk-space-check.service
+
+And put the content:
+
+```
+[Unit]
+After=network.service
+
+[Service]
+ExecStart=/usr/local/bin/disk-space-check.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Set proper permissions:
+
+    sudo chmod 744 /usr/local/bin/disk-space-check.sh
+    sudo chmod 664 /etc/systemd/system/disk-space-check.service
+
+Enable the service unit:
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable disk-space-check.service
+
+Systemd helpful commands:
+
+- `systemctl list-units --type=service` List existing services
+- `systemctl list-units --type=target` List possible targets
+- `systemctl list-dependencies <name>.target` List dependencies for <target>
 
 
 ***
@@ -2172,7 +2224,7 @@ Note: for security reasons, not recommended
 
 **Setup VIM**
 
-    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 And copy [.vimrc](os/home/.vimrc) file in your home folder (/home/<user>/.vimrc)
 After run
@@ -2256,6 +2308,68 @@ If the list is not updated even after running the command above, that means your
 
 You can submit an issue/contact us through gitter, or you can add it yourself to https://pci-ids.ucw.cz/. 
 Make sure you have the right vendor ID and the device ID by checking `lspci -nn` and read the guidelines.
+
+## Restore Screen Brightness and Keyboard backlit on Reboot
+
+On my device screen brightness and keyboard backlit always resets after reboot, so there is a fix.
+
+First, find config files where your brightness and keyboard backlit state is stored. In my case, it was `/sys/class/backlight/nvidia_0/brightness` and `/sys/class/leds/tpacpi\:\:kbd_backlight/brightness`
+
+Test your configs:
+
+    echo 1 > /sys/class/leds/tpacpi\:\:kbd_backlight/brightness
+    echo 70 > /sys/class/backlight/nvidia_0/brightness
+
+Settings should be changed. If not, check configuration files path.
+
+Max brightness you can check via `cat /sys/class/backlight/nvidia_0/max_brightness` and `cat /sys/class/leds/tpacpi\:\:kbd_backlight/max_brightness`
+
+Create script under `/usr/local/bin/`
+
+    sudo vim /usr/local/bin/setup-brightness.sh
+
+And put the lines below:
+
+```bash
+#!/bin/bash
+
+echo 0 > /sys/class/leds/tpacpi\:\:kbd_backlight/brightness
+echo 1 > /sys/class/leds/tpacpi\:\:kbd_backlight/brightness
+echo 70 > /sys/class/backlight/nvidia_0/brightness
+```
+
+Create systemd service file:
+
+    sudo vim /etc/systemd/system/setup-brightness.service
+
+And put content below:
+
+```
+[Unit]
+After=graphical.target
+Description=Set up the screen and keyboard brightness
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/setup-brightness.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Set proper permissions:
+
+    sudo chmod 744 /usr/local/bin/setup-brightness.sh
+    sudo chmod 664 /etc/systemd/system/setup-brightness.service
+
+Test your script by running:
+
+    sudo /usr/local/bin/setup-brightness.sh
+
+Enable the service unit:
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable setup-brightness.service
 
 # GUI
 

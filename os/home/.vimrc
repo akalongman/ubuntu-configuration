@@ -9,10 +9,10 @@ filetype off
 
 " vundle stuff
 set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#rc()
+call vundle#begin()
 
 " vundle repo
-Bundle 'gmarik/Vundle.vim'
+Bundle 'VundleVim/Vundle.vim'
 
 " github repos
 Plugin 'rking/ag.vim'
@@ -29,6 +29,10 @@ Plugin 'jnwhiteh/vim-golang'
 Plugin 'hdima/python-syntax'
 Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'StanAngeloff/php.vim'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
 
 " For vim-markdown
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown

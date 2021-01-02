@@ -841,7 +841,7 @@ This is for tweaking the UI
 
 You can check your [VGA Info](#vga-info)
 
-Find out the right driver version for your graphics card on http://www.nvidia.com/Download/index.aspx
+Find out the right driver version for your graphics card on https://www.nvidia.com/en-us/geforce/drivers/
 
 Install Nvidia Drivers
 

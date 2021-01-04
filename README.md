@@ -170,6 +170,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Ubuntu Infinite Login](#ubuntu-infinite-login)
     - [PCI Device Is Not Recognized Correctly](#pci-device-is-not-recognized-correctly)
     - [Restore Screen Brightness and Keyboard backlit on Reboot](#restore-screen-brightness-and-keyboard-backlit-on-reboot)
+    - [Disable UEFI Choice Screen](#disable-uefi-choice-screen)
 - [GUI](#gui)
     - [Move Dock To Bottom](#move-dock-to-bottom)
     - [Easy Window Resize](#easy-window-resize)
@@ -2370,6 +2371,26 @@ Enable the service unit:
 
     sudo systemctl daemon-reload
     sudo systemctl enable setup-brightness.service
+
+## Disable UEFI Choice Screen
+The easiest solution is to define the undocumented `GRUB_RECORDFAIL_TIMEOUT` variable in `/etc/default/grub`. For example:
+
+    sudo vim /etc/default/grub
+
+and add variable:
+
+    GRUB_RECORDFAIL_TIMEOUT=$GRUB_TIMEOUT
+
+Also set `GRUB_TIMEOUT` to `0`. After run:
+
+    sudo update-grub
+
+Example:
+
+    GRUB_HIDDEN_TIMEOUT=0
+    GRUB_HIDDEN_TIMEOUT_QUIET=true
+    GRUB_TIMEOUT=0
+    GRUB_RECORDFAIL_TIMEOUT=$GRUB_TIMEOUT
 
 # GUI
 

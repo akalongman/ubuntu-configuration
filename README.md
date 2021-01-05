@@ -2142,10 +2142,29 @@ For Ruby RVM (Version Management)
 [(Back to top)](#table-of-contents)
 
 ### NodeJS
-Install
+I recommend install NodeJS using [Node Version Manager](https://github.com/nvm-sh/nvm) 
+    
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-    sudo apt install -y nodejs
+To download, compile, and install the latest release of node, do this:
+
+    nvm install node # "node" is an alias for the latest version
+
+To install a specific version of node:
+
+    nvm install 6.14.4 # or 10.10.0, 8.9.1, etc
+
+To install a latest LTS version of node:
+
+    nvm install --lts
+
+You can list available versions using ls-remote:
+
+    nvm ls-remote
+
+And then in any new shell just use the installed version:
+
+    nvm use [version]
 
 ***
 [(Back to top)](#table-of-contents)
@@ -2156,9 +2175,6 @@ For installation Yarn package manager run:
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     sudo apt update && sudo apt install -y yarn
-
-Note: Ubuntu 17.04 comes with cmdtest installed by default. If you’re getting errors from installing yarn, 
-you may want to run `sudo apt remove cmdtest` first. Refer to [this](https://github.com/yarnpkg/yarn/issues/2821) for more information.
 
 ***
 [(Back to top)](#table-of-contents)

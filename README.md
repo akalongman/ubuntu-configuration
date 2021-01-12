@@ -84,6 +84,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Geekbench](#geekbench) (Geekbench 5 is a cross-platform benchmark that measures your system's performance with the press of a button)
         - [Clonezilla](#clonezilla) (Clonezilla is a partition and disk imaging/cloning program. It helps you to do system deployment, bare metal backup and recovery.)
         - [Screen Testing Soft](#screen-testing-soft) (This is a program for testing the quality of CRT/LCD screens. It displays various patterns and allows you to estimate the quality of your CRT/LCD monitor.)
+        - [Ventoy](#ventoy) (Open source tool to create bootable USB drive for ISO/WIM/IMG/VHD(x)/EFI files. You can copy many files at a time and ventoy will give you a boot menu to select them.)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
@@ -1118,6 +1119,37 @@ This is a program for testing the quality of CRT/LCD screens. It displays variou
 
     sudo apt install -y screentest
 
+### Ventoy
+
+[Ventoy](https://www.ventoy.net/en/index.html) is an open source tool to create bootable USB drive for ISO/WIM/IMG/VHD(x)/EFI files.
+With ventoy, you don't need to format the disk over and over, you just need to copy the ISO/WIM/IMG/VHD(x)/EFI files to the USB drive and boot them directly.
+You can copy many files at a time and ventoy will give you a boot menu to select them.
+
+Download the installation package, like ventoy-x.x.xx-linux.tar.gz from [here](https://github.com/ventoy/Ventoy/releases) and decompress it.
+Run the shell script as root, where XXX is the USB device, for example /dev/sdb:
+
+    sudo sh Ventoy2Disk.sh -i -L "MY-USB" /dev/XXX
+
+**Attention that the USB drive will be formatted and all the data will be lost after install.**
+
+You just need to install Ventoy once, after that all the things needed is to copy the iso files to the USB.
+You can also use it as a plain USB drive to store files and this will not affect Ventoy's function.
+
+You can configure how Ventoy will work using configuration file `/ventoy/ventoy.json` on the USB drive.
+
+My configuration file looks like:
+```json
+{
+    "control": [
+        { "VTOY_DEFAULT_SEARCH_ROOT": "/install/iso" }
+    ],
+    "theme": {
+        "display_mode": "CLI"
+    }
+}
+```
+
+Full documentation you can find [here](https://www.ventoy.net/en/plugin_control.html)
 
 ***
 [(Back to top)](#table-of-contents)

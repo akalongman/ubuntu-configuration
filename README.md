@@ -1233,7 +1233,7 @@ Installation
 
     sudo sh -c 'echo "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
     wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc -O- | sudo apt-key add -
-    sudo apt update && sudo apt install -y virtualbox-6.1
+    sudo apt update && sudo apt install -y virtualbox-6.1 virtualbox-ext-pack
 
 Suggested to [Enable Native Virtualization](#enable-native-virtualization)
 

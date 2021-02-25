@@ -888,8 +888,8 @@ For installing ATI drivers, read this official documentation: http://support.amd
     sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full \
         p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn \
         easy-rsa network-manager-openvpn-gnome exfat-fuse exfat-utils apt-transport-https python-dbus ethtool net-tools dos2unix \
-        liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome tree duplicity xserver-xorg-input-synaptics screen lib32z1 \
-        lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common cpu-checker libnss3-tools python3-pip libcanberra-gtk-module
+        liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome openfortivpn tree duplicity xserver-xorg-input-synaptics screen lib32z1 \
+        lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common cpu-checker libnss3-tools python3-pip libcanberra-gtk-module sshpass jq
 
 To setup the git defaults
 
@@ -1576,7 +1576,7 @@ If you are looking for more PHP modules try:
 It's important to install **php7.4-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.4-bz2 php7.4-cgi php7.4-cli php7.4-common php7.4-curl php7.4-dev php7.4-enchant php7.4-fpm php7.4-gd php7.4-gmp php7.4-imap php7.4-intl php7.4-json php7.4-ldap php7.4-mysql php7.4-odbc php7.4-opcache php7.4-pgsql php7.4-phpdbg php7.4-pspell php7.4-readline php7.4-sybase php7.4-tidy php7.4-xmlrpc php7.4-xsl php7.4-sqlite3 php7.4-mbstring php7.4-bcmath php7.4-soap php7.4-zip php-xdebug php-redis php-igbinary php-imagick
+    sudo apt update && sudo apt install -y php7.4-bz2 php7.4-cgi php7.4-cli php7.4-common php7.4-curl php7.4-dev php7.4-enchant php7.4-fpm php7.4-gd php7.4-gmp php7.4-imap php7.4-intl php7.4-json php7.4-ldap php7.4-mysql php7.4-odbc php7.4-opcache php7.4-pgsql php7.4-phpdbg php7.4-pspell php7.4-readline php7.4-sybase php7.4-tidy php7.4-xmlrpc php7.4-xsl php7.4-sqlite3 php7.4-mbstring php7.4-bcmath php7.4-soap php7.4-zip php7.4-xdebug php7.4-redis php7.4-igbinary php7.4-imagick php-sodium
 
 If you are looking for more PHP modules try:
 

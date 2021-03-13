@@ -60,6 +60,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Terminal Prompt Customization](#terminal-prompt-customization)
     - [Set CPU Governor to Performance](#set-cpu-governor-to-performance)
     - [Run Script on System Startup](#run-script-on-system-startup)
+    - [Manage Swap](#manage-swap)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [Flatpak](#flatpak)
@@ -798,6 +799,34 @@ Systemd helpful commands:
 - `systemctl list-units --type=target` List possible targets
 - `systemctl list-dependencies <name>.target` List dependencies for <target>
 
+
+## Manage Swap
+
+For more modern systems (>1GB), your swap space should be at a minimum be equal to your physical memory (RAM) size "if you use hibernation", 
+otherwise you need a minimum of round(sqrt(RAM)) and a maximum of twice the amount of RAM. The only downside to having more swap space than you will actually use, 
+is the disk space you will be reserving for it. More you can read [here](https://help.ubuntu.com/community/SwapFaq).
+
+Check swap
+
+    cat /proc/swaps
+
+The swappiness parameter controls the tendency of the kernel to move processes out of physical memory and onto the swap disk. 
+Because disks are much slower than RAM, this can lead to slower response times for system and applications if processes are too aggressively moved out of memory.
+
+The default setting in Ubuntu is swappiness=60. Reducing the default value of swappiness will probably improve overall performance for a typical Ubuntu desktop installation. 
+A value of swappiness=10 is recommended, but feel free to experiment.
+
+To check the swappiness value
+
+    cat /proc/sys/vm/swappiness
+
+To change the swappiness value with a swappiness value of 10 can be made with
+
+    sudo vim /etc/sysctl.conf
+
+And add/edit line
+
+    vm.swappiness=10
 
 ***
 

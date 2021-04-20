@@ -61,6 +61,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Set CPU Governor to Performance](#set-cpu-governor-to-performance)
     - [Run Script on System Startup](#run-script-on-system-startup)
     - [Manage Swap](#manage-swap)
+    - [Install Fonts](#install-fonts)
 - [Installation Packages](#installation-packages)
     - [Enable PPAs](#enable-ppas)
     - [Flatpak](#flatpak)
@@ -828,6 +829,14 @@ And add/edit line
 
     vm.swappiness=10
 
+## Install Fonts
+
+Create (if not exists) `~/.local/share/fonts` directory.
+
+Put fonts files in the `~/.local/share/fonts` directory and clear fonts cache:
+
+    fc-cache -rv
+
 ***
 
 [(Back to top)](#table-of-contents)
@@ -1541,7 +1550,7 @@ You can also install browser extensions for uGet integration:
 Linux Apache MySQL PHP
 
 **- Installation for the following:**
-- PHP 5.6/7.0/7.1/7.2/7.3/7.4 (and Modules)
+- PHP 5.6/7.0/7.4/8.0 (and Modules)
 - Apache 2 (and Modules + Dynamic hosts)
 - Nginx *(Optional)*
 - MySQL
@@ -1571,36 +1580,6 @@ If you are looking for more PHP modules try:
 
     sudo apt-cache search php7.0-
 
-##### PHP 7.1
-It's important to install **php7.1-dev** if you want to compile any add-ons later.
-
-    sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.1-bz2 php7.1-cgi php7.1-cli php7.1-common php7.1-curl php7.1-dev php7.1-enchant php7.1-fpm php7.1-gd php7.1-gmp php7.1-imap php7.1-intl php7.1-json php7.1-ldap php7.1-mcrypt php7.1-mysql php7.1-odbc php7.1-opcache php7.1-pgsql php7.1-phpdbg php7.1-pspell php7.1-readline php7.1-recode php7.1-sybase php7.1-tidy php7.1-xmlrpc php7.1-xsl php7.1-sqlite3 php7.1-mbstring php7.1-bcmath php7.1-soap php7.1-zip php-xdebug php-imagick
-
-If you are looking for more PHP modules try:
-
-    sudo apt-cache search php7.1-
-
-##### PHP 7.2
-It's important to install **php7.2-dev** if you want to compile any add-ons later.
-
-    sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.2-bz2 php7.2-cgi php7.2-cli php7.2-common php7.2-curl php7.2-dev php7.2-enchant php7.2-fpm php7.2-gd php7.2-gmp php7.2-imap php7.2-intl php7.2-json php7.2-ldap php7.2-mysql php7.2-odbc php7.2-opcache php7.2-pgsql php7.2-phpdbg php7.2-pspell php7.2-readline php7.2-recode php7.2-sybase php7.2-tidy php7.2-xmlrpc php7.2-xsl php7.2-sqlite3 php7.2-mbstring php7.2-bcmath php7.2-soap php7.2-zip php-xdebug php-imagick
-
-If you are looking for more PHP modules try:
-
-    sudo apt-cache search php7.2-
-
-##### PHP 7.3
-It's important to install **php7.3-dev** if you want to compile any add-ons later.
-
-    sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php7.3-bz2 php7.3-cgi php7.3-cli php7.3-common php7.3-curl php7.3-dev php7.3-enchant php7.3-fpm php7.3-gd php7.3-gmp php7.3-imap php7.3-intl php7.3-json php7.3-ldap php7.3-mysql php7.3-odbc php7.3-opcache php7.3-pgsql php7.3-phpdbg php7.3-pspell php7.3-readline php7.3-recode php7.3-sybase php7.3-tidy php7.3-xmlrpc php7.3-xsl php7.3-sqlite3 php7.3-mbstring php7.3-bcmath php7.3-soap php7.3-zip php-xdebug php-redis php-igbinary php-imagick
-
-If you are looking for more PHP modules try:
-
-    sudo apt-cache search php7.3-
-
 ##### PHP 7.4
 It's important to install **php7.4-dev** if you want to compile any add-ons later.
 
@@ -1610,6 +1589,16 @@ It's important to install **php7.4-dev** if you want to compile any add-ons late
 If you are looking for more PHP modules try:
 
     sudo apt-cache search php7.4-
+
+##### PHP 8.0
+It's important to install **php7.4-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt update && sudo apt install -y php8.0-bz2 php8.0-cgi php8.0-cli php8.0-common php8.0-curl php8.0-dev php8.0-enchant php8.0-fpm php8.0-gd php8.0-gmp php8.0-imap php8.0-intl php8.0-ldap php8.0-mysql php8.0-odbc php8.0-opcache php8.0-pgsql php8.0-phpdbg php8.0-pspell php8.0-readline php8.0-sybase php8.0-tidy php8.0-xmlrpc php8.0-xsl php8.0-sqlite3 php8.0-mbstring php8.0-bcmath php8.0-soap php8.0-zip php8.0-xdebug php8.0-redis php8.0-igbinary php8.0-imagick php8.0-psr php-sodium
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php8.0-
 
 
 #### Composer
@@ -1642,6 +1631,10 @@ For PHP 5.6
 For PHP 7.*
 
     sudo apt install -y apache2 libapache2-mod-php7.*
+
+For PHP 8.*
+
+    sudo apt install -y apache2 libapache2-mod-php8.*
 
 ##### Apache: Enable php-mcrypt & mod_rewrite
 

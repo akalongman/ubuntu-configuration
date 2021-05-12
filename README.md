@@ -1560,10 +1560,10 @@ Linux Apache MySQL PHP
 #### PHP
 
 ##### PHP 5.6
-It's important to install **php5-dev** if you want to compile any add-ons later.
+It's important to install **php5.6-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php5 libpcre3-dev php5-cli php5-cgi php5-common php5-mysql php5-curl php5-gd php5-geoip php5-imagick php5-imap php5-json php5-ldap php5-mcrypt php5-memcache php5-memcached php5-sqlite php5-tidy php5-xdebug php5-xmlrpc php5-xsl php5-dev
+    sudo apt update && sudo apt install -y php5.6 libpcre3-dev php5.6-cli php5.6-cgi php5.6-common php5.6-mysql php5.6-curl php5.6-gd php5.6-geoip php5.6-imagick php5.6-imap php5.6-json php5.6-ldap php5.6-mcrypt php5.6-memcache php5.6-memcached php5.6-tidy php5.6-xdebug php5.6-xmlrpc php5.6-xsl php5.6-dev
 
 If you are looking for more PHP modules try:
 
@@ -1626,7 +1626,7 @@ And add this lines in your .bashrc file:
 
 For PHP 5.6
 
-    sudo apt install -y apache2 libapache2-mod-php5
+    sudo apt install -y apache2 libapache2-mod-php5.6
 
 For PHP 7.*
 

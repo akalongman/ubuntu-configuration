@@ -913,7 +913,7 @@ The toolkit includes GPU-accelerated libraries, debugging and optimization tools
     wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
     sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
     sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
-    sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+    sudo add-apt-repository -y "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
     sudo apt update
     sudo apt -y install cuda
 
@@ -1032,7 +1032,7 @@ Install:
 ### Nautilus-Actions
 Use Nautilus-Actions to easily and graphically create custom context menu options for Ubuntu's Nautilus file manager.
 
-    sudo add-apt-repository ppa:daniel-marynicz/filemanager-actions
+    sudo add-apt-repository -y ppa:daniel-marynicz/filemanager-actions
     sudo apt install -y filemanager-actions-nautilus-extension
 
 
@@ -1088,7 +1088,7 @@ The main purpose of Neofetch is to be used in screenshots to show other users wh
 
 Installation:
 
-    sudo add-apt-repository ppa:dawidd0811/neofetch
+    sudo add-apt-repository -y ppa:dawidd0811/neofetch
     sudo apt update && sudo apt install -y neofetch
 
 ### GParted
@@ -1485,7 +1485,7 @@ Simple animated GIF screen recorder with an easy to use interface
 
 Installation
 
-    sudo add-apt-repository ppa:peek-developers/stable
+    sudo add-apt-repository -y ppa:peek-developers/stable
     sudo apt update && sudo apt install -y peek
 
 ### OBS
@@ -1494,7 +1494,7 @@ Free and open source software for video recording and live streaming https://obs
 
 Installation
 
-    sudo add-apt-repository ppa:obsproject/obs-studio
+    sudo add-apt-repository -y ppa:obsproject/obs-studio
     sudo apt update && sudo apt install -y obs-studio
 
 
@@ -1502,16 +1502,8 @@ Installation
 You can easily use `Startup Disk Creator` and `UNetbootin` to create Linux to USB. 
 But if you need to create Windows bootable USB from your Linux OS use woeusb:
 
-    sudo add-apt-repository ppa:nilarimogard/webupd8
-    sudo apt install -y woeusb
-
-The important part here is that you should format usb in NTFS.
-
-After run
-    
-    woeusb \
-        --target-filesystem NTFS \
-        --device Win10_1809Oct_EnglishInternational_x64.iso /dev/sd[1 letter]
+    sudo add-apt-repository -y ppa:tomtomtom/woeusb
+    sudo apt install -y woeusb-frontend-wxgtk
 
 ### StarUML
 
@@ -2032,7 +2024,7 @@ To configure Elasticsearch to start automatically when the system boots up, run 
 
 Install certbot (https://certbot.eff.org)
 
-    sudo add-apt-repository ppa:certbot/certbot
+    sudo add-apt-repository -y ppa:certbot/certbot
     sudo apt update
     
 Generating for nginx:

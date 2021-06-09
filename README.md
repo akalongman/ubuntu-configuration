@@ -1836,8 +1836,8 @@ Read more in [Configure SSL for Dynamic Virtualhosts](#apache-configure-ssl-for-
 
 You can get latest version number on https://dev.mysql.com/downloads/repo/apt
 
-    wget https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb
-    sudo dpkg -i mysql-apt-config_0.8.13-1_all.deb
+    wget https://dev.mysql.com/get/mysql-apt-config_0.8.17-1_all.deb
+    sudo dpkg -i mysql-apt-config_0.8.17-1_all.deb
     sudo apt update & sudo apt install -y mysql-server
 
 For start configuring MySQL server, run:
@@ -1872,6 +1872,20 @@ For MySQL 8.*
 Restart the service:
 
     sudo service mysql restart
+
+Check if mysql listens port correctly
+
+    sudo netstat -tulnp | grep mysql
+
+Output should be something like:
+```
+tcp6       0      0 :::33060                :::*                    LISTEN      13143/mysqld        
+tcp6       0      0 :::3306                 :::*                    LISTEN      13143/mysqld
+```
+
+You can also run the nmap command from a remote computer to check whether MySQL port 3306 is open to the remote host.
+
+    nmap {server-ip}
 
 #### Percona Toolkit
 Percona Toolkit is a collection of advanced open source command-line tools, developed and used by the Percona technical staff, 

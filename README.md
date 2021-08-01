@@ -1471,7 +1471,7 @@ Installation
 
 Installation
 
-    sudo apt install -y kdenlive
+    sudo apt install -y kdenlive breeze
 
 ### Httpie
 You can easily use httpie from terminal: `http get https://google.com`

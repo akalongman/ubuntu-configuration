@@ -171,6 +171,8 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Shortcuts](#shortcuts)
     - [VIM Customization](#vim-customization)
     - [Add Georgian Keyboard](#add-georgian-keyboard)
+    - [Touchpad Settings](#touchpad-settings)
+        - [Change Scroll Speed](#change-scroll-speed)
 - [Ubuntu Fixes](#ubuntu-fixes)
     - [Ubuntu Infinite Login](#ubuntu-infinite-login)
     - [PCI Device Is Not Recognized Correctly](#pci-device-is-not-recognized-correctly)
@@ -889,7 +891,7 @@ Install Nvidia Drivers
 
     sudo add-apt-repository -y ppa:graphics-drivers/ppa
 
-    sudo apt update && sudo apt install -y nvidia-XXX
+    sudo apt update && sudo apt install -y nvidia-driver-XXX
 
 Type your version instead XXX
 
@@ -2329,6 +2331,32 @@ After run
 ## Add Georgian Keyboard
 
 Go to System "Settings" > "Keyboard" > "Text Entry" and add Georgian layout. Also enable "Allow different sources for each window"
+
+
+## Touchpad Settings
+
+### Change Scroll Speed
+
+List input devices tofind the id
+
+    xinput --list
+
+You have to find input device, like "SynPS/2 Synaptics TouchPad". In my case id was 12.
+
+To list supported settings for device, run:
+
+    xinput list-props {id}
+
+To change scroll speed, you have to update "Synaptics Scrolling Distance" setting. e.g.
+
+    xinput --set-prop {id} 'Synaptics Scrolling Distance' -200 200
+
+To persist this setting you have to put command in the `/etc/X11/xinit/xinputrc` file.
+
+Sometimes id can be changed between reboots, so, you have to update file with following lines:
+
+    idd=$(xinput --list | grep 'SynPS/2 Synaptics TouchPad' | awk '{print $6}'| cut -d'=' -f2)
+    xinput --set-prop $idd 'Synaptics Scrolling Distance' -200 200
 
 ***
 [(Back to top)](#table-of-contents)

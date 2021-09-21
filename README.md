@@ -121,6 +121,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [StarUML](#staruml) (A sophisticated software modeler for agile and concise modeling)
         - [Gramps](#gramps) (A geneological tree manager)
         - [uGet](#uget) (A download manager)
+        - [Xournal](#xournal) (Xournal is a GUI application primarily developed for note-taking, sketching use case and PDF editing)
     - [Development](#development)
         - [LAMP](#lamp)
             - [PHP](#php)
@@ -1536,6 +1537,23 @@ To install, run:
 You can also install browser extensions for uGet integration: 
 
 - Chrome: https://chrome.google.com/webstore/detail/uget-integration/efjgjleilhflffpbnkaofpmdnajdpepi
+
+### Xournal
+
+Xournal is a GUI application primarily developed for note-taking and sketching use case. 
+As the name implies, Xournal is quite a handy tool when you are keeping a journal especially on a touchscreen-capable laptop. 
+Beyond this use case, Xournal has in fact an excellent PDF editing capability, and can export a modified PDF file as well.
+
+To install, run:
+
+    sudo apt install -y xournal
+
+It's very useful tool for adding a Signature Image to a PDF Document with Xournal.
+There are two ways to add your handwritten signature to a PDF document with Xournal. You can directly draw your signature using built-in Pen drawing. 
+Alternatively, you can create an image file of your signature using another tool, and import the image into the PDF document using Xournal.
+
+To hand-write your signature, click on `Pen` icon at the top-left of Xournal's GUI menu. You can also print and type anything (e.g., date) by clicking on `Text` icon.
+To add an image of your signature on Xournal, click on `Image` icon at the top of Xournal's GUI menu, or go to `Tools` → `Image` in the menu option.
 
 ***
 [(Back to top)](#table-of-contents)

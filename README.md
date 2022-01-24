@@ -1,4 +1,4 @@
-# Configuration of Ubuntu 20.04 LTS (Focal Fossa)
+PHP# Configuration of Ubuntu 20.04 LTS (Focal Fossa)
 
 This guide is for [Ubuntu](http://ubuntu.com/desktop), but also compatible with a other __Debian__ based OS as well, like [Mint](http://www.linuxmint.com/), [Elementary OS](http://elementaryos.org/), etc.
 
@@ -127,11 +127,9 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
             - [PHP](#php)
                 - [PHP 5.6](#php-56)
                 - [PHP 7.0](#php-70)
-                - [PHP 7.1](#php-71)
-                - [PHP 7.2](#php-72)
-                - [PHP 7.3](#php-73)
                 - [PHP 7.4](#php-74)
                 - [PHP 8.0](#php-80)
+                - [PHP 8.1](#php-81)
                 - [Switch PHP Versions](#switch-php-versions)
             - [Composer](#composer)
             - [PHPUnit](#phpunit)
@@ -1564,7 +1562,7 @@ To add an image of your signature on Xournal, click on `Image` icon at the top o
 Linux Apache MySQL PHP
 
 **- Installation for the following:**
-- PHP 5.6/7.0/7.4/8.0 (and Modules)
+- PHP 5.6/7.0/7.4/8.0/8.1 (and Modules)
 - Apache 2 (and Modules + Dynamic hosts)
 - Nginx *(Optional)*
 - MySQL
@@ -1614,21 +1612,31 @@ If you are looking for more PHP modules try:
 
     sudo apt-cache search php8.0-
 
+##### PHP 8.1
+It's important to install **php8.1-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt update && sudo apt install -y php8.1-bz2 php8.1-cgi php8.1-cli php8.1-common php8.1-curl php8.1-dev php8.1-enchant php8.1-fpm php8.1-gd php8.1-gmp php8.1-imap php8.1-intl php8.1-ldap php8.1-mysql php8.1-odbc php8.1-opcache php8.1-pgsql php8.1-phpdbg php8.1-pspell php8.1-readline php8.1-sybase php8.1-tidy php8.1-xmlrpc php8.1-xsl php8.1-sqlite3 php8.1-mbstring php8.1-bcmath php8.1-soap php8.1-zip php8.1-xdebug php8.1-redis php8.1-igbinary php8.1-imagick php8.1-psr php-sodium
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php8.1-
+
 ##### Switch PHP Versions
 
-For example switch from 5.6 to 7.4
+For example switch from 8.0 to 8.1
 
 Apache:
 
-    sudo a2dismod php5.6
-    sudo a2enmod php7.4
+    sudo a2dismod php8.0
+    sudo a2enmod php8.1
     sudo service apache2 restart
 
 Command Line:
 
-    sudo update-alternatives --set php /usr/bin/php7.4
-    sudo update-alternatives --set phar /usr/bin/phar7.4
-    sudo update-alternatives --set phar.phar /usr/bin/phar.phar7.4
+    sudo update-alternatives --set php /usr/bin/php8.1
+    sudo update-alternatives --set phar /usr/bin/phar8.1
+    sudo update-alternatives --set phar.phar /usr/bin/phar.phar8.1
 
 #### Composer
 

@@ -1637,6 +1637,7 @@ Command Line:
     sudo update-alternatives --set php /usr/bin/php8.1
     sudo update-alternatives --set phar /usr/bin/phar8.1
     sudo update-alternatives --set phar.phar /usr/bin/phar.phar8.1
+    sudo update-alternatives --set php-config /usr/bin/php-config8.1
 
 #### Composer
 

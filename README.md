@@ -55,6 +55,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [HP](#hp)
     - [Update BIOS on Laptop/PC](#update-bios-on-laptoppc)
         - [Lenovo](#update-bios-on-lenovo)
+    - [Update Firmware](#update-firmware)
     - [Sniff Local Traffic](#sniff-local-traffic)
     - [Play Sound Through Multiple Outputs](#play-sound-through-multiple-outputs)
     - [Terminal Prompt Customization](#terminal-prompt-customization)
@@ -693,7 +694,14 @@ Don't just assume it's sdb. If it's on another device on your laptop then you wi
 
 10. Follow the instructions.
 
+## Update Firmware
 
+Ubuntu ships with [Linux Vendor Firmware Manager](https://fwupd.org/) tool `fwupdmgr`
+
+For update firmware, you must run
+
+    sudo fwupdmgr refresh
+    sudo fwupdmgr update
 
 ## Sniff Local Traffic
 BetterCAP is a powerful, flexible and portable tool created to perform various types of MITM attacks against a network, 

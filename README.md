@@ -250,6 +250,10 @@ Or install `ncdu` and run
 
     ncdu /
 
+Disk Space Analyzer
+
+    sudo baobab
+
 Disks UUID
 
     ls -al /dev/disk/by-uuid/

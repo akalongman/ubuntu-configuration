@@ -2070,12 +2070,12 @@ Install certbot (https://certbot.eff.org)
     
 Generating for nginx:
     
-    sudo apt install -y python-certbot-nginx 
+    sudo apt install -y python3-certbot-nginx 
     sudo certbot --nginx
     
 Generating for apache:
     
-    sudo apt install -y python-certbot-apache 
+    sudo apt install -y python3-certbot-apache 
     sudo certbot --apache
 
 You can test automatic renewal for your certificates by running this command:

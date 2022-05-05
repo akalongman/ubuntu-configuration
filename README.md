@@ -1618,7 +1618,7 @@ If you are looking for more PHP modules try:
 It's important to install **php8.0-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php8.0-bz2 php8.0-cgi php8.0-cli php8.0-common php8.0-curl php8.0-dev php8.0-enchant php8.0-fpm php8.0-gd php8.0-gmp php8.0-imap php8.0-intl php8.0-ldap php8.0-mysql php8.0-odbc php8.0-opcache php8.0-pgsql php8.0-phpdbg php8.0-pspell php8.0-readline php8.0-sybase php8.0-tidy php8.0-xmlrpc php8.0-xsl php8.0-sqlite3 php8.0-mbstring php8.0-bcmath php8.0-soap php8.0-zip php8.0-xdebug php8.0-redis php8.0-igbinary php8.0-imagick php8.0-psr php-sodium
+    sudo apt update && sudo apt install -y php8.0-bz2 php8.0-cgi php8.0-cli php8.0-common php8.0-curl php8.0-dev php8.0-enchant php8.0-fpm php8.0-gd php8.0-gmp php8.0-imap php8.0-intl php8.0-ldap php8.0-mysql php8.0-odbc php8.0-opcache php8.0-pgsql php8.0-phpdbg php8.0-pspell php8.0-readline php8.0-sybase php8.0-tidy php8.0-xmlrpc php8.0-xsl php8.0-sqlite3 php8.0-mbstring php8.0-bcmath php8.0-soap php8.0-zip php8.0-xdebug php8.0-redis php8.0-igbinary php8.0-imagick php-sodium
 
 If you are looking for more PHP modules try:
 
@@ -1628,7 +1628,7 @@ If you are looking for more PHP modules try:
 It's important to install **php8.1-dev** if you want to compile any add-ons later.
 
     sudo add-apt-repository -y ppa:ondrej/php
-    sudo apt update && sudo apt install -y php8.1-bz2 php8.1-cgi php8.1-cli php8.1-common php8.1-curl php8.1-dev php8.1-enchant php8.1-fpm php8.1-gd php8.1-gmp php8.1-imap php8.1-intl php8.1-ldap php8.1-mysql php8.1-odbc php8.1-opcache php8.1-pgsql php8.1-phpdbg php8.1-pspell php8.1-readline php8.1-sybase php8.1-tidy php8.1-xmlrpc php8.1-xsl php8.1-sqlite3 php8.1-mbstring php8.1-bcmath php8.1-soap php8.1-zip php8.1-xdebug php8.1-redis php8.1-igbinary php8.1-imagick php8.1-psr php-sodium
+    sudo apt update && sudo apt install -y php8.1-bz2 php8.1-cgi php8.1-cli php8.1-common php8.1-curl php8.1-dev php8.1-enchant php8.1-fpm php8.1-gd php8.1-gmp php8.1-imap php8.1-intl php8.1-ldap php8.1-mysql php8.1-odbc php8.1-opcache php8.1-pgsql php8.1-phpdbg php8.1-pspell php8.1-readline php8.1-sybase php8.1-tidy php8.1-xmlrpc php8.1-xsl php8.1-sqlite3 php8.1-mbstring php8.1-bcmath php8.1-soap php8.1-zip php8.1-xdebug php8.1-redis php8.1-igbinary php8.1-imagick
 
 If you are looking for more PHP modules try:
 

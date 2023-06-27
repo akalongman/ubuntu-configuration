@@ -131,6 +131,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
                 - [PHP 7.4](#php-74)
                 - [PHP 8.0](#php-80)
                 - [PHP 8.1](#php-81)
+                - [PHP 8.2](#php-82)
                 - [Switch PHP Versions](#switch-php-versions)
             - [Composer](#composer)
             - [PHPUnit](#phpunit)
@@ -1634,22 +1635,34 @@ If you are looking for more PHP modules try:
 
     sudo apt-cache search php8.1-
 
+##### PHP 8.2
+It's important to install **php8.2-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt update && sudo apt install -y php8.2-bz2 php8.2-cgi php8.2-cli php8.2-common php8.2-curl php8.2-dev php8.2-enchant php8.2-fpm php8.2-gd php8.2-gmp php8.2-imap php8.2-intl php8.2-ldap php8.2-mysql php8.2-odbc php8.2-opcache php8.2-pgsql php8.2-phpdbg php8.2-pspell php8.2-readline php8.2-sybase php8.2-tidy php8.2-xmlrpc php8.2-xsl php8.2-sqlite3 php8.2-mbstring php8.2-bcmath php8.2-soap php8.2-zip php8.2-xdebug php8.2-redis php8.2-igbinary php8.2-imagick
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php8.2-
+
 ##### Switch PHP Versions
 
-For example switch from 8.0 to 8.1
+For example switch from 8.1 to 8.2
 
 Apache:
 
-    sudo a2dismod php8.0
-    sudo a2enmod php8.1
+    sudo a2dismod php8.1
+    sudo a2enmod php8.2
     sudo service apache2 restart
+
+Make sure, PHP module is installed via `sudo apt install -y libapache2-mod-php8.*`
 
 Command Line:
 
-    sudo update-alternatives --set php /usr/bin/php8.1
-    sudo update-alternatives --set phar /usr/bin/phar8.1
-    sudo update-alternatives --set phar.phar /usr/bin/phar.phar8.1
-    sudo update-alternatives --set php-config /usr/bin/php-config8.1
+    sudo update-alternatives --set php /usr/bin/php8.2
+    sudo update-alternatives --set phar /usr/bin/phar8.2
+    sudo update-alternatives --set phar.phar /usr/bin/phar.phar8.2
+    sudo update-alternatives --set php-config /usr/bin/php-config8.2
 
 #### Composer
 

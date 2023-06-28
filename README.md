@@ -1483,9 +1483,10 @@ Installation
 
 ### KDEnlive Video Editor
 
-Installation
+Installation via Flatpak
 
-    sudo apt install -y kdenlive breeze
+    flatpak install flathub org.kde.kdenlive
+    flatpak run org.kde.kdenlive
 
 ### Httpie
 You can easily use httpie from terminal: `http get https://google.com`

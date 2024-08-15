@@ -55,7 +55,6 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [HP](#hp)
     - [Update BIOS on Laptop/PC](#update-bios-on-laptoppc)
         - [Lenovo](#update-bios-on-lenovo)
-    - [Update Firmware](#update-firmware)
     - [Sniff Local Traffic](#sniff-local-traffic)
     - [Play Sound Through Multiple Outputs](#play-sound-through-multiple-outputs)
     - [Terminal Prompt Customization](#terminal-prompt-customization)
@@ -100,7 +99,6 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [SmartGit](#smart-git)
         - [FileZilla](#filezilla) (sFTP Client)
         - [Spotify](#spotify)
-        - [Google Music Player](#google-music-player)
         - [Meld Diff Tool](#meld-diff-tool)
         - [Vagrant](#vagrant)
         - [Docker](#docker)
@@ -152,7 +150,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
             - [Memcached](#Memcached)
             - [Redis](#redis)
                 - [Multiple Redis Instances](#multiple-redis-instances)
-            - [ELK Stack](#elk-stack) ELK Stack: Elasticsearch, Logstash, and Kibana
+            - [ELK Stack](#elk-stack) Elasticsearch, Logstash, and Kibana
             - [Letsencrypt](#letsencrypt)
             - [Phalcon](#phalcon)
             - [Phalcon Dev Tools](#phalcon-dev-tools)
@@ -708,15 +706,6 @@ Don't just assume it's sdb. If it's on another device on your laptop then you wi
 9. Make sure your laptop has its power supply plugged in. (It will refuse to update otherwise.)
 
 10. Follow the instructions.
-
-## Update Firmware
-
-Ubuntu ships with [Linux Vendor Firmware Manager](https://fwupd.org/) tool `fwupdmgr`
-
-For update firmware, you must run
-
-    sudo fwupdmgr refresh
-    sudo fwupdmgr update
 
 ## Sniff Local Traffic
 BetterCAP is a powerful, flexible and portable tool created to perform various types of MITM attacks against a network, 
@@ -1308,12 +1297,6 @@ Download deb bundle from https://www.syntevo.com/smartgit/download/
 Installation
 
     sudo apt install -y filezilla
-
-### Google Music Player
-
-This is a beautiful cross platform Desktop Player for Google Play Music.
-
-deb file can be downloaded from https://www.googleplaymusicdesktopplayer.com/
 
 ### Spotify
 
@@ -2662,9 +2645,9 @@ Install Package Control https://packagecontrol.io/installation#st3
 
 After:
 
-    cd ~/.config/sublime-text-3/Packages/
+    cd ~/.config/sublime-text/Packages/
     rm -rf User
-    ln -s ~/Dropbox/workspace/appdata/sublime-text-3/Packages/User
+    ln -s ~/Dropbox/workspace/appdata/sublime-text/Packages/User
 
 
 ## Sync FileZilla

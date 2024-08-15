@@ -3,8 +3,8 @@
   hosts: all
   become: true
   vars:
-    pptp_username: vpnuser
-    pptp_password: 123456
+    pptp_username: longman
+    pptp_password: 123123123
   tasks:
     - name: APT is updated/upgraded
       apt:

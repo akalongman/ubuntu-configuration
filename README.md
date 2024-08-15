@@ -1,8 +1,8 @@
-PHP# Configuration of Ubuntu 20.04 LTS (Focal Fossa)
+PHP# Configuration of Ubuntu 24.04 LTS (Noble Numbat)
 
 This guide is for [Ubuntu](http://ubuntu.com/desktop), but also compatible with a other __Debian__ based OS as well, like [Mint](http://www.linuxmint.com/), [Elementary OS](http://elementaryos.org/), etc.
 
-There are configurations for other versions such as [18.04](tree/18.04), [16.04](tree/16.04), [15.10](tree/15.10)
+There are configurations for other versions such as [20.04](tree/20.04), [18.04](tree/18.04), [16.04](tree/16.04), [15.10](tree/15.10)
 
 All commands/configurations are tested (I am currently use this configuration), but anyway, everything you do is "at your own risk".
 
@@ -71,7 +71,6 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Install Nvidia Cuda Toolkit](#install-nvidia-cuda-toolkit) (Install CUDA toolkit from official repository for Nvidia)
         - [Install ATI Drivers](#install-ati-drivers)
         - [Utilities](#utilities)
-        - [RedShift For Eye Strain](#redshift-for-eye-strain) (Redshift adjusts the color temperature of your screen according to your surroundings)
         - [Dark Theme](#dark-theme)
         - [Oracle Java](#oracle-java)
         - [Wine](#wine) (Windows emulator) (Run Microsoft® Windows® applications on linux)
@@ -90,6 +89,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Ventoy](#ventoy) (Open source tool to create bootable USB drive for ISO/WIM/IMG/VHD(x)/EFI files. You can copy many files at a time and ventoy will give you a boot menu to select them.)
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
+        - [Firefox](#firefox)
         - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
         - [Dropbox](#dropbox) (Allows users to create a special folder on their computers, which Dropbox then synchronizes so that it appears to be the same folder (with the same contents) regardless of which device is used to view it)
         - [Sublime Text 3](#sublime-text-3) (A sophisticated text editor for code, markup and prose)
@@ -123,6 +123,9 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Gramps](#gramps) (A geneological tree manager)
         - [uGet](#uget) (A download manager)
         - [Xournal](#xournal) (Xournal is a GUI application primarily developed for note-taking, sketching use case and PDF editing)
+        - [Transmission](#transmission) (A Fast, Easy and Free Bittorrent Client For macOS, Windows and Linux)
+        - [Timeshift](#timeshift) (Timeshift for Linux is an application that provides functionality similar to the System Restore feature in Windows and the Time Machine tool in Mac OS)
+        - [LibreOffice](#libreOffice) (LibreOffice is a free and powerful office suite, and a successor to OpenOffice.org (commonly known as OpenOffice))
     - [Development](#development)
         - [LAMP](#lamp)
             - [PHP](#php)
@@ -155,7 +158,6 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
             - [Phalcon Dev Tools](#phalcon-dev-tools)
             - [Secure Permissions](#secure-permissions)
         - [Python](#python)
-            - [Pip](#pip)
             - [Virtualenv](#virtualenv)
         - [Go](#go)
         - [Ruby](#ruby)
@@ -179,6 +181,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [PCI Device Is Not Recognized Correctly](#pci-device-is-not-recognized-correctly)
     - [Restore Screen Brightness and Keyboard backlit on Reboot](#restore-screen-brightness-and-keyboard-backlit-on-reboot)
     - [Disable UEFI Choice Screen](#disable-uefi-choice-screen)
+    - [Disable Enhanced Tailing](#disable-enhanced-tailing)
 - [GUI](#gui)
     - [Move Dock To Bottom](#move-dock-to-bottom)
     - [Easy Window Resize](#easy-window-resize)
@@ -186,6 +189,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Fix Gnome Lockscreen](#fix-gnome-lockscreen)
     - [Gnome Extensions](#gnome-extensions)
     - [Reload Gnome Freeze](#reload-gnome-freeze)
+    - [Create Desktop Launcher](create-desktop-launcher)
 - [Virtual Machine Related](#virtual-machine-related)
     - [Fix Mouse Side Buttons in VMWare](#fix-mouse-side-buttons-in-vmware)
     - [Vagrant VBGuest Fix](#vagrant-vbguest-fix)
@@ -589,6 +593,10 @@ Install Necessary Packages
 
     sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
 
+If you got an error: libdvd-pkg: `apt-get check` failed, you may have broken packages. Aborting...
+
+You have to run `sudo dpkg-reconfigure libdvd-pkg` and try again.
+
 Next, add your user to the KVM group and libvirtd group. To do so, type:
 
     sudo adduser `id -un` libvirt
@@ -676,12 +684,14 @@ You can see BIOS version via [BIOS Info](#bios-info) command
 
 ### Update BIOS on Lenovo
 
+Install genisoimage via `sudo apt install genisoimage`
+
 1. Go to support.lenovo.com (or better use a search engine because the Lenovo website is ugly) 
 and search for the BIOS upgrade of your laptop model.
 
 2. Download the most recent ISO file. Look for "BIOS bootable update CD".
 
-3. Convert the ISO image to IMG format via `geteltorito -o bios.img g2uj18us.iso` [Convert .ISO to .IMG format](#convert-iso-to-img-format)
+3. Convert the ISO image to IMG format via `genisoimage -o bios.img g2uj18us.iso` [Convert .ISO to .IMG format](#convert-iso-to-img-format)
 
 4. Insert any USB stick into your laptop. The image file is just ~50 MB in size so even USB sticks with low capacity will work. 
 Keep in mind that the stick will be completely overwritten.
@@ -740,7 +750,7 @@ After that restart pulseaudio
 Then go to your sound settings and you will see the option to output to multiple sound devices.
 
 ## Terminal Prompt Customization
-Put the file [ps.sh](os/etc/profile.d/ps.ssh) under `/etc/profile.d` directory.
+Put the file [ps.sh](os/etc/profile.d/ps.sh) under `/etc/profile.d` directory.
 
 In the ~/.bashrc and /root/.bashrc files add line:
 
@@ -847,9 +857,17 @@ And add/edit line
 
 ## Install Fonts
 
-Create (if not exists) `~/.local/share/fonts` directory.
+Assume you have your fonts under `~/Download/Fonts`
 
-Put fonts files in the `~/.local/share/fonts` directory and clear fonts cache:
+To add these fonts, you have to run:
+
+    sudo mkdir /usr/share/fonts/truetype/custom
+    sudo mv /home/longman/Downloads/Fonts/*.TTF /usr/share/fonts/truetype/custom
+    
+    sudo mkdir /usr/share/fonts/opentype/custom/
+    sudo mv /home/longman/Downloads/Fonts/*.otf /usr/share/fonts/opentype/custom
+
+To clear cache, run:
 
     fc-cache -rv
 
@@ -941,11 +959,17 @@ For installing ATI drivers, read this official documentation: http://support.amd
 
     sudo apt install -y vim git mercurial meld curl htop xclip unzip gdebi preload bleachbit ubuntu-restricted-extras cifs-utils unace unrar zip p7zip-full \
         p7zip-rar sharutils rar openssh-server lm-sensors whois traceroute nmap font-manager sshfs mc libavcodec-extra libdvd-pkg nfs-kernel-server openvpn \
-        easy-rsa network-manager-openvpn-gnome exfat-fuse exfat-utils apt-transport-https python-dbus ethtool net-tools dos2unix \
-        liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome openfortivpn tree duplicity xserver-xorg-input-synaptics screen lib32z1 \
-        lib32ncurses5-dev libglib2.0-dev-bin pv software-properties-common cpu-checker libnss3-tools python3-pip libcanberra-gtk-module sshpass jq
+        easy-rsa network-manager-openvpn-gnome exfat-fuse apt-transport-https ethtool net-tools dos2unix \
+        liblz4-tool network-manager-openconnect-gnome network-manager-fortisslvpn-gnome openfortivpn tree duplicity screen lib32z1 \
+        libglib2.0-dev-bin pv software-properties-common cpu-checker libnss3-tools python3-pip libcanberra-gtk-module sshpass jq libfuse2 libxi6 libxrender1 \
+        libxtst6 mesa-utils libfontconfig libgtk-3-bin tar dbus-user-session libminizip1 libgdk-pixbuf-xlib-2.0-0 libgdk-pixbuf2.0-0 libopenal-data libopenal1 \
+        libsndio7.0 gnome-shell-extension-manager bpytop ca-certificates-java cargo clang clang-18 default-jdk default-jdk-headless default-jre default-jre-headless \
+        fonts-dejavu-extra icu-devtools java-common lib32gcc-s1 lib32stdc++6 libatk-wrapper-java libatk-wrapper-java-jni libc6-x32 libclang-common-18-dev libclang-rt-18-dev \
+        libgit2-1.7 libhttp-parser2.9 libice-dev libicu-dev libobjc-13-dev libobjc4 libpfm4 libsm-dev libstd-rust-1.75 libstd-rust-dev libxml2-dev libxt-dev libz3-4 libz3-dev \
+        linux-headers-generic llvm-18 llvm-18-dev llvm-18-linker-tools llvm-18-runtime llvm-18-tools openjdk-21-jdk openjdk-21-jdk-headless openjdk-21-jre openjdk-21-jre-headless \
+        p7zip python3-gpg python3-ldb python3-markdown python3-psutil python3-samba python3-talloc python3-tdb rustc samba-common samba-common-bin samba-dsdb-modules putty-tools
 
-To setup the git defaults
+To set up the git defaults
 
     git config --global user.name "your name"
     git config --global user.email "your@email.com"
@@ -955,46 +979,6 @@ That will create a `~/.gitconfig` with:
     [user]
         email = you@email.com
         name = your name
-
-### RedShift For Eye Strain
-It is a program which adjusts the color temperature of your screen with GTK+ integration. 
-Think about daylight and night light difference.
-
-    sudo apt install -y redshift
-
-Create your configuration file:
-
-    sudo vim ~/.config/redshift.conf
-
-Adjust the temperatures you prefer. I like mine to be very yellow and dim. (The lower the dimmer)
-
-    [redshift]
-    temp-day=3500
-    temp-night=3500
-    ; Set the screen brightness. Default is 1.0.
-    ;brightness=0.9
-    ; It is also possible to use different settings for day and night
-    ;brightness-day=0.7
-    ;brightness-night=0.4
-    ; There are more settings for Gamma, Location Provider, Manual Location, etc.
-
-Close and reload redshift. If you cannot find the icon anywhere run this in terminal:
-
-    pkill redshift-gtk redshift
-
-If RedShift gives you a `Geoclue2` error do this:
-
-    sudo vim /etc/geoclue/geoclue.conf
-
-Append these lines at the bottom:
-
-    [redshift]
-    allowed=true
-    system=false
-    users=
-
-A newer version of redshift will install a desktop file so a Geoclue2 warning won't happen
-on newer systems.
 
 ### Dark Theme
 
@@ -1102,8 +1086,7 @@ The main purpose of Neofetch is to be used in screenshots to show other users wh
 
 Installation:
 
-    sudo add-apt-repository -y ppa:dawidd0811/neofetch
-    sudo apt update && sudo apt install -y neofetch
+    sudo apt install -y neofetch
 
 ### GParted
 Partition editor for graphically managing disk partitions https://gparted.sourceforge.io/
@@ -1219,6 +1202,11 @@ Add google chrome repository and install
 
 Then launch it with `$ google-chrome` and you can pin it to a gnome bar.
 
+### Firefox
+Install via snap:
+
+        sudo snap install firefox
+
 ### PlayOnLinux
 
 Installation
@@ -1279,19 +1267,22 @@ Download from http://dbeaver.jkiss.org/download/
 ### VirtualBox
 VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use.
 
-Check latest version number on https://www.virtualbox.org/wiki/Downloads
+Check latest version number on https://www.virtualbox.org/wiki/Linux_Downloads
 
-During writing this manual, latest version was 6.1
+During writing this manual, latest version was 7.0
 
 Installation
 
-    sudo sh -c 'echo "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
-    wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc -O- | sudo apt-key add -
-    sudo apt update && sudo apt install -y virtualbox-6.1 virtualbox-ext-pack
+    sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
+    wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg --dearmor
+    sudo apt-get update
+    sudo apt-get install virtualbox-7.0
+
+If you get error, first run: `sudo apt --fix-broken install`
 
 Suggested to [Enable Native Virtualization](#enable-native-virtualization)
 
-Also you can read [Virtual Machine Related](#virtual-machine-related)
+Also, you can read [Virtual Machine Related](#virtual-machine-related)
 
 ### Android Studio
 
@@ -1406,66 +1397,33 @@ Installation
 
 ### Skype
 
-Installation
+Install using snap:
 
-    wget https://go.skype.com/skypeforlinux-64.deb
-    sudo apt install ./skypeforlinux-64.deb
+    sudo snap install skype
 
 ### Telegram
 
-Installation
+Install using snap:
 
-    sudo apt install -y telegram-desktop
+    sudo snap install telegram-desktop
 
 ### Slack
 
-Install via terminal:
+Install using snap:
 
-    wget -O - https://packagecloud.io/slacktechnologies/slack/gpgkey  | sudo apt-key add -
-
-Create the file `/etc/apt/sources.list.d/slack.list` with the following content
-
-    deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main
-    
-And run:
-    
-    sudo apt update && sudo apt install -y slack-desktop
-    
-Or download .deb from https://slack.com/downloads and install manually
+    sudo snap install slack
 
 ### Viber
 
-Since new versions of Ubuntu are shipped with libssl1.1 or have this package in their repositories, viber.deb can be tinkered to state libssl1.1 as a dependency.
+Download AppImage from https://www.viber.com/en/download/
 
-Ensure that libssl1.1 is installed:
+Create applications folder, if not exists: `mkdir ~/applications`
 
-    sudo apt install libssl1.1
-    
-Download viber.deb from the [Viber webpage](https://www.viber.com/download/) and copy it to a temp folder. 
-I have used /home/<user>/temp for this.
+    mv viber.AppImage ~/applications && chmod a+x ~/applications/viber.AppImage
 
-Now we need to make some changes to the package:
+Execute `~/applications/viber.AppImage`
 
-    mkdir viber
-    cd viber 
-    ar x ../viber.deb
-    tar xzf control.tar.gz
 
-Now we need to change dependencies:
-
-- Open the control file with a text editor.
-- Change on line 6: libssl1.0.0 to libssl1.1. (Note: in case of newer version of libssl use the new version).
-- Save the file and exit.
-
-Repackage the .deb file.
-
-    tar --ignore-failed-read -cvzf control.tar.gz {post,pre}{inst,rm} md5sums control
-    ar rcs viber-new.deb debian-binary control.tar.gz data.tar.xz
-    
-Install the new deb:
-
-    sudo dpkg -i viber-new.deb
-     
 ### Gimp
 
 Installation
@@ -1483,10 +1441,9 @@ Installation
 
 ### KDEnlive Video Editor
 
-Installation via Flatpak
+Install using snap:
 
-    flatpak install flathub org.kde.kdenlive
-    flatpak run org.kde.kdenlive
+    sudo snap install kdenlive
 
 ### Httpie
 You can easily use httpie from terminal: `http get https://google.com`
@@ -1567,6 +1524,33 @@ Alternatively, you can create an image file of your signature using another tool
 To hand-write your signature, click on `Pen` icon at the top-left of Xournal's GUI menu. You can also print and type anything (e.g., date) by clicking on `Text` icon.
 To add an image of your signature on Xournal, click on `Image` icon at the top of Xournal's GUI menu, or go to `Tools` → `Image` in the menu option.
 
+### Transmission
+
+Transmission is designed for easy, powerful use. We've set the defaults to just work and it only takes a few clicks to configure advanced features like watch directories, bad peer blocklists, and the web interface. 
+When Ubuntu chose Transmission as its default BitTorrent client, one of the most-cited reasons was its easy learning curve.
+
+To install, run:
+
+    sudo apt install -y transmission
+
+### Timeshift
+
+Timeshift for Linux is an application that provides functionality similar to the System Restore feature in Windows and the Time Machine tool in Mac OS. Timeshift protects your system by taking incremental snapshots of the file system at regular intervals. 
+These snapshots can be restored at a later date to undo all changes to the system.
+
+To install, run:
+
+    sudo apt install -y timeshift
+
+### LibreOffice
+
+LibreOffice is a free and powerful office suite, and a successor to OpenOffice.org (commonly known as OpenOffice).
+Its clean interface and feature-rich tools help you unleash your creativity and enhance your productivity.
+
+To install, run:
+
+    sudo apt install -y libreoffice
+
 ***
 [(Back to top)](#table-of-contents)
 
@@ -1576,7 +1560,7 @@ To add an image of your signature on Xournal, click on `Image` icon at the top o
 Linux Apache MySQL PHP
 
 **- Installation for the following:**
-- PHP 5.6/7.0/7.4/8.0/8.1 (and Modules)
+- PHP 5.6/7.0/7.4/8.0/8.1/8.2/8.3 (and Modules)
 - Apache 2 (and Modules + Dynamic hosts)
 - Nginx *(Optional)*
 - MySQL
@@ -1645,6 +1629,18 @@ It's important to install **php8.2-dev** if you want to compile any add-ons late
 If you are looking for more PHP modules try:
 
     sudo apt-cache search php8.2-
+
+##### PHP 8.3
+It's important to install **php8.3-dev** if you want to compile any add-ons later.
+
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt install -y php8.3-bz2 php8.3-cgi php8.3-cli php8.3-common php8.3-curl php8.3-dev php8.3-enchant php8.3-fpm php8.3-gd php8.3-gmp php8.3-imap php8.3-intl php8.3-ldap php8.3-mysql php8.3-odbc php8.3-opcache php8.3-pgsql php8.3-phpdbg php8.3-pspell php8.3-readline php8.3-sybase php8.3-tidy php8.3-xmlrpc php8.3-xsl php8.3-sqlite3 php8.3-mbstring php8.3-bcmath php8.3-soap php8.3-zip php8.3-xdebug php8.3-redis php8.3-igbinary php8.3-imagick
+
+If you get gpg warning, use this workaround to fix it: https://github.com/oerdnj/deb.sury.org/issues/1429#issuecomment-2180233990
+
+If you are looking for more PHP modules try:
+
+    sudo apt-cache search php8.3-
 
 ##### Switch PHP Versions
 
@@ -1751,6 +1747,8 @@ and add the following lines before `IncludeOptional sites-enabled/*.conf` line.
         </Directory>
 
     </VirtualHost>
+
+_Make sure apache user can access the folder. Ubuntu 24 has 750 permission on /home/user folder._
 
 If you want to disable all configured virtual hosts, then comment this line in your config file:
 
@@ -1883,8 +1881,8 @@ Read more in [Configure SSL for Dynamic Virtualhosts](#apache-configure-ssl-for-
 
 You can get latest version number on https://dev.mysql.com/downloads/repo/apt
 
-    wget https://dev.mysql.com/get/mysql-apt-config_0.8.17-1_all.deb
-    sudo dpkg -i mysql-apt-config_0.8.17-1_all.deb
+    wget https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb
+    sudo dpkg -i mysql-apt-config_0.8.30-1_all.deb
     sudo apt update & sudo apt install -y mysql-server
 
 For start configuring MySQL server, run:
@@ -1898,6 +1896,16 @@ If you are not able to login with root user, run:
 and run:    
     
     ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'YourPassword';
+
+If even with sudo mysql not able to log in, try this:
+
+Add --skip-grant-tables option to startup command:
+
+    sudo vim /usr/lib/systemd/system/mysql.service
+
+Run `FLUSH PRIVILEGES;` and after:
+
+    ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
 
 ##### Allow remote access for root:
 
@@ -1962,8 +1970,10 @@ Usage (See the documents from the git link above for more example):
 #### Redis
 Install redis latest stable version
 
-    sudo add-apt-repository -y ppa:chris-lea/redis-server
-    sudo apt install -y redis-server
+    curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+    sudo apt-get update
+    sudo apt-get install redis
 
 Add to startup:
 
@@ -1973,8 +1983,8 @@ Add to startup:
 
 Disable default instance
 
-    sudo systemctl stop redis
-    sudo systemctl disable redis
+    sudo systemctl stop redis-server
+    sudo systemctl disable redis-server
 
 Repeat these steps to configure a Redis instance for every instance you want to set up:
 
@@ -1990,7 +2000,7 @@ In the config file edit lines:
 
     daemonize no
     supervised systemd
-    pidfile /var/run/redis/redis_1.pid
+    pidfile /run/redis/redis_1.pid
     logfile /var/log/redis/redis_1.log
     dir /var/lib/redis/redis_1/
 
@@ -2079,17 +2089,15 @@ To configure Elasticsearch to start automatically when the system boots up, run 
 
 Install certbot (https://certbot.eff.org)
 
-    sudo add-apt-repository -y ppa:certbot/certbot
-    sudo apt update
-    
+    sudo snap install --classic certbot
+
 Generating for nginx:
     
-    sudo apt install -y python3-certbot-nginx 
+    sudo snap install certbot-nginx-unit
     sudo certbot --nginx
     
 Generating for apache:
     
-    sudo apt install -y python3-certbot-apache 
     sudo certbot --apache
 
 You can test automatic renewal for your certificates by running this command:
@@ -2166,55 +2174,17 @@ Lastly, you could have a deploy script that does this for you, such as Python `F
 ### Python
 
 **- Installation packages:**
-    - Pip
+    - Python3
     - Virtualenv
 
-Python is installed by default on Ubuntu, version 2.7 is suitable. I strongly recommend installing `python-dev` for headers to compile certain PIP packages.
+Python is installed by default on Ubuntu, version 3.12 is suitable. I strongly recommend installing `python-dev` for headers to compile certain PIP packages.
 
-    sudo apt install -y python-dev libmysqlclient-dev
-    sudo apt install -y python-pip
+    sudo apt install -y python3-dev python3-full libmysqlclient-dev
     sudo pip install fabric virtualenv virtualenvwrapper django
-
-Manually install Python. python installation required packages
-
-    sudo apt -y install build-essential checkinstall
-    sudo apt -y install libreadline-gplv2-dev libncursesw5-dev \
-                                 libsqlite3-dev tk-dev libgdbm-dev libc6-dev
-    sudo apt -y install libjpeg-dev libpng-dev
-    sudo apt -y install zlib1g-dev libbz2-dev
-    sudo apt -y install krb5-multidev
-    sudo apt -y install openssl libssl-dev
-    sudo apt -y install libffi-dev
-    sudo apt -y install libgmp-dev
-
-Download and extract Python using following command from [python](#python) official site. You can also download latest(3.6.0) version in place of specified below.
-
-    wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz && tar -xvf Python-3.5.2.tgz
-    sudo mv Python-3.5.2 /opt/ && cd /opt && cd Python-3.5.2
-
-Use below set of commands to compile python source code on your system using altinstall.
-
-    ./configure
-    make
-    sudo make altinstall
 
 Check the Python version installed, using below command
 
-    python3.5 -V
-
-#### Pip
-[Pip](#pip) is a tool for installing and managing Python packages. Install Pip with Wget and Python.
-
-    wget https://bootstrap.pypa.io/get-pip.py
-    sudo python3.5 get-pip.py
-
-View a list of helpful commands
-
-    pip --help
-
-Check the version of Pip that is installed
-
-    pip -V
+    python3 -V
 
 #### Virtualenv
 [Virtualenv](#virtualenv) is a tool to create isolated Python environments. install the virtualenv package
@@ -2566,6 +2536,13 @@ Example:
     GRUB_TIMEOUT=0
     GRUB_RECORDFAIL_TIMEOUT=$GRUB_TIMEOUT
 
+## Disable Enhanced Tailing
+In Ubuntu 24.04 where certain applications such as Firefox use the top bar as the title bar, whenever you accidentally touch the top bar and drag, it resizes the window, which can be quite frustrating. 
+
+To disable this behaviour, you have to disable "Enhanced Tailing" under `Settings` -> `Ubuntu Desktop`.
+
+Beware that turning that feature off will also disable <kbd>Super</kbd> + <kbd>Up</kbd> and <kbd>Super</kbd> + <kbd>Down</kbd> to maximize and minimize windows.
+
 # GUI
 
 ## Move Dock To Bottom
@@ -2575,7 +2552,7 @@ I prefer dock like Mac. To do this, run commands:
     gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-position BOTTOM
     gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode FIXED
-    gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 34
+    gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 48
     gsettings set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
     gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 
@@ -2606,26 +2583,41 @@ In terminal make sure this is false, then try your hotkey `ctrl+alt+l` or if you
 You can toggle these items at https://extensions.gnome.org
 I suggest creating an account so you have a record.
 
-- [OpenWeather](https://extensions.gnome.org/extension/750/openweather/) - Weather extension to display weather information from https://openweathermap.org/ or https://darksky.net for almost all locations in the world.
-- [No Title Bar](https://extensions.gnome.org/extension/2015/no-title-bar-forked/) - No Title Bar removes the title bar from non-GTK applications and moves the window title and buttons to the top panel.
-- [Extension Update Notifier](https://extensions.gnome.org/extension/1166/extension-update-notifier/) - Shows a notification when extension updates are available.
-- [Hide Activities Button](https://extensions.gnome.org/extension/1128/hide-activities-button/) - Hides the Activities button on the panel
-- [Remove Dropdown Arrows](https://extensions.gnome.org/extension/800/remove-dropdown-arrows/) - Removes the dropdown arrows which were introduced in Gnome 3.10 from the App Menu, System Menu, Input Menu, Access Menu, Places Menu, Applications Menu and any other extension that wants to add dropdown arrows.
-- [Status Area Horizontal Spacing](https://extensions.gnome.org/extension/355/status-area-horizontal-spacing/) - Reduce the horizontal spacing between icons in the top-right status area
-- [NoAnnoyance](https://extensions.gnome.org/extension/1236/noannoyance/) - Disables the “Window Is Ready” notification and changes the policy of the window manager so that new windows are always focused.
-- [Clock Override](https://extensions.gnome.org/extension/1206/clock-override/) - Customize the date and time format displayed in clock in the top bar in GNOME Shell. My format is: `%a | %e %b | %H:%M`
-- [Panel OSD](https://extensions.gnome.org/extension/708/panel-osd/) - Configuring where on the (main) screen notifications will appear, instead of just above the message tray.
-- [Draw On You Screen](https://extensions.gnome.org/extension/1683/draw-on-you-screen/) - Start drawing with Super+Alt+D and save your beautiful work by taking a screenshot.
-- [Caffeine](https://extensions.gnome.org/extension/517/caffeine/) - Disable the screensaver and auto suspend.
-- [CPU Power Manager](https://extensions.gnome.org/extension/945/cpu-power-manager/) - Manage Intel_pstate CPU Frequency scaling driver.
+- [Apps Menu](https://extensions.gnome.org/extension/6/applications-menu/) - Add a category-based menu for apps.
+- [Clipboard Indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/) - The most popular clipboard manager for GNOME, with over 1M downloads.
+- [Date Menu Formatter](https://extensions.gnome.org/extension/4655/date-menu-formatter/) - Allows customization of the date display in the panel.
+- [Desktop Icons NG (DING)](https://extensions.gnome.org/extension/2087/desktop-icons-ng-ding/) - Adds icons to the desktop. Fork of the original Desktop Icons extension, with several enhancements.
+- [Grand Theft Focus](https://extensions.gnome.org/extension/5410/grand-theft-focus/) - Removes the 'Window is ready' notification and brings the window into focus instead.
+- [Notification Banner Position](https://extensions.gnome.org/extension/4105/notification-banner-position/) - Changes position of the notification banner from the default to the right side of the screen.
+- [OpenWeather Refined](https://extensions.gnome.org/extension/6655/openweather/) - Display weather for the current or a specified location. Fork of OpenWeather. Weather data is provided by OpenWeatherMap.org or WeatherAPI.com or VisualCrossing.com.
+- [Status Area Horizontal Spacing](https://extensions.gnome.org/extension/355/status-area-horizontal-spacing/) - Reduce the horizontal spacing between icons in the top-right status area.
 - [Todo.txt](https://extensions.gnome.org/extension/570/todotxt/) - A Gnome shell interface for todo.txt.
-- [Jiggle](https://extensions.gnome.org/extension/3438/jiggle/) - Jiggle is a Gnome Shell extension that highlights the cursor position when the mouse is moved rapidly.
+- [User Themes](https://extensions.gnome.org/extension/19/user-themes/) - Load shell themes from user directory.
+- [Vitals](https://extensions.gnome.org/extension/1460/vitals/) - A glimpse into your computer's temperature, voltage, fan speed, memory usage, processor load, system resources, network speed and storage stats.
+- [Wiggle](https://extensions.gnome.org/extension/1460/vitals/) - Wiggle is a GNOME 45+ port/fix for the scaling effect from Jiggle with better performance. Wiggle magnifies your cursor when the mouse is moved rapidly.
 
 
 ## Reload Gnome Freeze
 This is a rare things, it happens much more in Gnome and requires a lot more "damaging" things. To fix a gnome that seems frozen do the following:
 
 <kbd>ALT + F2</kbd> enter in <kbd>r</kbd> (lowecase) and press <kbd>Enter</kbd>
+
+
+## Create Desktop Launcher
+
+Create a `AppName.desktop` file in `~/.local/share/applications` with content:
+
+```
+[Desktop Entry]
+Version=0.1.1
+Type=Application
+Name=appName
+Comment=Application Description
+TryExec=Path/to/AppImage
+Exec=Path/to/AppImage
+Icon=Path/to/AppImage.icon
+Actions=Editor
+```
 
 
 ***

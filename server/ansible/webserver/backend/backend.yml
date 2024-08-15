@@ -1,17 +1,8 @@
 ---
-- name: Set Up Backend Server
+- name: Set Up Server
   hosts: all
   become: true
   become_method: sudo
-  vars:
-    LOCAL_HOSTNAME: 'web01'
-    LOCAL_FQDN_NAME: 'website.com'
-    LOCAL_TIMEZONE: 'Asia/Tbilisi'
-    PHP_VERSION: '7.3'
-    MYSQL_USER: 'db-user'
-    MYSQL_PASSWORD: 'secret'
-    MYSQL_TEST_DB: 'test-db'
-    DEPLOYER_USER: 'deployer'
   tasks:
     - name: Set timezone to {{ LOCAL_TIMEZONE }}
       timezone:
@@ -38,19 +29,23 @@
         state: present
         filename: redis
 
-    - name: Add Certbot repository
-      apt_repository:
-        repo: ppa:certbot/certbot
-        state: present
-        filename: certbot
-
     - name: Add MySQL Repository
-      apt: deb=http://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb
+      apt_repository:
+        repo: "deb http://repo.mysql.com/apt/ubuntu focal mysql-8.0"
+        state: present
+        filename: mysql
+      when: INSTALL_MYSQL|bool == true
 
     - name: APT is updated/upgraded
       apt:
-        upgrade: True
+        upgrade: "yes"
         cache_valid_time: 3600
+
+    - name: MySQL server installed
+      apt:
+        name: mysql-server
+        state: latest
+      when: INSTALL_MYSQL|bool == true
 
     - name: Necessary packages are installed
       apt:
@@ -75,22 +70,60 @@
         - traceroute
         - nmap
         - mc
+        - neofetch
         - apt-transport-https
         - ethtool
         - net-tools
         - dos2unix
+        - telnet
         - python3-mysqldb
-        - php{{ PHP_VERSION }}-*
+        - php{{ PHP_VERSION }}-bz2
+        - php{{ PHP_VERSION }}-cgi
+        - php{{ PHP_VERSION }}-cli
+        - php{{ PHP_VERSION }}-common
+        - php{{ PHP_VERSION }}-curl
+        - php{{ PHP_VERSION }}-dev
+        - php{{ PHP_VERSION }}-enchant
+        - php{{ PHP_VERSION }}-fpm
+        - php{{ PHP_VERSION }}-gd
+        - php{{ PHP_VERSION }}-gmp
+        - php{{ PHP_VERSION }}-imap
+        - php{{ PHP_VERSION }}-intl
+        - php{{ PHP_VERSION }}-json
+        - php{{ PHP_VERSION }}-ldap
+        - php{{ PHP_VERSION }}-mysql
+        - php{{ PHP_VERSION }}-odbc
+        - php{{ PHP_VERSION }}-opcache
+        - php{{ PHP_VERSION }}-pgsql
+        - php{{ PHP_VERSION }}-phpdbg
+        - php{{ PHP_VERSION }}-pspell
+        - php{{ PHP_VERSION }}-readline
+        - php{{ PHP_VERSION }}-sybase
+        - php{{ PHP_VERSION }}-tidy
+        - php{{ PHP_VERSION }}-xmlrpc
+        - php{{ PHP_VERSION }}-xsl
+        - php{{ PHP_VERSION }}-sqlite3
+        - php{{ PHP_VERSION }}-mbstring
+        - php{{ PHP_VERSION }}-bcmath
+        - php{{ PHP_VERSION }}-soap
+        - php{{ PHP_VERSION }}-zip
+        - php-xdebug
+        - php-redis
+        - php-igbinary
+        - php-imagick
         - nginx
-        - mysql-server
         - redis-server
+        - supervisor
         - python3-pip
-        - python-certbot-nginx
+        - python3-certbot-nginx
         - python3-certbot-dns-*
 
-    - name: Install supervisor
-      pip:
+    - name: Supervisor service is enabled
+      service:
         name: supervisor
+        enabled: yes
+        state: started
+        daemon_reload: yes
 
     - name: Download composer installer
       get_url:
@@ -98,21 +131,33 @@
         dest: /tmp/composer-installer
 
     - name: Install composer
-      shell: cat /tmp/composer-installer | php && mv composer.phar /usr/local/bin/composer
+      shell: cat /tmp/composer-installer | php && mv composer.phar /usr/bin/composer
 
-    - name: Download Gitlab Runner installer
-      get_url:
-        url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
-        dest: /tmp/gitlab-runner-installer
-
-    - name: Install Gitlab Runner
-      shell: cat /tmp/gitlab-runner-installer | bash
+#    - name: Download Gitlab Runner installer
+#      get_url:
+#        url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
+#        dest: /tmp/gitlab-runner-installer
+#
+#    - name: Install Gitlab Runner
+#      shell: cat /tmp/gitlab-runner-installer | bash
 
     - name: Make composer executable
       file:
-        path: /usr/local/bin/composer
+        path: /usr/bin/composer
         mode: a+x
         state: file
+
+    - name: Install NVM
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+      args:
+        creates: "/home/{{ DEPLOYER_USER }}/.nvm/nvm.sh"
+      when: INSTALL_NVM|bool == true
+
+    - name: PHP Config File deployed
+      template:
+        src: php/00-default.ini.j2
+        dest: /etc/php/{{ PHP_VERSION }}/fpm/conf.d/00-default.ini
 
     - name: PHP service is enabled
       service:
@@ -134,6 +179,7 @@
         enabled: yes
         state: started
         daemon_reload: yes
+      when: INSTALL_MYSQL|bool == true
 
     - name: Redis service is enabled
       service:
@@ -142,22 +188,44 @@
         state: started
         daemon_reload: yes
 
-    - name: Create a test database
+    - name: Create a database
       mysql_db:
-        name={{ MYSQL_TEST_DB }}
+        name={{ MYSQL_DB }}
         state=present
+      when: INSTALL_MYSQL|bool == true
 
-    - name: Create a new user for connections
+    - name: Create a new database user
       mysql_user:
         name={{ MYSQL_USER }}
         password={{ MYSQL_PASSWORD }}
         priv=*.*:ALL
         host=%
         state=present
+      when: INSTALL_MYSQL|bool == true
+
+    - name: MySQL server make available remotely
+      lineinfile:
+        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+        state: present
+        line: 'bind-address    = *'
+      when: INSTALL_MYSQL|bool == true
+
+    - name: MySQL service is restarted
+      service:
+        name: mysql
+        enabled: yes
+        state: restarted
+        daemon_reload: yes
+      when: INSTALL_MYSQL|bool == true
 
     - name: Make sure we have a 'admins' group
       group:
         name: admins
+        state: present
+
+    - name: Make sure we have a deployer user
+      user:
+        name: "{{ DEPLOYER_USER }}"
         state: present
 
     - name: Allow 'admins' group to have passwordless sudo

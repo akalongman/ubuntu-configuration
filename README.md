@@ -1,4 +1,4 @@
-PHP# Configuration of Ubuntu 24.04 LTS (Noble Numbat)
+# Configuration of Ubuntu 24.04 LTS (Noble Numbat)
 
 This guide is for [Ubuntu](http://ubuntu.com/desktop), but also compatible with a other __Debian__ based OS as well, like [Mint](http://www.linuxmint.com/), [Elementary OS](http://elementaryos.org/), etc.
 

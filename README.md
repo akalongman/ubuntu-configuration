@@ -89,6 +89,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Other Tools](#other-tools)
         - [Google Chrome](#google-chrome)
         - [Firefox](#firefox)
+        - [1Password](#1password)
         - [PlayOnLinux](#playonlinux) (Software which using wine allows you to easily install and use numerous games and apps designed to run with Microsoft® Windows®)
         - [Dropbox](#dropbox) (Allows users to create a special folder on their computers, which Dropbox then synchronizes so that it appears to be the same folder (with the same contents) regardless of which device is used to view it)
         - [Sublime Text 3](#sublime-text-3) (A sophisticated text editor for code, markup and prose)
@@ -1184,17 +1185,23 @@ Full documentation you can find [here](https://www.ventoy.net/en/plugin_control.
 
 ### Google Chrome
 Add google chrome repository and install
-
-        sudo sh -c 'echo "deb [arch=amd64] http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-        sudo apt update && sudo apt install -y google-chrome-stable
+    
+    sudo sh -c 'echo "deb [arch=amd64] http://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+    sudo apt update && sudo apt install -y google-chrome-stable
 
 Then launch it with `$ google-chrome` and you can pin it to a gnome bar.
 
 ### Firefox
 Install via snap:
 
-        sudo snap install firefox
+    sudo snap install firefox
+
+### 1Password
+
+    wget https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb
+    sudo dpkg -i 1password-latest.deb
+    sudo apt update & sudo apt install -y 1password
 
 ### PlayOnLinux
 

@@ -1203,6 +1203,20 @@ Install via snap:
     sudo dpkg -i 1password-latest.deb
     sudo apt update & sudo apt install -y 1password
 
+Add to system startup
+
+    mkdir -p ~/.config/autostart && \
+    cat <<EOF > ~/.config/autostart/1password.desktop
+    [Desktop Entry]
+    Type=Application
+    Exec=1password --silent
+    Hidden=false
+    NoDisplay=false
+    X-GNOME-Autostart-enabled=true
+    Name=1Password
+    Comment=Start 1Password minimized
+    EOF
+
 ### PlayOnLinux
 
 Installation

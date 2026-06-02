@@ -207,16 +207,16 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
 
 # Optional Configurations
 
-### Get System Details
+## Get System Details
 
-#### Operating System
+### Operating System
 
     lsb_release -a
     lsb_release -as     # Short Information
     lsb_release -sc     # OS Codename
     lsb_release --help
 
-#### CPU Info
+### CPU Info
 
     sudo dmidecode -t processor
     
@@ -226,26 +226,26 @@ Or
     cpuid               # Must install cpuid from terminal
     cat /proc/cpuinfo   # Lots of info
 
-#### VGA Info
+### VGA Info
 
     sudo lshw -C display
 
-#### Motherboard Info
+### Motherboard Info
 
     sudo dmidecode -t baseboard
 
-#### BIOS Info
+### BIOS Info
 
     sudo dmidecode -t bios
 
-#### Memory and Usage Info
+### Memory and Usage Info
 
     free -h             # Human readable, or do --help for options
     top or htop         # Must install htop
     vmstat -s
     cat /proc/meminfo   # Lots of info
 
-#### Disks
+### Disks
 Disk Space
 
     df
@@ -263,11 +263,11 @@ Disks UUID
 
     ls -al /dev/disk/by-uuid/
 
-#### GUI Processes
+### GUI Processes
 
     gnome-system-monitor
 
-#### Startup Times
+### Startup Times
 You can find out which service takes how much time to finish 
 starting up by entering the following command in terminal:
 
@@ -277,7 +277,7 @@ Overall startup time you can find via:
 
     systemd-analyze time
 
-#### Packages
+### Packages
 
 List all installed Packages
 
@@ -287,9 +287,9 @@ List only packages which were expressly installed
 
     aptitude search '~i!~M'
 
-#### Other Commands
+### Other Commands
 
-##### Screenshots
+#### Screenshots
 To taking screenshot from terminal run this:
 
     gnome-screenshot
@@ -306,7 +306,7 @@ For changing default save directory for gnome-screenshot, use the command
 
     gsettings set org.gnome.gnome-screenshot auto-save-directory "file:///home/$USER/Pictures/"
 
-##### Print power consumption in watts
+#### Print power consumption in watts
 
     awk '{print $1*10^-6 " W"}' /sys/class/power_supply/BAT0/power_now
 
@@ -1723,6 +1723,8 @@ To illustrate this if we went to a domain somesite.com.test the VirtualDocumentR
     /var/www/html/domains/somesite.com
 
 Now you have to add automatic `.test` domain resolving on your local machine:
+
+_This NetworkManager `dns=dnsmasq` method is superseded by [Wildcard .test resolving (VPN safe, systemd-resolved)](#wildcard-test-resolving-vpn-safe-systemd-resolved) below. Prefer that method, especially if you use a VPN._
 
 Edit the file `/etc/NetworkManager/NetworkManager.conf`, and add the line `dns=dnsmasq` to the [main] section, it will look like this:
 

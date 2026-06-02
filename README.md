@@ -80,7 +80,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Firewall](#firewall)
             - [UFW](#ufw)
             - [GUFW](#gufw)
-        - [Geekbench](#geekbench) (Geekbench 5 is a cross-platform benchmark that measures your system's performance with the press of a button)
+        - [Geekbench](#geekbench) (Geekbench 6 is a cross-platform benchmark that measures your system's performance with the press of a button)
         - [Clonezilla](#clonezilla) (Clonezilla is a partition and disk imaging/cloning program. It helps you to do system deployment, bare metal backup and recovery.)
         - [Screen Testing Soft](#screen-testing-soft) (This is a program for testing the quality of CRT/LCD screens. It displays various patterns and allows you to estimate the quality of your CRT/LCD monitor.)
         - [Ventoy](#ventoy) (Open source tool to create bootable USB drive for ISO/WIM/IMG/VHD(x)/EFI files. You can copy many files at a time and ventoy will give you a boot menu to select them.)
@@ -98,6 +98,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [SmartGit](#smart-git)
         - [FileZilla](#filezilla) (sFTP Client)
         - [Spotify](#spotify)
+        - [TeamViewer](#teamviewer)
         - [Meld Diff Tool](#meld-diff-tool)
         - [Vagrant](#vagrant)
         - [Docker](#docker)
@@ -357,7 +358,7 @@ If you are running Grub as your default boot-loader, you can use this applicatio
     sudo add-apt-repository -y ppa:danielrichter2007/grub-customizer
     sudo apt update && sudo apt install -y grub-customizer
 
-Load the application either with `<Super>` and look for grub customizer or terminal `gksudo grub-customizer`.
+Load the application either with `<Super>` and look for grub customizer, or run `sudo grub-customizer` from a terminal.
 
 Go to the `General Settings` tab, and you'll see *default entry*.
 
@@ -412,7 +413,7 @@ After run
 
 ### Generate a New SSH Key
 
-    ssh-keygen -t rsa -C "your_email@example.com"
+    ssh-keygen -t ed25519 -C "your_email@example.com"
 
 ### Connecting to a Host
 
@@ -851,8 +852,8 @@ And restart the system.
 This is for tweaking the UI
 
     sudo apt update && sudo apt install -y\
-        gnome-tweak-tool\
-        chrome-gnome-shell\
+        gnome-tweaks\
+        gnome-browser-connector\
         gnome-shell-extensions\
         dconf-editor\
         synaptic
@@ -934,7 +935,7 @@ The "problem" stems from the factor that the new "Dark" setting only changes the
 It does not change the colour of the desktop UI itself.
 To fix this, install the User Themes GNOME Shell extension and GNOME Tweak Tool:
 
-    sudo apt install -y gnome-shell-extensions gnome-tweak-tool
+    sudo apt install -y gnome-shell-extensions gnome-tweaks
 
 Open GNOME Extensions app and slide the toggle next to "User Themes" to on.
 
@@ -1079,11 +1080,11 @@ Download archive from https://www.geekbench.com/download/linux/ and extract.
 
 Move folder under /opt
 
-    sudo mv Geekbench-5.3.1-Linux /opt/geekbench5
+    sudo mv Geekbench-6.7.1-Linux /opt/geekbench6
 
 Now you can run benchmark
 
-    /opt/geekbench5/geekbench5
+    /opt/geekbench6/geekbench6
 
 ### Clonezilla
 Clonezilla is a partition and disk imaging/cloning program. It helps you to do system deployment, bare metal backup and recovery. 
@@ -1234,14 +1235,14 @@ VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterp
 
 Check latest version number on https://www.virtualbox.org/wiki/Linux_Downloads
 
-During writing this manual, latest version was 7.0
+During writing this manual, latest version was 7.2
 
 Installation
 
     sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
     wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg --dearmor
-    sudo apt-get update
-    sudo apt-get install virtualbox-7.0
+    sudo apt update
+    sudo apt install virtualbox-7.2
 
 If you get error, first run: `sudo apt --fix-broken install`
 
@@ -1301,11 +1302,11 @@ Make sure linux headers already installed
 
     sudo apt install -y linux-headers-$(uname -r)
 
-Go to the https://www.vagrantup.com/downloads.html page of Vagrant and check for the latest release.
-During writing this manual, last version was 2.0.1
-    
-    wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
-    sudo dpkg -i vagrant_2.0.1_x86_64.deb
+Install Vagrant from the official HashiCorp apt repository:
+
+    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+    sudo apt update && sudo apt install -y vagrant
 
 Reconfigure the VirtualBox DKMS:
 
@@ -1313,7 +1314,7 @@ Reconfigure the VirtualBox DKMS:
 
 ### Docker
 
-Installation
+Installation (the convenience script runs as root, review it at https://get.docker.com first if you prefer):
 
     wget -qO- https://get.docker.com/ | sh
 
@@ -1950,7 +1951,7 @@ And after install
 Download [mkcert](https://github.com/FiloSottile/mkcert) precompiled binary
 from https://github.com/FiloSottile/mkcert/releases
 
-    wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64
+    wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64
     chmod +x mkcert
 
 Generate and install root certificates:
@@ -2002,7 +2003,7 @@ Run `FLUSH PRIVILEGES;` and after:
 
 ##### Allow remote access for root:
 
-Login in MySQL shell and run:
+Exposing `root` to every host (`%`) is risky. Prefer a dedicated user restricted to a known source IP, kept behind a firewall, and use a strong password. If you accept the risk, login in MySQL shell and run:
 
     CREATE USER 'root'@'%' IDENTIFIED BY 'secret';
     GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
@@ -2202,15 +2203,15 @@ You can test automatic renewal for your certificates by running this command:
     sudo apt install -y default-jre
 
 #### Phalcon
+Phalcon 5 ships as a PECL extension built against your installed PHP:
 
-    sudo apt-add-repository ppa:phalcon/stable
-    sudo apt update
-    sudo apt install -y php5-phalcon
+    sudo apt install -y php-pear php-dev
+    sudo pecl install phalcon
 
 #### Phalcon Dev Tools
-This is an easy to use install script that will cleanup after itself. It can also be used for updating:
+Install the developer tools via Composer:
 
-    sudo bash install_phalcon_devtools.sh
+    composer global require phalcon/devtools
 
 To test it run: `$ phalcon`
 
@@ -2303,16 +2304,12 @@ Deactivate
 
 
 ### Go
-Install Golang. You can check latest version of Golang here https://golang.org/dl/#featured
-While writing this article, lastest version was 1.9
+Install Golang. Check the latest version at https://go.dev/dl/
 
-    sudo add-apt-repository -y ppa:gophers/archive
-    sudo apt -y update && sudo apt install golang-1.9
+Download and extract the official tarball (replace the version as needed):
 
-After that your installation will be in the `/usr/lib/go-1.9`
-I recommend create symlink:
-
-    sudo ln -s /usr/lib/go-1.9 /usr/local/go
+    wget https://go.dev/dl/go1.26.3.linux-amd64.tar.gz
+    sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.26.3.linux-amd64.tar.gz
 
 And Add `/usr/local/go/bin` to the PATH environment variable. 
 You can do this by adding this line to your `/etc/profile` (for a system-wide installation) or `$HOME/.profile`:
@@ -2325,13 +2322,12 @@ You can do this by adding this line to your `/etc/profile` (for a system-wide in
 
 
 ### Ruby
-Install Ruby 2.X with header files in `ruby2.0-dev`, this will keep your gems from having issues.
+Install the full Ruby toolchain (interpreter plus headers for building gems):
 
-    sudo apt install -y ruby2.0 ruby2.0-dev
+    sudo apt install -y ruby-full
 
-For Ruby RVM (Version Management)
+For Ruby version management, use RVM (it imports its own signing keys):
 
-    gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
     \curl -sSL https://get.rvm.io | bash -s stable
 
 ***
@@ -2340,7 +2336,7 @@ For Ruby RVM (Version Management)
 ### NodeJS
 I recommend install NodeJS using [Node Version Manager](https://github.com/nvm-sh/nvm) 
     
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 
 To download, compile, and install the latest release of node, do this:
 
@@ -2348,7 +2344,7 @@ To download, compile, and install the latest release of node, do this:
 
 To install a specific version of node:
 
-    nvm install 6.14.4 # or 10.10.0, 8.9.1, etc
+    nvm install 22.11.0 # or 20.18.0, 18.20.5, etc
 
 To install a latest LTS version of node:
 
@@ -2393,7 +2389,7 @@ Ultimate entertainment platform. http://store.steampowered.com/
 ### PCSXR
 PCSX-Reloaded - PlayStation 1 Emulator. The project is unmaintained (its former CodePlex home is gone).
 
-Install emulator:
+Install emulator (the `pcsxr` package was removed from recent Ubuntu releases, so this may fail; DuckStation is a maintained alternative):
 
     sudo apt install -y pcsxr
 

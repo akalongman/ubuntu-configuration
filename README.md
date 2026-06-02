@@ -1345,7 +1345,7 @@ Just like Google Keep and Windows Sticky Notes, it allows you to jot down though
 
 Installation
 
-    sudo apt-add-repository ppa:umang/indicator-stickynotes
+    sudo add-apt-repository ppa:umang/indicator-stickynotes
     sudo apt update && sudo apt install -y indicator-stickynotes
 
 ### Guake
@@ -1538,7 +1538,7 @@ It's important to install **php5.6-dev** if you want to compile any add-ons late
 
 If you are looking for more PHP modules try:
 
-    sudo apt-cache search php5-
+    sudo apt search php5-
 
 
 ##### PHP 7.0
@@ -1549,7 +1549,7 @@ It's important to install **php7.0-dev** if you want to compile any add-ons late
 
 If you are looking for more PHP modules try:
 
-    sudo apt-cache search php7.0-
+    sudo apt search php7.0-
 
 ##### PHP 7.4
 It's important to install **php7.4-dev** if you want to compile any add-ons later.
@@ -1559,7 +1559,7 @@ It's important to install **php7.4-dev** if you want to compile any add-ons late
 
 If you are looking for more PHP modules try:
 
-    sudo apt-cache search php7.4-
+    sudo apt search php7.4-
 
 ##### PHP 8.0
 It's important to install **php8.0-dev** if you want to compile any add-ons later.
@@ -1569,7 +1569,7 @@ It's important to install **php8.0-dev** if you want to compile any add-ons late
 
 If you are looking for more PHP modules try:
 
-    sudo apt-cache search php8.0-
+    sudo apt search php8.0-
 
 ##### PHP 8.1
 It's important to install **php8.1-dev** if you want to compile any add-ons later.
@@ -1579,7 +1579,7 @@ It's important to install **php8.1-dev** if you want to compile any add-ons late
 
 If you are looking for more PHP modules try:
 
-    sudo apt-cache search php8.1-
+    sudo apt search php8.1-
 
 ##### PHP 8.2
 It's important to install **php8.2-dev** if you want to compile any add-ons later.
@@ -1589,7 +1589,7 @@ It's important to install **php8.2-dev** if you want to compile any add-ons late
 
 If you are looking for more PHP modules try:
 
-    sudo apt-cache search php8.2-
+    sudo apt search php8.2-
 
 ##### PHP 8.3
 It's important to install **php8.3-dev** if you want to compile any add-ons later.
@@ -1601,7 +1601,7 @@ If you get gpg warning, use this workaround to fix it: https://github.com/oerdnj
 
 If you are looking for more PHP modules try:
 
-    sudo apt-cache search php8.3-
+    sudo apt search php8.3-
 
 ##### Switch PHP Versions
 
@@ -1675,7 +1675,7 @@ For PHP 7 (if mcrypt is available)
 
 If you are looking for more Apache modules try:
 
-    sudo apt-cache search libapache2-mod
+    sudo apt search libapache2-mod
 
 ##### Apache: Configure dynamic virtualhosts
 
@@ -2067,8 +2067,8 @@ Install redis latest stable version
 
     curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
     echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
-    sudo apt-get update
-    sudo apt-get install redis
+    sudo apt update
+    sudo apt install redis
 
 Add to startup:
 

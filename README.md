@@ -142,6 +142,8 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
                 - [Enable php-mcrypt](#apache-enable-php-mcrypt)
                 - [Configure Dynamic Virtualhosts](#apache-configure-dynamic-virtualhosts)
                 - [Configure SSL for Dynamic Virtualhosts](#apache-configure-ssl-for-dynamic-virtualhosts)
+                - [Wildcard .test resolving (VPN safe, systemd-resolved)](#wildcard-test-resolving-vpn-safe-systemd-resolved)
+                - [Worktree subdomains](#apache-worktree-subdomains)
             - [Nginx](#nginx)
             - [Generate SSL certificates for local domains](#generate-ssl-certificates-for-local-domains)
             - [MySQL](#mysql)
@@ -1838,6 +1840,139 @@ Add new VirtualHost section:
 ```
 
 Make sure the mod_ssl is enabled and restart the apache.
+
+##### Wildcard .test resolving (VPN safe, systemd-resolved)
+
+The NetworkManager `dns=dnsmasq` method above promotes dnsmasq to the system resolver. On a machine that also uses a VPN this tends to break split DNS, because every query funnels through dnsmasq and the servers the VPN provides get dropped. The method below is safer. It keeps systemd-resolved as the system resolver and runs a tiny dnsmasq that answers only the reserved `.test` TLD on a loopback port, so the VPN and all normal DNS stay untouched.
+
+It also avoids `/etc/dnsmasq.d/`. That directory is parsed only by the full `dnsmasq` service, which is not installed (Ubuntu ships only `dnsmasq-base`, the bare binary, with no `dnsmasq.conf` and no `conf-dir` directive). A file dropped there would be read by nothing. A dedicated unit is self contained and trivial to remove.
+
+Make sure the dnsmasq binary is present:
+
+    sudo apt install -y dnsmasq-base
+
+Create `/etc/dnsmasq-test.conf`. It binds a high loopback port (5354), so it never competes with systemd-resolved on 127.0.0.53 or with libvirt on 192.168.122.1, and it forwards nothing:
+
+```ini
+port=5354
+listen-address=127.0.0.1
+bind-interfaces
+no-resolv
+no-hosts
+no-poll
+address=/test/127.0.0.1
+address=/test/::1
+```
+
+Create a dedicated service at `/etc/systemd/system/dnsmasq-test.service`:
+
+```ini
+[Unit]
+Description=dnsmasq stub for *.test local development
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/dnsmasq -k --conf-file=/etc/dnsmasq-test.conf
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start it:
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable --now dnsmasq-test
+
+Point systemd-resolved at the stub for `.test` only. Create `/etc/systemd/resolved.conf.d/test.conf`:
+
+```ini
+[Resolve]
+DNS=127.0.0.1:5354
+Domains=~test
+```
+
+The `~` prefix marks `test` as a routing domain, so resolved sends only `.test` queries to the stub and every other name keeps using the DNS from your active connections (wifi and VPN). Restart the resolver:
+
+    sudo systemctl restart systemd-resolved
+
+Verify that `.test` resolves locally while real names still resolve normally:
+
+    resolvectl query anything.test    # 127.0.0.1 and ::1
+    resolvectl query github.com       # a real public IP
+
+To roll back, delete `/etc/systemd/resolved.conf.d/test.conf` and restart systemd-resolved, then run `sudo systemctl disable --now dnsmasq-test`.
+
+_With a wildcard resolver in place, per domain lines in `/etc/hosts` are no longer needed for `.test`. Keep only the non `.test` entries there._
+
+##### Apache: Worktree subdomains
+
+This serves each git worktree of a project at `{worktree}.{project}.test`. For example `feature-x.socar-loyalty.test` maps to the `feature-x` worktree, while `socar-loyalty.test` keeps serving the main checkout. Worktrees live nested under each project at `{project}/.worktrees/{worktree}`.
+
+Append the block below to `/etc/apache2/apache2.conf`, after the default dynamic virtualhost. It must stay after that default, so plain two label hosts such as `socar-loyalty.test` keep falling through to it. `%1` is the worktree label and `%2` is the project label. The `*.*.test` alias matches only hosts with three or more labels, which is why two label hosts are left to the default vhost:
+
+```apache
+<VirtualHost *:80>
+    ServerName worktree-dispatch.invalid
+    ServerAlias *.*.test
+    VirtualDocumentRoot /home/longman/projects/web/domains/%2/.worktrees/%1/public
+
+    <Directory /home/longman/projects/web/domains>
+        DirectoryIndex index.php index.html
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName worktree-dispatch.invalid
+    ServerAlias *.*.test
+    VirtualDocumentRoot /home/longman/projects/web/domains/%2/.worktrees/%1/public
+
+    SSLEngine on
+    SSLCertificateFile    /home/longman/projects/web/certs/cert.pem
+    SSLCertificateKeyFile /home/longman/projects/web/certs/key.pem
+
+    <Directory /home/longman/projects/web/domains>
+        DirectoryIndex index.php index.html
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+_Adjust the base path to match your dynamic virtualhost root if it differs._
+
+For HTTPS the certificate needs a `*.{project}.test` SAN for each project, because an X.509 wildcard covers a single label only and a `*.*.test` certificate is not valid. Extend the certificate script so it emits a global `*.test` plus a `*.{project}.test` per folder:
+
+```bash
+cmd_array=( mkcert -key-file key.pem -cert-file cert.pem "*.test" )
+for d in /home/longman/projects/web/domains/*/ ; do
+    name="$(basename "$d")"
+    cmd_array+=("$name.test" "*.$name.test")
+done
+
+"${cmd_array[@]}"
+```
+
+New worktrees never need a certificate change. A brand new project added at the top level needs one rerun of this script.
+
+Create a worktree at the nested path and keep it out of the main checkout status with a local exclude:
+
+```bash
+cd /home/longman/projects/web/domains/socar-loyalty
+git worktree add .worktrees/feature-x -b feature-x
+echo '/.worktrees/' >> "$(git rev-parse --git-common-dir)/info/exclude"
+```
+
+Point that worktree `.env` at its own isolated database, then validate and reload Apache:
+
+    sudo apache2ctl configtest && sudo systemctl reload apache2
+
+The worktree is now reachable at `https://feature-x.socar-loyalty.test` with no further configuration. Every later worktree is just `git worktree add .worktrees/<name>`.
 
 #### Nginx
 Or if you prefer to use nginx

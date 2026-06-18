@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# DaVinci Resolve launcher. Why each variable exists:
+#   __NV_PRIME_RENDER_OFFLOAD / __GLX_VENDOR_LIBRARY_NAME
+#     -> render the UI on the NVIDIA dGPU, not the Intel iGPU (on-demand PRIME laptops)
+#   QT_QPA_PLATFORM=xcb
+#     -> force X11; Resolve's bundled Qt misbehaves on Wayland + NVIDIA
+# UI scaling is NOT set here: Resolve ignores Qt scale env vars (QT_SCALE_FACTOR and
+# QT_FONT_DPI have no effect, DPR stays 1.0). Its UI scale lives in-app under
+# Preferences > User > UI Settings > UI Display Scale.
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export QT_QPA_PLATFORM=xcb
+
+exec /opt/resolve/bin/resolve "$@"

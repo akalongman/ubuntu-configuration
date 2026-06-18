@@ -113,6 +113,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
         - [Gimp](#gimp)
         - [VLC Player](#vlc-player)
         - [KDEnlive Video Editor](#kdenlive-video-editor)
+        - [DaVinci Resolve](#davinci-resolve) (Blackmagic professional video editor)
         - [Httpie](#httpie) (Terminal HTTP client)
         - [Peek](#peek) (Simple animated GIF screen recorder with an easy to use interface)
         - [OBS](#obs) (Video recording and live streaming)
@@ -1405,6 +1406,31 @@ Installation
 Install using snap:
 
     sudo snap install kdenlive
+
+### DaVinci Resolve
+
+Blackmagic's professional video editor (https://www.blackmagicdesign.com/products/davinciresolve). Linux is officially unsupported, so Ubuntu 24.04 needs a few fixes. These steps assume a hybrid Intel/NVIDIA laptop with a 4K display.
+
+Install the NVIDIA driver first (see [Install Nvidia Drivers](#install-nvidia-drivers)).
+
+The installer looks for pre-t64 package names that no longer exist on Ubuntu 24.04. Run [davinci-resolve-deb-shims.sh](os/home/scripts/davinci-resolve-deb-shims.sh) to register shim packages so its check passes (the real libraries are already installed as the t64 packages):
+
+    bash os/home/scripts/davinci-resolve-deb-shims.sh
+
+Download the installer, then unzip and run it:
+
+    cd ~/Downloads
+    unzip ./DaVinci_Resolve_*_Linux.zip
+    sudo ./DaVinci_Resolve_*_Linux/DaVinci_Resolve_*_Linux.run -i
+
+Resolve bundles an old GLib that crashes against the system pango. Move it aside so the system one is used:
+
+    sudo mkdir -p /opt/resolve/libs/_disabled_glib
+    sudo mv /opt/resolve/libs/{libglib-2.0,libgio-2.0,libgmodule-2.0,libgobject-2.0}.so* /opt/resolve/libs/_disabled_glib/
+
+Copy [davinci-resolve](os/home/.local/bin/davinci-resolve) to `~/.local/bin/` (then run `chmod +x ~/.local/bin/davinci-resolve`) and [com.blackmagicdesign.resolve.desktop](os/home/.local/share/applications/com.blackmagicdesign.resolve.desktop) to `~/.local/share/applications/`. The wrapper renders Resolve on the NVIDIA GPU (PRIME offload) under X11.
+
+Resolve ignores Qt scaling variables, so on a HiDPI display set the scale in the app: Preferences > User > UI Settings > UI Display Scale > 200%, then restart.
 
 ### Httpie
 You can easily use httpie from terminal: `http get https://google.com`

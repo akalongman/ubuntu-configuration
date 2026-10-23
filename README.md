@@ -2534,8 +2534,8 @@ Next, Login as your user who must be able to run sudo.
     - To Check: `cat ~/.xsession-errors`
     - You don't need to do anything if there are syntax errors, we will move the file
 - **Try Moving XAuthority**
-  - Sometimes it's as easy to moving Xauthority so a new is generated at login
-  - To Fix: `sudo ~/.Xauthority ~/.Xauthority.bak`
+  - Sometimes renaming Xauthority is enough for a new one to be generated at login.
+  - To Fix: `sudo mv ~/.Xauthority ~/.Xauthority.bak`
 - **Try Reconfiguring LightDM**
   - Fix: `dpkg-reconfigure lightdm`, then select lightdm in the menu
   - Lastly restart lightdm: `sudo service lightdm restart`

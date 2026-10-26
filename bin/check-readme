@@ -34,7 +34,13 @@ TOC_ITEM = re.compile(r'- \[[^\]]*\]\(([^)\s]+)\)')
 TOC_TITLE = 'Table of Contents'
 # The target of a link or image, up to the `)` or the space before a title.
 LINK = re.compile(r'\]\(([^)\s]+)')
-EXTERNAL = ('http:', 'https:', 'mailto:')
+# A link reference definition, `[label]: target`, at the start of a line.
+REFERENCE = re.compile(r'^ {0,3}\[[^\]]+\]:\s*<?([^\s>]+)>?')
+# An HTML `href` or `src` attribute, double or single quoted; group 2 is the target.
+ATTRIBUTE = re.compile(r'(?<![\w-])(?:href|src)\s*=\s*(["\'])(.*?)\1', re.IGNORECASE)
+BACKTICKS = re.compile(r'`+')
+# A target with a URI scheme (`https:`, `mailto:`, `ftp:`, `tel:`) is external.
+SCHEME = re.compile(r'^[A-Za-z][A-Za-z0-9+.-]*:')
 # Relative links into another release branch, which GitHub resolves under the current branch.
 BRANCH_LINK = ('tree/', 'blob/')
 REPO_URL = 'https://github.com/akalongman/ubuntu-configuration/'
@@ -50,7 +56,7 @@ class Heading(NamedTuple):
 class TocLine(NamedTuple):
     line: int  # 1-based
     indent: int  # spaces before the first item on the line
-    targets: list[str]  # link target of every item on the line, in order
+    items: list[re.Match[str]]  # every item on the line, in order; group 1 is its target
 
 
 def anchor(text: str) -> str:
@@ -110,7 +116,7 @@ def toc_lines(lines: list[str], section: tuple[int, int]) -> list[TocLine]:
     """The TOC item lines of the section, outside fenced code."""
     start, end = section
     return [
-        TocLine(index + 1, len(match[1]), TOC_ITEM.findall(line))
+        TocLine(index + 1, len(match[1]), list(TOC_ITEM.finditer(line)))
         for index, line in outside_fences(lines)
         if start < index < end and (match := TOC_LINE.match(line))
     ]
@@ -133,11 +139,11 @@ def check_toc(
     problems = []
     entries = []  # (line, indent or None when not checked, anchor), one per TOC item
     for toc in toc_lines(lines, section):
-        if len(toc.targets) > 1:
+        if len(toc.items) > 1:
             problems.append(
-                (toc.line, f'TOC line holds {len(toc.targets)} entries; put each on its own line')
+                (toc.line, f'TOC line holds {len(toc.items)} entries; put each on its own line')
             )
-        for position, target in enumerate(toc.targets):
+        for position, target in enumerate(item[1] for item in toc.items):
             if not target.startswith('#'):
                 problems.append(
                     (toc.line, f"TOC entry links to '{target}'; TOC links must start with '#'")
@@ -181,39 +187,79 @@ def check_toc(
     return problems
 
 
+def blank(text: str, start: int, end: int) -> str:
+    """text with text[start:end] replaced by spaces, so later offsets stay valid."""
+    return text[:start] + ' ' * (end - start) + text[end:]
+
+
+def blank_code_spans(text: str) -> str:
+    """text with its code spans blanked out.
+
+    As in GFM, backtick runs pair left to right with the next run of the same length, and a
+    run without a partner is literal.
+    """
+    runs = list(BACKTICKS.finditer(text))
+    position = 0
+    while position < len(runs):
+        opening = runs[position]
+        closing = next(
+            (k for k in range(position + 1, len(runs)) if len(runs[k][0]) == len(opening[0])),
+            None,
+        )
+        if closing is None:
+            position += 1
+            continue
+        text = blank(text, opening.start(), runs[closing].end())
+        position = closing + 1
+    return text
+
+
+def link_targets(text: str) -> list[str]:
+    """Targets of the inline links, reference definition and `href` or `src` attributes on a
+    line, in order, outside code spans."""
+    text = blank_code_spans(text)
+    found = [(match.start(), match[1]) for match in LINK.finditer(text)]
+    found += [(match.start(), match[2]) for match in ATTRIBUTE.finditer(text)]
+    found += [(match.start(), match[1]) for match in REFERENCE.finditer(text)]
+    return [target for _, target in sorted(found)]
+
+
+def link_problem(target: str, anchors: set[str], base_dir: Path) -> str | None:
+    """Why a link target fails on GitHub, or None when it resolves or is external."""
+    if SCHEME.match(target):
+        return None
+    if target == '#':
+        return "empty in-page link '#'; name a heading anchor"
+    if target.startswith('#'):
+        return None if target[1:] in anchors else f'link to {target} matches no heading'
+    if target.startswith(BRANCH_LINK):
+        return f"relative branch link '{target}' 404s on GitHub; use {REPO_URL}{target}"
+    path = unquote(target.partition('?')[0].partition('#')[0])
+    # The repository is the README's directory, and a leading `/` names its root, as on
+    # GitHub. normpath works on the text, so unlike Path.resolve() it keeps a symlinked
+    # checkout or folder inside the repository.
+    relative = os.path.normpath(path.removeprefix('/'))
+    if os.path.isabs(relative) or relative.split(os.sep)[0] == os.pardir:
+        return f"link target '{target}' points outside the repository"
+    if not (base_dir / relative).exists():
+        return f"link target '{target}' does not exist"
+    return None
+
+
 def check_links(
     lines: list[str], headings: list[Heading], section: tuple[int, int], base_dir: Path
 ) -> list[tuple[int, str]]:
     """In-page, repo file and release branch links outside fenced code and the TOC items."""
     anchors = {h.anchor for h in headings}
-    toc = {t.line for t in toc_lines(lines, section)}  # check_toc reports their targets
+    # check_toc reports the TOC items' targets; any other link on their lines is checked here.
+    toc_items = {toc.line: toc.items for toc in toc_lines(lines, section)}
     problems = []
     for index, line in outside_fences(lines):
-        if index + 1 in toc:
-            continue
-        for target in LINK.findall(line):
-            if target.startswith(EXTERNAL):
-                continue
-            if target.startswith('#'):
-                if target[1:] not in anchors:
-                    problems.append((index + 1, f'link to {target} matches no heading'))
-            elif target.startswith(BRANCH_LINK):
-                problems.append(
-                    (index + 1, f"relative branch link '{target}' 404s on GitHub;"
-                                f' use {REPO_URL}{target}')
-                )
-            else:
-                path = unquote(target.partition('?')[0].partition('#')[0])
-                # The repository is the README's directory, and a leading `/` names its root,
-                # as on GitHub. normpath works on the text, so unlike Path.resolve() it keeps
-                # a symlinked checkout or folder inside the repository.
-                relative = os.path.normpath(path.removeprefix('/'))
-                if os.path.isabs(relative) or relative.split(os.sep)[0] == os.pardir:
-                    problems.append(
-                        (index + 1, f"link target '{target}' points outside the repository")
-                    )
-                elif not (base_dir / relative).exists():
-                    problems.append((index + 1, f"link target '{target}' does not exist"))
+        for item in toc_items.get(index + 1, ()):
+            line = blank(line, item.start(), item.end())
+        for target in link_targets(line):
+            if problem := link_problem(target, anchors, base_dir):
+                problems.append((index + 1, problem))
     return problems
 
 

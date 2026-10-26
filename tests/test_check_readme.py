@@ -307,6 +307,52 @@ class LinkTest(CheckTestCase):
     def test_links_in_fenced_code_ignored(self):
         self.assertClean(BASE + '\n```\n[x](os/missing)\n```\n')
 
+    def test_reference_definition_is_checked(self):
+        self.assertProblems(
+            BASE + '\n[ps]: os/missing "Title"\n',
+            ["README.md:14: link target 'os/missing' does not exist"],
+        )
+
+    def test_html_href_and_src_are_checked(self):
+        self.assertProblems(
+            BASE + '\n<a href="os/missing">x</a>\n\n<img src=\'files/missing.png\'>\n',
+            ["README.md:14: link target 'os/missing' does not exist",
+             "README.md:16: link target 'files/missing.png' does not exist"],
+        )
+
+    def test_link_in_code_span_ignored(self):
+        self.assertClean(BASE + '\nRun `[x](missing)` as is.\n')
+
+    def test_link_between_code_spans_checked(self):
+        for line in (
+            'Run `a` then [x](os/missing) then `b`.',
+            'Run ``a ` b`` then [x](os/missing) then `c`.',  # runs pair by length
+            'A lone ` then [x](os/missing).',  # a run without a partner is literal
+        ):
+            with self.subTest(line=line):
+                self.assertProblems(
+                    BASE + '\n' + line + '\n',
+                    ["README.md:14: link target 'os/missing' does not exist"],
+                )
+
+    def test_empty_in_page_link(self):
+        self.assertProblems(
+            BASE + '\n[top](#)\n',
+            ["README.md:14: empty in-page link '#'; name a heading anchor"],
+        )
+
+    def test_any_uri_scheme_is_external(self):
+        self.assertClean(
+            BASE + '\n[f](ftp://example.invalid/x) [t](tel:+995322000000)'
+                   ' [H](HTTPS://example.invalid/x)\n'
+        )
+
+    def test_link_in_toc_note_is_checked(self):
+        self.assertProblems(
+            BASE.replace('- [Alpha](#alpha)\n', '- [Alpha](#alpha) (see [cfg](os/missing))\n'),
+            ["README.md:4: link target 'os/missing' does not exist"],
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

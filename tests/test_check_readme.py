@@ -214,8 +214,22 @@ class TocTest(CheckTestCase):
             github=True,
         )
 
+    def test_annotation_escapes_file_property(self):
+        self.assertProblems(
+            BASE + '\n## Delta\n',
+            ["::error file=a%2Cb.md,line=14::heading 'Delta' (#delta) has no TOC entry"],
+            github=True,
+            name='a,b.md',
+        )
+
     def test_crlf_readme(self):
         self.assertClean(BASE, crlf=True)
+
+    def test_byte_order_mark_is_not_part_of_line_1(self):
+        self.assertClean('\ufeff' + BASE + '\n[(Back to top)](#guide)\n')
+
+    def test_runs_without_docstrings(self):
+        self.assertClean(BASE, flags=('-OO',))
 
     def test_script_is_executable(self):
         self.assertTrue(os.access(SCRIPT, os.X_OK))

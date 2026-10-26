@@ -188,6 +188,15 @@ class TocTest(CheckTestCase):
             with self.subTest(line=new):
                 self.assertProblems(BASE.replace(old, new), [f'README.md:{line}: {message}'])
 
+    def test_unparsable_toc_line_stand_in_is_not_link_checked(self):
+        # The TOC check reports the stand-in's stale anchor; the link scan does not repeat it.
+        self.assertProblems(
+            BASE.replace('- [Gamma](#gamma)\n', '* [Gamma](#gama)\n'),
+            ["README.md:6: TOC line is not a '- [label](#anchor)' item;"
+             " use '- ' bullets and space indentation",
+             "README.md:6: TOC entry #gama does not match heading 'Gamma' (#gamma, line 12)"],
+        )
+
     def test_unparsable_toc_line_without_a_link(self):
         # Nothing on the line names the heading, so the heading is reported too.
         self.assertProblems(

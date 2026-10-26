@@ -307,6 +307,29 @@ class LinkTest(CheckTestCase):
     def test_links_in_fenced_code_ignored(self):
         self.assertClean(BASE + '\n```\n[x](os/missing)\n```\n')
 
+    def test_links_in_indented_code_ignored(self):
+        self.assertClean(BASE + '\nRun this:\n\n    sed -i "s/[x](missing)/y/" file\n')
+
+    def test_indented_code_block_extent(self):
+        # The block runs over blank lines and lines indented 4 spaces or a tab, and ends at
+        # the first non-blank line indented less.
+        self.assertProblems(
+            BASE + '\nRun this:\n\n    [a](missing)\n\n\t[b](missing)\nSee [c](os/missing)\n',
+            ["README.md:19: link target 'os/missing' does not exist"],
+        )
+
+    def test_indented_list_item_after_blank_is_not_code(self):
+        self.assertProblems(
+            BASE + '\n- item\n\n    - [x](os/missing)\n',
+            ["README.md:16: link target 'os/missing' does not exist"],
+        )
+
+    def test_indented_line_under_prose_is_not_code(self):
+        self.assertProblems(
+            BASE + '\n**- Packages:**\n    - [x](os/missing)\n',
+            ["README.md:15: link target 'os/missing' does not exist"],
+        )
+
     def test_reference_definition_is_checked(self):
         self.assertProblems(
             BASE + '\n[ps]: os/missing "Title"\n',

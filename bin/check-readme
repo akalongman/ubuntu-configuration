@@ -24,6 +24,8 @@ DESCRIPTION = (
 HEADING = re.compile(r'^ {0,3}(#{1,6})[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$')
 FENCE_OPEN = re.compile(r'^ {0,3}(`{3,}|~{3,})')
 FENCE_CLOSE = re.compile(r'^ {0,3}(`{3,}|~{3,})[ \t]*$')
+INDENTED = re.compile(r'( {4}|\t)')
+LIST_ITEM = re.compile(r'^\s*([-*+]|\d+[.)])\s')
 # Markup that changes the rendered heading text, so the anchor rule below does
 # not model it. An intraword `_` (mod_rewrite) is literal; backticks and `*`
 # are dropped by the anchor rule, as on GitHub.
@@ -64,20 +66,53 @@ def anchor(text: str) -> str:
     return re.sub(r'[^\w\- ]', '', text.lower()).replace(' ', '-')
 
 
-def outside_fences(lines: list[str]) -> Iterator[tuple[int, str]]:
-    """Yield (0-based index, line) for every line outside fenced code."""
+def fenced(lines: list[str]) -> Iterator[tuple[int, str, bool]]:
+    """Yield (0-based index, line, True for fenced code and its fences) for every line."""
     fence = None
     for index, line in enumerate(lines):
         if fence:
             close = FENCE_CLOSE.match(line)
             if close and close[1][0] == fence[0] and len(close[1]) >= len(fence):
                 fence = None
-            continue
-        opening = FENCE_OPEN.match(line)
-        if opening:
-            fence = opening[1]
-            continue
-        yield index, line
+            yield index, line, True
+        else:
+            opening = FENCE_OPEN.match(line)
+            fence = opening[1] if opening else None
+            yield index, line, fence is not None
+
+
+def outside_fences(lines: list[str]) -> Iterator[tuple[int, str]]:
+    """Yield (0-based index, line) for every line outside fenced code."""
+    for index, line, in_fence in fenced(lines):
+        if not in_fence:
+            yield index, line
+
+
+def outside_code(lines: list[str]) -> Iterator[tuple[int, str]]:
+    """Yield (0-based index, line) for every line outside fenced and indented code.
+
+    A line indented 4 spaces or a tab opens an indented code block when the line before it
+    is blank and it is not inside a list. The block runs over blank and indented lines and
+    ends at the first non-blank line indented less. A list item line enters a list; a
+    heading, a fence, or an unindented line after a blank line leaves it.
+    """
+    in_list = in_code = False
+    after_blank = True  # the start of the file counts as a blank line
+    for index, line, in_fence in fenced(lines):
+        blank = not line.strip()
+        indented = INDENTED.match(line) is not None
+        if in_fence:
+            in_list = in_code = False
+        else:
+            if in_code or (indented and after_blank and not in_list):
+                in_code = blank or indented
+            if not in_code:
+                if LIST_ITEM.match(line):
+                    in_list = True
+                elif HEADING.match(line) or (after_blank and not blank and not line[0].isspace()):
+                    in_list = False
+                yield index, line
+        after_blank = blank
 
 
 def parse_headings(lines: list[str]) -> list[Heading]:
@@ -249,12 +284,12 @@ def link_problem(target: str, anchors: set[str], base_dir: Path) -> str | None:
 def check_links(
     lines: list[str], headings: list[Heading], section: tuple[int, int], base_dir: Path
 ) -> list[tuple[int, str]]:
-    """In-page, repo file and release branch links outside fenced code and the TOC items."""
+    """In-page, repo file and release branch links outside code and the TOC items."""
     anchors = {h.anchor for h in headings}
     # check_toc reports the TOC items' targets; any other link on their lines is checked here.
     toc_items = {toc.line: toc.items for toc in toc_lines(lines, section)}
     problems = []
-    for index, line in outside_fences(lines):
+    for index, line in outside_code(lines):
         for item in toc_items.get(index + 1, ()):
             line = blank(line, item.start(), item.end())
         for target in link_targets(line):

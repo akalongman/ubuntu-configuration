@@ -186,19 +186,59 @@ class TocTest(CheckTestCase):
             )
 
     def test_heading_markup_fails(self):
+        # Each TOC entry names the anchor the plain-text rule gives, so the TOC check passes
+        # and the markup message is the only one.
         cases = [
-            ('## Beta _Two_\n',
-             "README.md:10: heading 'Beta _Two_' contains markup whose anchor is not modeled;"
-             " check it by hand"),
-            ('## Beta [Two](https://example.com)\n',
-             "README.md:10: heading 'Beta [Two](https://example.com)' contains markup whose"
-             " anchor is not modeled; check it by hand"),
+            ('Beta _Two_', 'beta-_two_'),
+            ('Beta [Two](https://example.com)', 'beta-twohttpsexamplecom'),
+            ('Beta [Two][ref]', 'beta-tworef'),
+            ('Beta &amp; Two', 'beta-amp-two'),
+            ('Beta <kbd>Two</kbd>', 'beta-kbdtwokbd'),
         ]
-        for heading, message in cases:
-            with self.subTest(heading=heading):
-                code, out, _ = run(BASE.replace('## Beta Two\n', heading))
-                self.assertEqual(code, 1)
-                self.assertIn(message, out)
+        for text, slug in cases:
+            with self.subTest(heading=text):
+                readme = BASE.replace('(#beta-two)', f'(#{slug})')
+                self.assertProblems(
+                    readme.replace('## Beta Two\n', f'## {text}\n'),
+                    [f"README.md:10: heading '{text}' contains markup whose anchor is not"
+                     ' modeled; check it by hand'],
+                )
+
+    def test_setext_headings_pass_when_listed(self):
+        readme = BASE.replace('## Beta Two\n', 'Beta Two\n--------\n')
+        self.assertClean(readme.replace('# Gamma\n', 'Gamma\n=====\n'))
+
+    def test_setext_h1_ends_the_toc_section(self):
+        self.assertClean('# Guide\n\n# Table of Contents\n- [Alpha](#alpha)\n\nAlpha\n=====\n')
+
+    def test_setext_heading_missing_from_toc(self):
+        # A second `---` under the underline is a thematic break, not another heading.
+        for underline in ('=====', '-', '---\n---'):
+            with self.subTest(underline=underline):
+                self.assertProblems(
+                    BASE + f'\nDelta\n{underline}\n',
+                    ["README.md:14: heading 'Delta' (#delta) has no TOC entry"],
+                )
+
+    def test_thematic_break_after_blank_line_is_not_a_heading(self):
+        self.assertClean(BASE + '\nSome prose.\n\n---\n')
+
+    def test_underline_under_list_item_or_quote_is_not_a_heading(self):
+        for text in ('- item', '> quote'):
+            with self.subTest(text=text):
+                self.assertClean(BASE + f'\n{text}\n---\n')
+
+    def test_heading_in_list_or_quote_fails(self):
+        for line in ('> ## Quoted', '> > # Deeper', '- ## Listed', '1) ### Numbered'):
+            with self.subTest(line=line):
+                self.assertProblems(
+                    BASE + '\n' + line + '\n',
+                    ['README.md:14: heading inside a list or quote is not modeled;'
+                     ' check it by hand'],
+                )
+
+    def test_nested_heading_shape_in_indented_code_ignored(self):
+        self.assertClean(BASE + '\nRun this:\n\n    - # not a heading\n')
 
     def test_github_annotations(self):
         self.assertProblems(

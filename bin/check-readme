@@ -26,10 +26,18 @@ FENCE_OPEN = re.compile(r'^ {0,3}(`{3,}|~{3,})')
 FENCE_CLOSE = re.compile(r'^ {0,3}(`{3,}|~{3,})[ \t]*$')
 INDENTED = re.compile(r'( {4}|\t)')
 LIST_ITEM = re.compile(r'^\s*([-*+]|\d+[.)])\s')
-# Markup that changes the rendered heading text, so the anchor rule below does
-# not model it. An intraword `_` (mod_rewrite) is literal; backticks and `*`
-# are dropped by the anchor rule, as on GitHub.
-MARKUP = re.compile(r'\[[^\]]*\]\(|<[A-Za-z/!]|(?<!\w)_|_(?!\w)')
+QUOTE = re.compile(r'^ {0,3}>')
+# The underline that makes the paragraph line above it a setext heading: `=` for H1, `-` for H2.
+SETEXT = re.compile(r'^ {0,3}(=+|-+)[ \t]*$')
+# An ATX heading inside a blockquote or a list item, which GitHub renders as a heading.
+NESTED_HEADING = re.compile(r'^ {0,3}(>\s*)+#{1,6}\s|^\s*([-*+]|\d+[.)])\s+#{1,6}\s')
+# Markup that changes the rendered heading text, so the anchor rule below does not model it:
+# inline and full reference links, entity references, HTML tags and `_` emphasis. An
+# intraword `_` (mod_rewrite) is literal; backticks and `*` are dropped by the anchor rule,
+# as on GitHub.
+MARKUP = re.compile(
+    r'\[[^\]]*\]\(|\[[^\]]*\]\[|&[A-Za-z#][A-Za-z0-9]*;|<[A-Za-z/!]|(?<!\w)_|_(?!\w)'
+)
 # A TOC item line, and every `- [label](target)` item on it.
 TOC_LINE = re.compile(r'^( *)- \[')
 TOC_ITEM = re.compile(r'- \[[^\]]*\]\(([^)\s]+)\)')
@@ -115,36 +123,46 @@ def outside_code(lines: list[str]) -> Iterator[tuple[int, str]]:
         after_blank = blank
 
 
+def is_paragraph(line: str) -> bool:
+    """True for a plain paragraph line: not blank, a list item, a heading, a quote, indented,
+    or itself a setext underline."""
+    return bool(line.strip()) and not any(
+        pattern.match(line) for pattern in (LIST_ITEM, HEADING, QUOTE, INDENTED, SETEXT)
+    )
+
+
 def parse_headings(lines: list[str]) -> list[Heading]:
-    """Every heading outside fenced code, with GitHub's `-1`, `-2` suffixes on repeats."""
+    """Every ATX and setext heading outside fenced code, with GitHub's `-1`, `-2` suffixes on
+    repeats."""
     headings = []
     taken = {}
     for index, line in outside_fences(lines):
         match = HEADING.match(line)
-        if not match:
+        below = SETEXT.match(lines[index + 1]) if index + 1 < len(lines) else None
+        if match:
+            level, text = len(match[1]), match[2]
+        elif below and is_paragraph(line):
+            level, text = 1 if below[1][0] == '=' else 2, line.strip()
+        else:
             continue
-        text = match[2]
         base = slug = anchor(text)
         while slug in taken:
             taken[base] += 1
             slug = f'{base}-{taken[base]}'
         taken[slug] = 0
-        headings.append(Heading(index + 1, len(match[1]), text, slug))
+        headings.append(Heading(index + 1, level, text, slug))
     return headings
 
 
-def toc_section(lines: list[str]) -> tuple[int, int] | None:
-    """0-based index of the '# Table of Contents' line, index of the next H1 or len(lines)."""
-    start = None
-    for index, line in outside_fences(lines):
-        match = HEADING.match(line)
-        if not match or len(match[1]) != 1:
-            continue
-        if start is not None:
-            return start, index
-        if match[2] == TOC_TITLE:
-            start = index
-    return None if start is None else (start, len(lines))
+def toc_section(headings: list[Heading], count: int) -> tuple[int, int] | None:
+    """0-based index of the '# Table of Contents' line, index of the next H1 or count (the
+    number of lines)."""
+    top = [h for h in headings if h.level == 1]
+    for position, heading in enumerate(top):
+        if heading.text == TOC_TITLE:
+            end = top[position + 1].line - 1 if position + 1 < len(top) else count
+            return heading.line - 1, end
+    return None
 
 
 def toc_lines(lines: list[str], section: tuple[int, int]) -> list[TocLine]:
@@ -157,13 +175,17 @@ def toc_lines(lines: list[str], section: tuple[int, int]) -> list[TocLine]:
     ]
 
 
-def check_headings(headings: list[Heading]) -> list[tuple[int, str]]:
+def check_headings(lines: list[str], headings: list[Heading]) -> list[tuple[int, str]]:
     """Headings whose anchor this script cannot compute."""
     return [
         (h.line, f"heading '{h.text}' contains markup whose anchor is not modeled;"
                  ' check it by hand')
         for h in headings
         if MARKUP.search(h.text)
+    ] + [
+        (index + 1, 'heading inside a list or quote is not modeled; check it by hand')
+        for index, line in outside_code(lines)
+        if NESTED_HEADING.match(line)
     ]
 
 
@@ -334,14 +356,14 @@ def main(argv: list[str]) -> int:
         reason = exc.strerror if isinstance(exc, OSError) and exc.strerror else exc
         print(f'{shown}: cannot read ({reason})', file=sys.stderr)
         return 2
-    section = toc_section(lines)
+    headings = parse_headings(lines)
+    section = toc_section(headings, len(lines))
     if section is None:
         print(f"{shown}: no '# {TOC_TITLE}' section", file=sys.stderr)
         return 2
 
-    headings = parse_headings(lines)
     problems = (
-        check_headings(headings)
+        check_headings(lines, headings)
         + check_toc(lines, headings, section)
         + check_links(lines, headings, section, path.parent)
     )

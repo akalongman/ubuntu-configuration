@@ -1,6 +1,6 @@
 # README check
 
-Date: 2026-10-26. Status: draft, awaiting review.
+Date: 2026-10-26. Status: approved and implemented.
 
 ## Intent
 
@@ -76,6 +76,17 @@ Calls made in design, for review:
   4. *No branch-relative links.* A relative link starting with `tree/` or `blob/` fails, and
      the message gives the absolute `https://github.com/akalongman/ubuntu-configuration/...`
      form.
+  - *Hardening after the final review.* Repo links resolve against the README's directory,
+    a leading `/` names the repository root as on GitHub, and a target outside it fails.
+    A heading after the TOC that skips a level (H2 to H4) fails at the heading, and its TOC
+    indentation is not checked. Links in indented code blocks (4 spaces or a tab after a
+    blank line, outside a list) are skipped. A paragraph line underlined with `=` or `-` is
+    a setext heading; a heading inside a list or quote fails with a "check it by hand"
+    message. A TOC line that looks like a list item but is not a space-indented
+    `- [label](#anchor)` item fails at its line. Reference definitions and HTML `href` and
+    `src` attributes are checked like inline links, and code spans are skipped. An empty
+    `(#)` link fails, and a target with any URI scheme is external. Links in a TOC line's
+    trailing note are checked.
 - **Anchor rules.** Lowercase, drop every character except letters, digits, `_`, `-` and
   space, turn each space into `-`, and suffix repeats with `-1`, `-2` in document order.
   Lines inside fenced code (`` ``` `` or `~~~`) are never headings or links.

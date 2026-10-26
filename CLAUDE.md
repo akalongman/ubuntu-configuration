@@ -48,9 +48,9 @@ tailored to that release (the first line names the version, e.g. "Configuration 
 
 - After editing, run `bin/check-readme`, and `python3 -m unittest discover -s tests` after
   changing the checker. It requires the TOC to list every heading in order with the right
-  anchor and indentation, every in-page and repo link to resolve, and no link to be
-  branch-relative.
-- It opens with a hand-maintained **Table of Contents** built from in-page anchor links
+  anchor and indentation, every in-page and repo link to resolve, no relative `tree/` or
+  `blob/` link into another branch, and no heading to skip a level.
+- The README opens with a hand-maintained **Table of Contents** built from in-page anchor links
   (`[Section](#section)`). When you add, remove, or rename a heading, update the matching TOC
   entry and verify the anchor slug: GitHub lowercases, drops punctuation except `-` and `_`,
   and turns each space into a hyphen (`Apache: Enable php-mcrypt & mod_rewrite` becomes

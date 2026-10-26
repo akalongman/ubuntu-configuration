@@ -1,6 +1,7 @@
 """Tests for bin/check-readme, run as a subprocess against temporary READMEs."""
 
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -25,28 +26,39 @@ BASE = (
 )
 
 
-def run(readme, files=(), github=False, crlf=False, args=('README.md',)):
-    """Run the script on README.md in a temp dir; returns (exit, stdout lines, stderr)."""
+def environment(github=False):
+    """os.environ without GITHUB_ACTIONS, or with it set to 'true' when github is set."""
+    env = {key: value for key, value in os.environ.items() if key != 'GITHUB_ACTIONS'}
+    if github:
+        env['GITHUB_ACTIONS'] = 'true'
+    return env
+
+
+def execute(command, cwd, github=False):
+    """Run a command; returns (exit, stdout lines, stderr)."""
+    result = subprocess.run(
+        command, cwd=cwd, env=environment(github), capture_output=True, text=True, encoding='utf-8'
+    )
+    return result.returncode, result.stdout.splitlines(), result.stderr
+
+
+def run(readme, files=(), github=False, crlf=False, name='README.md', args=None, flags=()):
+    """Run the script on a README in a temp repo dir; returns (exit, stdout lines, stderr).
+
+    The repo dir sits inside the temp dir, so `files` may name a path just outside it
+    (`../outside.md`). `args` defaults to the README's name; `flags` go to the interpreter.
+    """
     with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
+        root = Path(tmp) / 'repo'
+        root.mkdir()
         text = readme.replace('\n', '\r\n') if crlf else readme
-        (root / 'README.md').write_bytes(text.encode('utf-8'))
-        for name in files:
-            path = root / name
+        (root / name).write_bytes(text.encode('utf-8'))
+        for file in files:
+            path = root / file
             path.parent.mkdir(parents=True, exist_ok=True)
             path.touch()
-        env = {key: value for key, value in os.environ.items() if key != 'GITHUB_ACTIONS'}
-        if github:
-            env['GITHUB_ACTIONS'] = 'true'
-        result = subprocess.run(
-            [sys.executable, SCRIPT, *args],
-            cwd=root,
-            env=env,
-            capture_output=True,
-            text=True,
-            encoding='utf-8',
-        )
-        return result.returncode, result.stdout.splitlines(), result.stderr
+        args = (name,) if args is None else args
+        return execute([sys.executable, *flags, SCRIPT, *args], root, github)
 
 
 def doc(entries):
@@ -151,6 +163,28 @@ class TocTest(CheckTestCase):
     def test_fenced_hash_lines_are_not_headings(self):
         self.assertClean(BASE + '\n```bash\n# comment\n```    \n\n~~~\n```\n# inner\n~~~\n')
 
+    def test_unclosed_fence_runs_to_the_end(self):
+        # As on GitHub, everything after an unclosed fence is code.
+        self.assertProblems(
+            BASE.replace('# Gamma\n', '```\n# Gamma\n'),
+            ['README.md:6: TOC entry #gamma matches no heading'],
+        )
+
+    def test_shorter_fence_does_not_close_a_longer_one(self):
+        self.assertClean(BASE + '\n````\n```\n## Delta\n````\n')
+
+    def test_default_path_is_the_repository_readme(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'bin').mkdir()
+            shutil.copy(SCRIPT, root / 'bin' / 'check-readme')
+            (root / 'README.md').write_text(BASE + '\n## Delta\n', encoding='utf-8')
+            (root / 'elsewhere').mkdir()
+            self.assertEqual(
+                execute([sys.executable, root / 'bin' / 'check-readme'], root / 'elsewhere'),
+                (1, ["README.md:14: heading 'Delta' (#delta) has no TOC entry"], ''),
+            )
+
     def test_heading_markup_fails(self):
         cases = [
             ('## Beta _Two_\n',
@@ -217,11 +251,21 @@ class LinkTest(CheckTestCase):
             files=('files/bios.bin', 'notes/a b.md'),
         )
 
+    def test_repo_link_fragment_is_stripped(self):
+        self.assertClean(BASE + '\n[n](notes/a.md#section)\n', files=('notes/a.md',))
+
     def test_branch_relative_link(self):
         self.assertProblems(
             BASE + '\n[20.04](tree/20.04)\n',
             ["README.md:14: relative branch link 'tree/20.04' 404s on GitHub;"
              ' use https://github.com/akalongman/ubuntu-configuration/tree/20.04'],
+        )
+
+    def test_branch_relative_blob_link(self):
+        self.assertProblems(
+            BASE + '\n[r](blob/24.04/README.md)\n',
+            ["README.md:14: relative branch link 'blob/24.04/README.md' 404s on GitHub;"
+             ' use https://github.com/akalongman/ubuntu-configuration/blob/24.04/README.md'],
         )
 
     def test_external_links_ignored(self):

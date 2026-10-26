@@ -141,6 +141,8 @@ def check_toc(
             indent = toc.indent if position == 0 else None
             entries.append((toc.line, indent, target.removeprefix('#')))
 
+    # h.line is 1-based and section[1] is the 0-based index of the next H1, so `>` keeps
+    # that H1 (its line is section[1] + 1) and every heading after it.
     body = [h for h in headings if h.line > section[1]]
     matcher = difflib.SequenceMatcher(
         None, [slug for _, _, slug in entries], [h.anchor for h in body], autojunk=False

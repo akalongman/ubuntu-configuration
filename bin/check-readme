@@ -33,7 +33,7 @@ HTML_OR_TABLE = re.compile(r'^ {0,3}[<|]')
 # The underline that makes the paragraph line above it a setext heading: `=` for H1, `-` for H2.
 SETEXT = re.compile(r'^ {0,3}(=+|-+)[ \t]*$')
 # An ATX heading inside a blockquote or a list item, which GitHub renders as a heading.
-NESTED_HEADING = re.compile(r'^ {0,3}(>\s*)+#{1,6}\s|^\s*([-*+]|\d+[.)])\s+#{1,6}\s')
+NESTED_HEADING = re.compile(r'^ {0,3}(>\s*)+#{1,6}\s|' + LIST_ITEM.pattern + r'\s*#{1,6}\s')
 # Markup that changes the rendered heading text, so the anchor rule below does not model it:
 # inline and full reference links, entity references, HTML tags and `_` emphasis. An
 # intraword `_` (mod_rewrite) is literal; backticks and `*` are dropped by the anchor rule,
@@ -246,24 +246,34 @@ def toc_entries(
     return entries, problems
 
 
-def check_toc(
-    lines: list[str], headings: list[Heading], section: tuple[int, int]
-) -> list[tuple[int, str]]:
-    """Compare the TOC, in order and indentation, with the headings after its section, and
-    report a heading after it that skips a level."""
-    entries, problems = toc_entries(lines, section)
+def after_toc(headings: list[Heading], section: tuple[int, int]) -> list[Heading]:
+    """The headings after the TOC section, from the next H1 on."""
     # h.line is 1-based and section[1] is the 0-based index of the next H1, so `>` keeps
     # that H1 (its line is section[1] + 1) and every heading after it.
-    body = [h for h in headings if h.line > section[1]]
+    return [h for h in headings if h.line > section[1]]
 
-    skips = set()  # headings that skip a level; their TOC indentation is not checked
-    for previous, heading in zip(body, body[1:]):
-        if heading.level > previous.level + 1:
-            skips.add(heading)
-            problems.append(
-                (heading.line, f"heading '{heading.text}' skips from H{previous.level}"
-                               f' to H{heading.level}')
-            )
+
+def check_level_skips(headings: list[Heading], section: tuple[int, int]) -> list[tuple[int, str]]:
+    """Headings after the TOC section that skip a level, each reported at its own line."""
+    body = after_toc(headings, section)
+    return [
+        (heading.line, f"heading '{heading.text}' skips from H{previous.level}"
+                       f' to H{heading.level}')
+        for previous, heading in zip(body, body[1:])
+        if heading.level > previous.level + 1
+    ]
+
+
+def check_toc(
+    lines: list[str], headings: list[Heading], section: tuple[int, int], skips: set[int]
+) -> list[tuple[int, str]]:
+    """Compare the TOC, in order and indentation, with the headings after its section.
+
+    skips holds the lines of the headings that skip a level, which check_level_skips
+    reports; the indentation of their TOC entries is not checked.
+    """
+    entries, problems = toc_entries(lines, section)
+    body = after_toc(headings, section)
 
     matcher = difflib.SequenceMatcher(
         None, [entry.slug for entry in entries], [h.anchor for h in body], autojunk=False
@@ -278,7 +288,7 @@ def check_toc(
             continue
         for entry, heading in zip(entries[i1:i2], body[j1:j2]):
             expected = 4 * (heading.level - 1)
-            if entry.indent is not None and entry.indent != expected and heading not in skips:
+            if entry.indent is not None and entry.indent != expected and heading.line not in skips:
                 problems.append(
                     (entry.line, f'TOC entry #{entry.slug} is indented {entry.indent} spaces, '
                                  f'expected {expected} (H{heading.level})')
@@ -427,9 +437,11 @@ def main(argv: list[str]) -> int:
         print(f"{shown}: no '# {TOC_TITLE}' section", file=sys.stderr)
         return 2
 
+    level_skips = check_level_skips(headings, section)
     problems = (
         check_headings(lines, headings)
-        + check_toc(lines, headings, section)
+        + level_skips
+        + check_toc(lines, headings, section, {line for line, _ in level_skips})
         + check_links(lines, headings, section, path.parent)
     )
     report(shown, problems, os.environ.get('GITHUB_ACTIONS') == 'true')

@@ -2,7 +2,7 @@
 
 This guide is for [Ubuntu](http://ubuntu.com/desktop), but also compatible with a other __Debian__ based OS as well, like [Mint](http://www.linuxmint.com/), [Elementary OS](http://elementaryos.org/), etc.
 
-There are configurations for other versions such as [20.04](tree/20.04), [18.04](tree/18.04), [16.04](tree/16.04), [15.10](tree/15.10)
+There are configurations for other versions such as [20.04](https://github.com/akalongman/ubuntu-configuration/tree/20.04), [18.04](https://github.com/akalongman/ubuntu-configuration/tree/18.04), [16.04](https://github.com/akalongman/ubuntu-configuration/tree/16.04), [15.10](https://github.com/akalongman/ubuntu-configuration/tree/15.10)
 
 All commands/configurations are tested (I am currently use this configuration), but anyway, everything you do is "at your own risk".
 
@@ -32,7 +32,8 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Order of Grub](#order-of-grub)
     - [Mounting Drives](#mounting-drives)
         - [Mounting of Local Drives](#mounting-of-local-drives)
-        - [Mounting of Network Drives](#mounting-of-network-drives)    - [SSH](#ssh)
+        - [Mounting of Network Drives](#mounting-of-network-drives)
+    - [SSH](#ssh)
         - [Generate a New SSH Key](#generate-a-new-ssh-key)
         - [Connecting to a Host](#connecting-to-a-host)
         - [.ssh Folder Permissions](#ssh-folder-permissions)
@@ -134,6 +135,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
                 - [PHP 8.0](#php-80)
                 - [PHP 8.1](#php-81)
                 - [PHP 8.2](#php-82)
+                - [PHP 8.3](#php-83)
                 - [Switch PHP Versions](#switch-php-versions)
             - [Composer](#composer)
             - [PHPUnit](#phpunit)
@@ -147,6 +149,8 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
             - [Nginx](#nginx)
             - [Generate SSL certificates for local domains](#generate-ssl-certificates-for-local-domains)
             - [MySQL](#mysql)
+                - [Installation](#installation)
+                - [Allow Remote Access for Root](#allow-remote-access-for-root)
             - [Percona Toolkit](#percona-toolkit)
             - [MyCLI](#mycli) Terminal MySQL Utility
             - [PostgreSQL](#postgresql)
@@ -155,6 +159,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
                 - [Multiple Redis Instances](#multiple-redis-instances)
             - [ELK Stack](#elk-stack) Elasticsearch, Logstash, and Kibana
             - [Letsencrypt](#letsencrypt)
+            - [Java Runtime](#java-runtime)
             - [Phalcon](#phalcon)
             - [Phalcon Dev Tools](#phalcon-dev-tools)
             - [Secure Permissions](#secure-permissions)
@@ -190,7 +195,7 @@ If you found any issue, please let me know on [Issues Page](https://github.com/a
     - [Fix Gnome Lockscreen](#fix-gnome-lockscreen)
     - [Gnome Extensions](#gnome-extensions)
     - [Reload Gnome Freeze](#reload-gnome-freeze)
-    - [Create Desktop Launcher](create-desktop-launcher)
+    - [Create Desktop Launcher](#create-desktop-launcher)
 - [Virtual Machine Related](#virtual-machine-related)
     - [Fix Mouse Side Buttons in VMWare](#fix-mouse-side-buttons-in-vmware)
     - [Vagrant VBGuest Fix](#vagrant-vbguest-fix)

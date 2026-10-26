@@ -304,10 +304,25 @@ class TocTest(CheckTestCase):
             with self.subTest(text=text):
                 self.assertClean(BASE + f'\n{text}\n---\n')
 
-    def test_underline_under_html_or_table_line_is_not_a_heading(self):
-        for text in ('<br>', '| a | b |'):
+    def test_underline_under_a_lone_html_tag_is_not_a_heading(self):
+        # A line holding one HTML tag and nothing else opens an HTML block on GitHub.
+        for text in ('<br>', '</details>', '   <div class="note" hidden>', '<br />  '):
             with self.subTest(text=text):
                 self.assertClean(BASE + f'\n{text}\n---\n')
+
+    def test_underline_under_inline_html_or_table_line_is_a_heading(self):
+        # Inline HTML with text, and a table row whose delimiter row is missing, are
+        # paragraph text, so GitHub renders them as an H2.
+        cases = [
+            ('| a | b |', ["README.md:14: heading '| a | b |' (#-a--b-) has no TOC entry"]),
+            ('<kbd>Ctrl</kbd> + C',
+             ["README.md:14: heading '<kbd>Ctrl</kbd> + C' contains markup whose anchor is not"
+              ' modeled; check it by hand',
+              "README.md:14: heading '<kbd>Ctrl</kbd> + C' (#kbdctrlkbd--c) has no TOC entry"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertProblems(BASE + f'\n{text}\n---\n', expected)
 
     def test_heading_in_list_or_quote_fails(self):
         for line in ('> ## Quoted', '> > # Deeper', '- ## Listed', '1) ### Numbered'):

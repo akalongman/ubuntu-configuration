@@ -27,9 +27,14 @@ FENCE_CLOSE = re.compile(r'^ {0,3}(`{3,}|~{3,})[ \t]*$')
 INDENTED = re.compile(r'( {4}|\t)')
 LIST_ITEM = re.compile(r'^\s*([-*+]|\d+[.)])\s')
 QUOTE = re.compile(r'^ {0,3}>')
-# A line starting with an HTML tag or a table pipe, which the setext rule does not take as
-# heading text.
-HTML_OR_TABLE = re.compile(r'^ {0,3}[<|]')
+# A line holding one complete HTML tag (opening, closing or self-closing, with attributes)
+# and nothing else, which opens an HTML block on GitHub, so the setext rule does not take it
+# as heading text. Inline HTML with text beside it stays paragraph text.
+HTML_TAG_LINE = re.compile(
+    r'^ {0,3}(?:<[A-Za-z][A-Za-z0-9-]*'
+    r'(?:\s+[A-Za-z_:][A-Za-z0-9_.:-]*(?:\s*=\s*(?:[^\s"\'=<>`]+|\'[^\']*\'|"[^"]*"))?)*'
+    r'\s*/?>|</[A-Za-z][A-Za-z0-9-]*\s*>)\s*$'
+)
 # The underline that makes the paragraph line above it a setext heading: `=` for H1, `-` for H2.
 SETEXT = re.compile(r'^ {0,3}(=+|-+)[ \t]*$')
 # An ATX heading inside a blockquote or a list item, which GitHub renders as a heading.
@@ -140,11 +145,11 @@ def outside_code(lines: list[str]) -> Iterator[tuple[int, str]]:
 
 
 def is_paragraph(line: str) -> bool:
-    """True for a plain paragraph line: not blank, a list item, a heading, a quote, an HTML
-    or table line, indented, or itself a setext underline."""
+    """True for a plain paragraph line: not blank, a list item, a heading, a quote, a lone
+    HTML tag, indented, or itself a setext underline."""
     return bool(line.strip()) and not any(
         pattern.match(line)
-        for pattern in (LIST_ITEM, HEADING, QUOTE, HTML_OR_TABLE, INDENTED, SETEXT)
+        for pattern in (LIST_ITEM, HEADING, QUOTE, HTML_TAG_LINE, INDENTED, SETEXT)
     )
 
 

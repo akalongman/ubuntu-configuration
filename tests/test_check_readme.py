@@ -56,13 +56,17 @@ def doc(entries):
     return '\n'.join(['# Guide', '', '# Table of Contents', *toc, '', *body, ''])
 
 
-class TocTest(unittest.TestCase):
+class CheckTestCase(unittest.TestCase):
+    """Assertion helpers shared by the test classes; holds no tests itself."""
 
     def assertClean(self, readme, **kwargs):
         self.assertEqual(run(readme, **kwargs), (0, [], ''))
 
     def assertProblems(self, readme, expected, **kwargs):
         self.assertEqual(run(readme, **kwargs), (1, expected, ''))
+
+
+class TocTest(CheckTestCase):
 
     def test_clean_readme_passes(self):
         self.assertEqual(run(BASE), (0, [], ''))
@@ -181,6 +185,53 @@ class TocTest(unittest.TestCase):
 
     def test_script_is_executable(self):
         self.assertTrue(os.access(SCRIPT, os.X_OK))
+
+
+class LinkTest(CheckTestCase):
+
+    def test_in_page_link_to_missing_heading(self):
+        self.assertProblems(
+            BASE + '\n[(Back to top)](#table-of-content)\n',
+            ['README.md:14: link to #table-of-content matches no heading'],
+        )
+
+    def test_back_to_top_resolves(self):
+        self.assertClean(BASE + '\n[(Back to top)](#table-of-contents)\n')
+
+    def test_repo_link_missing_file(self):
+        self.assertProblems(
+            BASE + '\nCopy [ps.sh](os/etc/profile.d/ps.sh).\n',
+            ["README.md:14: link target 'os/etc/profile.d/ps.sh' does not exist"],
+        )
+
+    def test_repo_link_existing_file(self):
+        self.assertClean(
+            BASE + '\nCopy [ps.sh](os/etc/profile.d/ps.sh).\n',
+            files=('os/etc/profile.d/ps.sh',),
+        )
+
+    def test_repo_link_query_title_escape_image(self):
+        self.assertClean(
+            BASE + '\n[b](files/bios.bin?raw=1) [n](notes/a%20b.md "Title")'
+                   ' ![i](files/bios.bin)\n',
+            files=('files/bios.bin', 'notes/a b.md'),
+        )
+
+    def test_branch_relative_link(self):
+        self.assertProblems(
+            BASE + '\n[20.04](tree/20.04)\n',
+            ["README.md:14: relative branch link 'tree/20.04' 404s on GitHub;"
+             ' use https://github.com/akalongman/ubuntu-configuration/tree/20.04'],
+        )
+
+    def test_external_links_ignored(self):
+        self.assertClean(
+            BASE + '\n[x](https://example.invalid/missing) [h](http://example.invalid)'
+                   ' [m](mailto:a@example.com)\n'
+        )
+
+    def test_links_in_fenced_code_ignored(self):
+        self.assertClean(BASE + '\n```\n[x](os/missing)\n```\n')
 
 
 if __name__ == '__main__':

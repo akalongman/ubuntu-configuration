@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that README.md's table of contents mirrors its headings.
+"""Check that README.md's table of contents mirrors its headings and its local links resolve.
 
 Prints one line per problem, sorted by line, as `<path>:<line>: <message>`, or
 as a GitHub annotation when GITHUB_ACTIONS=true. Exit status: 0 when clean,
@@ -15,6 +15,7 @@ import sys
 from collections.abc import Iterator
 from pathlib import Path
 from typing import NamedTuple
+from urllib.parse import unquote
 
 HEADING = re.compile(r'^ {0,3}(#{1,6})[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$')
 FENCE_OPEN = re.compile(r'^ {0,3}(`{3,}|~{3,})')
@@ -27,6 +28,12 @@ MARKUP = re.compile(r'\[[^\]]*\]\(|<[A-Za-z/!]|(?<!\w)_|_(?!\w)')
 TOC_LINE = re.compile(r'^( *)- \[')
 TOC_ITEM = re.compile(r'- \[[^\]]*\]\(([^)\s]+)\)')
 TOC_TITLE = 'Table of Contents'
+# The target of a link or image, up to the `)` or the space before a title.
+LINK = re.compile(r'\]\(([^)\s]+)')
+EXTERNAL = ('http:', 'https:', 'mailto:')
+# Relative links into another release branch, which GitHub resolves under the current branch.
+BRANCH_LINK = ('tree/', 'blob/')
+REPO_URL = 'https://github.com/akalongman/ubuntu-configuration/'
 
 
 class Heading(NamedTuple):
@@ -168,6 +175,34 @@ def check_toc(
     return problems
 
 
+def check_links(
+    lines: list[str], headings: list[Heading], section: tuple[int, int], base_dir: Path
+) -> list[tuple[int, str]]:
+    """In-page, repo file and release branch links outside fenced code and the TOC items."""
+    anchors = {h.anchor for h in headings}
+    toc = {t.line for t in toc_lines(lines, section)}  # check_toc reports their targets
+    problems = []
+    for index, line in outside_fences(lines):
+        if index + 1 in toc:
+            continue
+        for target in LINK.findall(line):
+            if target.startswith(EXTERNAL):
+                continue
+            if target.startswith('#'):
+                if target[1:] not in anchors:
+                    problems.append((index + 1, f'link to {target} matches no heading'))
+            elif target.startswith(BRANCH_LINK):
+                problems.append(
+                    (index + 1, f"relative branch link '{target}' 404s on GitHub;"
+                                f' use {REPO_URL}{target}')
+                )
+            else:
+                path = unquote(target.partition('?')[0].partition('#')[0])
+                if not (base_dir / path).exists():
+                    problems.append((index + 1, f"link target '{target}' does not exist"))
+    return problems
+
+
 def report(path: str, problems: list[tuple[int, str]], github: bool) -> None:
     """Print the problems sorted by line, plain or as GitHub error annotations."""
     for line, message in sorted(problems, key=lambda problem: problem[0]):
@@ -201,7 +236,11 @@ def main(argv: list[str]) -> int:
         return 2
 
     headings = parse_headings(lines)
-    problems = check_headings(headings) + check_toc(lines, headings, section)
+    problems = (
+        check_headings(headings)
+        + check_toc(lines, headings, section)
+        + check_links(lines, headings, section, path.parent)
+    )
     report(shown, problems, os.environ.get('GITHUB_ACTIONS') == 'true')
     return 1 if problems else 0
 

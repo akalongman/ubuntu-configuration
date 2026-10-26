@@ -1,0 +1,210 @@
+#!/usr/bin/env python3
+"""Check that README.md's table of contents mirrors its headings.
+
+Prints one line per problem, sorted by line, as `<path>:<line>: <message>`, or
+as a GitHub annotation when GITHUB_ACTIONS=true. Exit status: 0 when clean,
+1 on problems, 2 when the file cannot be read or has no '# Table of Contents'
+section.
+"""
+
+import argparse
+import difflib
+import os
+import re
+import sys
+from collections.abc import Iterator
+from pathlib import Path
+from typing import NamedTuple
+
+HEADING = re.compile(r'^ {0,3}(#{1,6})[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$')
+FENCE_OPEN = re.compile(r'^ {0,3}(`{3,}|~{3,})')
+FENCE_CLOSE = re.compile(r'^ {0,3}(`{3,}|~{3,})[ \t]*$')
+# Markup that changes the rendered heading text, so the anchor rule below does
+# not model it. An intraword `_` (mod_rewrite) is literal; backticks and `*`
+# are dropped by the anchor rule, as on GitHub.
+MARKUP = re.compile(r'\[[^\]]*\]\(|<[A-Za-z/!]|(?<!\w)_|_(?!\w)')
+# A TOC item line, and every `- [label](target)` item on it.
+TOC_LINE = re.compile(r'^( *)- \[')
+TOC_ITEM = re.compile(r'- \[[^\]]*\]\(([^)\s]+)\)')
+TOC_TITLE = 'Table of Contents'
+
+
+class Heading(NamedTuple):
+    line: int  # 1-based
+    level: int
+    text: str
+    anchor: str
+
+
+class TocLine(NamedTuple):
+    line: int  # 1-based
+    indent: int  # spaces before the first item on the line
+    targets: list[str]  # link target of every item on the line, in order
+
+
+def anchor(text: str) -> str:
+    """GitHub's anchor for plain heading text, before duplicate suffixes."""
+    return re.sub(r'[^\w\- ]', '', text.lower()).replace(' ', '-')
+
+
+def outside_fences(lines: list[str]) -> Iterator[tuple[int, str]]:
+    """Yield (0-based index, line) for every line outside fenced code."""
+    fence = None
+    for index, line in enumerate(lines):
+        if fence:
+            close = FENCE_CLOSE.match(line)
+            if close and close[1][0] == fence[0] and len(close[1]) >= len(fence):
+                fence = None
+            continue
+        opening = FENCE_OPEN.match(line)
+        if opening:
+            fence = opening[1]
+            continue
+        yield index, line
+
+
+def parse_headings(lines: list[str]) -> list[Heading]:
+    """Every heading outside fenced code, with GitHub's `-1`, `-2` suffixes on repeats."""
+    headings = []
+    taken = {}
+    for index, line in outside_fences(lines):
+        match = HEADING.match(line)
+        if not match:
+            continue
+        text = match[2]
+        base = slug = anchor(text)
+        while slug in taken:
+            taken[base] += 1
+            slug = f'{base}-{taken[base]}'
+        taken[slug] = 0
+        headings.append(Heading(index + 1, len(match[1]), text, slug))
+    return headings
+
+
+def toc_section(lines: list[str]) -> tuple[int, int] | None:
+    """0-based index of the '# Table of Contents' line, index of the next H1 or len(lines)."""
+    start = None
+    for index, line in outside_fences(lines):
+        match = HEADING.match(line)
+        if not match or len(match[1]) != 1:
+            continue
+        if start is not None:
+            return start, index
+        if match[2] == TOC_TITLE:
+            start = index
+    return None if start is None else (start, len(lines))
+
+
+def toc_lines(lines: list[str], section: tuple[int, int]) -> list[TocLine]:
+    """The TOC item lines of the section, outside fenced code."""
+    start, end = section
+    return [
+        TocLine(index + 1, len(match[1]), TOC_ITEM.findall(line))
+        for index, line in outside_fences(lines)
+        if start < index < end and (match := TOC_LINE.match(line))
+    ]
+
+
+def check_headings(headings: list[Heading]) -> list[tuple[int, str]]:
+    """Headings whose anchor this script cannot compute."""
+    return [
+        (h.line, f"heading '{h.text}' contains markup whose anchor is not modeled;"
+                 ' check it by hand')
+        for h in headings
+        if MARKUP.search(h.text)
+    ]
+
+
+def check_toc(
+    lines: list[str], headings: list[Heading], section: tuple[int, int]
+) -> list[tuple[int, str]]:
+    """Compare the TOC, in order and indentation, with the headings after its section."""
+    problems = []
+    entries = []  # (line, indent or None when not checked, anchor), one per TOC item
+    for toc in toc_lines(lines, section):
+        if len(toc.targets) > 1:
+            problems.append(
+                (toc.line, f'TOC line holds {len(toc.targets)} entries; put each on its own line')
+            )
+        for position, target in enumerate(toc.targets):
+            if not target.startswith('#'):
+                problems.append(
+                    (toc.line, f"TOC entry links to '{target}'; TOC links must start with '#'")
+                )
+            indent = toc.indent if position == 0 else None
+            entries.append((toc.line, indent, target.removeprefix('#')))
+
+    body = [h for h in headings if h.line > section[1]]
+    matcher = difflib.SequenceMatcher(
+        None, [slug for _, _, slug in entries], [h.anchor for h in body], autojunk=False
+    )
+    stray, unlisted = [], []
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag != 'equal':
+            stray += entries[i1:i2]
+            unlisted += body[j1:j2]
+            continue
+        for (line, indent, slug), heading in zip(entries[i1:i2], body[j1:j2]):
+            expected = 4 * (heading.level - 1)
+            if indent is not None and indent != expected:
+                problems.append(
+                    (line, f'TOC entry #{slug} is indented {indent} spaces, '
+                           f'expected {expected} (H{heading.level})')
+                )
+
+    # An anchor left over on both sides is listed, just not where its heading is.
+    moved = {slug for _, _, slug in stray} & {h.anchor for h in unlisted}
+    for heading in unlisted:
+        if heading.anchor not in moved:
+            problems.append(
+                (heading.line, f"heading '{heading.text}' (#{heading.anchor}) has no TOC entry")
+            )
+    for line, _, slug in stray:
+        if slug in moved:
+            moved.discard(slug)
+            problems.append((line, f'TOC entry #{slug} is out of order'))
+        else:
+            problems.append((line, f'TOC entry #{slug} matches no heading'))
+    return problems
+
+
+def report(path: str, problems: list[tuple[int, str]], github: bool) -> None:
+    """Print the problems sorted by line, plain or as GitHub error annotations."""
+    for line, message in sorted(problems, key=lambda problem: problem[0]):
+        if github:
+            message = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+            print(f'::error file={path},line={line}::{message}')
+        else:
+            print(f'{path}:{line}: {message}')
+
+
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        'path', nargs='?', help='README to check (default: README.md at the repository root)'
+    )
+    args = parser.parse_args(argv)
+    if args.path is None:
+        path, shown = Path(__file__).resolve().parent.parent / 'README.md', 'README.md'
+    else:
+        path, shown = Path(args.path), args.path
+
+    try:
+        lines = path.read_text(encoding='utf-8').splitlines()
+    except (OSError, UnicodeDecodeError) as exc:
+        reason = exc.strerror if isinstance(exc, OSError) and exc.strerror else exc
+        print(f'{shown}: cannot read ({reason})', file=sys.stderr)
+        return 2
+    section = toc_section(lines)
+    if section is None:
+        print(f"{shown}: no '# {TOC_TITLE}' section", file=sys.stderr)
+        return 2
+
+    headings = parse_headings(lines)
+    problems = check_headings(headings) + check_toc(lines, headings, section)
+    report(shown, problems, os.environ.get('GITHUB_ACTIONS') == 'true')
+    return 1 if problems else 0
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))

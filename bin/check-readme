@@ -83,24 +83,25 @@ def anchor(text: str) -> str:
     return re.sub(r'[^\w\- ]', '', text.lower()).replace(' ', '-')
 
 
-def fenced(lines: list[str]) -> Iterator[tuple[int, str, bool]]:
-    """Yield (0-based index, line, True for fenced code and its fences) for every line."""
+def fenced(lines: list[str]) -> Iterator[tuple[int, str, bool, bool]]:
+    """Yield (0-based index, line, True for fenced code and its fences, True for an opening
+    fence) for every line."""
     fence = None
     for index, line in enumerate(lines):
         if fence:
             close = FENCE_CLOSE.match(line)
             if close and close[1][0] == fence[0] and len(close[1]) >= len(fence):
                 fence = None
-            yield index, line, True
+            yield index, line, True, False
         else:
             opening = FENCE_OPEN.match(line)
             fence = opening[1] if opening else None
-            yield index, line, fence is not None
+            yield index, line, fence is not None, fence is not None
 
 
 def outside_fences(lines: list[str]) -> Iterator[tuple[int, str]]:
     """Yield (0-based index, line) for every line outside fenced code."""
-    for index, line, in_fence in fenced(lines):
+    for index, line, in_fence, _ in fenced(lines):
         if not in_fence:
             yield index, line
 
@@ -111,15 +112,18 @@ def outside_code(lines: list[str]) -> Iterator[tuple[int, str]]:
     A line indented 4 spaces or a tab opens an indented code block when the line before it
     is blank and it is not inside a list. The block runs over blank and indented lines and
     ends at the first non-blank line indented less. A list item line enters a list; a
-    heading, a fence, or an unindented line after a blank line leaves it.
+    heading, a fence opened at column 0, or an unindented line after a blank line leaves
+    it. A fence opened indented, under a list item, leaves the list state as it was.
     """
     in_list = in_code = False
     after_blank = True  # the start of the file counts as a blank line
-    for index, line, in_fence in fenced(lines):
+    for index, line, in_fence, opens in fenced(lines):
         blank = not line.strip()
         indented = INDENTED.match(line) is not None
         if in_fence:
-            in_list = in_code = False
+            in_code = False
+            if opens and not line[0].isspace():
+                in_list = False
         else:
             if in_code or (indented and after_blank and not in_list):
                 in_code = blank or indented

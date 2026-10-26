@@ -437,6 +437,21 @@ class LinkTest(CheckTestCase):
             ["README.md:15: link target 'os/missing' does not exist"],
         )
 
+    def test_indented_fence_keeps_the_list(self):
+        # A fence indented under a list item stays in the item, so the 4-space line after it
+        # and a blank line is a list paragraph, not code.
+        for pad in ('  ', '    '):
+            with self.subTest(indent=len(pad)):
+                self.assertProblems(
+                    BASE + f'\n- item\n\n{pad}```\n{pad}code\n{pad}```\n\n    [cfg](os/missing)\n',
+                    ["README.md:20: link target 'os/missing' does not exist"],
+                )
+
+    def test_column_0_fence_ends_the_list(self):
+        # The prose right after the fence follows no blank line, so only the fence ends the
+        # list, and the 4-space block after the blank line is code.
+        self.assertClean(BASE + '\n- item\n\n```\ncode\n```\nprose\n\n    [x](os/missing)\n')
+
     def test_reference_definition_is_checked(self):
         self.assertProblems(
             BASE + '\n[ps]: os/missing "Title"\n',

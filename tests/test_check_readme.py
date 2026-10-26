@@ -136,6 +136,73 @@ class TocTest(CheckTestCase):
             ["README.md:5: TOC entry links to 'beta-two'; TOC links must start with '#'"],
         )
 
+    def test_heading_skips_a_level(self):
+        # Its TOC entry's indentation is not checked, whichever form the TOC uses.
+        entries = [(1, 'Alpha', 'alpha'), (2, 'Beta', 'beta'), (4, 'Delta', 'delta')]
+        for indent in (12, 8):
+            with self.subTest(indent=indent):
+                readme = doc(entries).replace(' ' * 12 + '- [Delta]', ' ' * indent + '- [Delta]')
+                self.assertProblems(readme, ["README.md:10: heading 'Delta' skips from H2 to H4"])
+
+    def test_stale_toc_anchor(self):
+        self.assertProblems(
+            BASE.replace('## Beta Two\n', '## Beta Three\n'),
+            ["README.md:5: TOC entry #beta-two does not match heading 'Beta Three'"
+             ' (#beta-three, line 10)'],
+        )
+
+    def test_unequal_replace_keeps_unlinked_messages(self):
+        self.assertProblems(
+            BASE.replace('## Beta Two\n', '## Beta Three\n\n## Beta Four\n'),
+            ['README.md:5: TOC entry #beta-two matches no heading',
+             "README.md:10: heading 'Beta Three' (#beta-three) has no TOC entry",
+             "README.md:12: heading 'Beta Four' (#beta-four) has no TOC entry"],
+        )
+
+    def test_stale_anchor_pairs_only_with_an_unlisted_heading(self):
+        # #zeta faces Beta Two, but Beta Two is listed further down: two separate mistakes.
+        readme = BASE.replace(
+            '- [Alpha](#alpha)\n    - [Beta Two](#beta-two)\n- [Gamma](#gamma)\n',
+            '- [Alpha](#alpha)\n    - [Zeta](#zeta)\n- [Gamma](#gamma)\n    - [B](#beta-two)\n',
+        )
+        self.assertProblems(
+            readme,
+            ['README.md:5: TOC entry #zeta matches no heading',
+             'README.md:7: TOC entry #beta-two is out of order'],
+        )
+
+    def test_toc_entry_listed_twice(self):
+        readme = BASE.replace('- [Gamma](#gamma)\n', '- [Gamma](#gamma)\n- [Again](#alpha)\n')
+        self.assertProblems(
+            readme, ['README.md:7: TOC entry #alpha is listed twice (first at line 4)']
+        )
+
+    def test_unparsable_toc_line(self):
+        message = ("TOC line is not a '- [label](#anchor)' item;"
+                   " use '- ' bullets and space indentation")
+        cases = [
+            ('- [Gamma](#gamma)\n', '* [Gamma](#gamma)\n', 6),
+            ('    - [Beta Two](#beta-two)\n', '\t- [Beta Two](#beta-two)\n', 5),
+        ]
+        for old, new, line in cases:
+            with self.subTest(line=new):
+                self.assertProblems(BASE.replace(old, new), [f'README.md:{line}: {message}'])
+
+    def test_unparsable_toc_line_without_a_link(self):
+        # Nothing on the line names the heading, so the heading is reported too.
+        self.assertProblems(
+            BASE.replace('- [Gamma](#gamma)\n', '- Gamma\n'),
+            ["README.md:6: TOC line is not a '- [label](#anchor)' item;"
+             " use '- ' bullets and space indentation",
+             "README.md:12: heading 'Gamma' (#gamma) has no TOC entry"],
+        )
+
+    def test_toc_section_non_list_lines_are_silent(self):
+        self.assertClean(BASE.replace(
+            '- [Gamma](#gamma)\n',
+            '- [Gamma](#gamma)\n\n***\n\n[(Back to top)](#table-of-contents)\n',
+        ))
+
     def test_labels_and_notes_are_free_text(self):
         readme = BASE.replace('- [Alpha](#alpha)\n', '- [Custom](#alpha) (a note)\n')
         self.assertClean(readme)

@@ -38,10 +38,13 @@ NESTED_HEADING = re.compile(r'^ {0,3}(>\s*)+#{1,6}\s|^\s*([-*+]|\d+[.)])\s+#{1,6
 MARKUP = re.compile(
     r'\[[^\]]*\]\(|\[[^\]]*\]\[|&[A-Za-z#][A-Za-z0-9]*;|<[A-Za-z/!]|(?<!\w)_|_(?!\w)'
 )
-# A TOC item line, and every `- [label](target)` item on it.
-TOC_LINE = re.compile(r'^( *)- \[')
-TOC_ITEM = re.compile(r'- \[[^\]]*\]\(([^)\s]+)\)')
+# A `[label](target)` link, a `- [label](target)` TOC item, and a TOC line a reader means
+# as an item: a list item with any bullet, or a line starting with a tab.
+ITEM_LINK = re.compile(r'\[[^\]]*\]\(([^)\s]+)\)')
+TOC_ITEM = re.compile(r'- ' + ITEM_LINK.pattern)
+TOC_LIKE = re.compile(r'\s*[-*+]\s|\t')
 TOC_TITLE = 'Table of Contents'
+UNPARSABLE = "TOC line is not a '- [label](#anchor)' item; use '- ' bullets and space indentation"
 # The target of a link or image, up to the `)` or the space before a title.
 LINK = re.compile(r'\]\(([^)\s]+)')
 # A link reference definition, `[label]: target`, at the start of a line.
@@ -65,8 +68,14 @@ class Heading(NamedTuple):
 
 class TocLine(NamedTuple):
     line: int  # 1-based
-    indent: int  # spaces before the first item on the line
+    indent: int | None  # spaces before the first item; None when the line is unparsable
     items: list[re.Match[str]]  # every item on the line, in order; group 1 is its target
+
+
+class TocEntry(NamedTuple):
+    line: int  # 1-based
+    indent: int | None  # None when not checked: a later item on its line, or unparsable
+    slug: str  # the target without its `#`
 
 
 def anchor(text: str) -> str:
@@ -166,13 +175,24 @@ def toc_section(headings: list[Heading], count: int) -> tuple[int, int] | None:
 
 
 def toc_lines(lines: list[str], section: tuple[int, int]) -> list[TocLine]:
-    """The TOC item lines of the section, outside fenced code."""
+    """The TOC item lines of the section, outside fenced code.
+
+    A line holds items when it starts with `- [label](target)` after space indentation. A
+    line that looks like a list item or starts with a tab but does not is unparsable: its
+    indent is None, and its first `[label](target)` link, if any, stands in as its item.
+    """
     start, end = section
-    return [
-        TocLine(index + 1, len(match[1]), list(TOC_ITEM.finditer(line)))
-        for index, line in outside_fences(lines)
-        if start < index < end and (match := TOC_LINE.match(line))
-    ]
+    found = []
+    for index, line in outside_fences(lines):
+        if not start < index < end:
+            continue
+        indent = len(line) - len(line.lstrip(' '))
+        if TOC_ITEM.match(line, indent):
+            found.append(TocLine(index + 1, indent, list(TOC_ITEM.finditer(line))))
+        elif line.strip() and TOC_LIKE.match(line):
+            link = ITEM_LINK.search(line)
+            found.append(TocLine(index + 1, None, [link] if link else []))
+    return found
 
 
 def check_headings(lines: list[str], headings: list[Heading]) -> list[tuple[int, str]]:
@@ -189,13 +209,15 @@ def check_headings(lines: list[str], headings: list[Heading]) -> list[tuple[int,
     ]
 
 
-def check_toc(
-    lines: list[str], headings: list[Heading], section: tuple[int, int]
-) -> list[tuple[int, str]]:
-    """Compare the TOC, in order and indentation, with the headings after its section."""
-    problems = []
-    entries = []  # (line, indent or None when not checked, anchor), one per TOC item
+def toc_entries(
+    lines: list[str], section: tuple[int, int]
+) -> tuple[list[TocEntry], list[tuple[int, str]]]:
+    """One entry per TOC item, first occurrences only, and the problems of the TOC lines."""
+    entries, problems = [], []
+    first = {}  # slug: line of its first entry
     for toc in toc_lines(lines, section):
+        if toc.indent is None:
+            problems.append((toc.line, UNPARSABLE))
         if len(toc.items) > 1:
             problems.append(
                 (toc.line, f'TOC line holds {len(toc.items)} entries; put each on its own line')
@@ -205,42 +227,77 @@ def check_toc(
                 problems.append(
                     (toc.line, f"TOC entry links to '{target}'; TOC links must start with '#'")
                 )
-            indent = toc.indent if position == 0 else None
-            entries.append((toc.line, indent, target.removeprefix('#')))
+            slug = target.removeprefix('#')
+            if slug in first:
+                problems.append(
+                    (toc.line, f'TOC entry #{slug} is listed twice (first at line {first[slug]})')
+                )
+                continue
+            first[slug] = toc.line
+            entries.append(TocEntry(toc.line, toc.indent if position == 0 else None, slug))
+    return entries, problems
 
+
+def check_toc(
+    lines: list[str], headings: list[Heading], section: tuple[int, int]
+) -> list[tuple[int, str]]:
+    """Compare the TOC, in order and indentation, with the headings after its section, and
+    report a heading after it that skips a level."""
+    entries, problems = toc_entries(lines, section)
     # h.line is 1-based and section[1] is the 0-based index of the next H1, so `>` keeps
     # that H1 (its line is section[1] + 1) and every heading after it.
     body = [h for h in headings if h.line > section[1]]
+
+    skips = set()  # headings that skip a level; their TOC indentation is not checked
+    for previous, heading in zip(body, body[1:]):
+        if heading.level > previous.level + 1:
+            skips.add(heading)
+            problems.append(
+                (heading.line, f"heading '{heading.text}' skips from H{previous.level}"
+                               f' to H{heading.level}')
+            )
+
     matcher = difflib.SequenceMatcher(
-        None, [slug for _, _, slug in entries], [h.anchor for h in body], autojunk=False
+        None, [entry.slug for entry in entries], [h.anchor for h in body], autojunk=False
     )
-    stray, unlisted = [], []
+    stray, unlisted, facing = [], [], []
     for tag, i1, i2, j1, j2 in matcher.get_opcodes():
         if tag != 'equal':
             stray += entries[i1:i2]
             unlisted += body[j1:j2]
+            if tag == 'replace' and i2 - i1 == j2 - j1:
+                facing += zip(entries[i1:i2], body[j1:j2])
             continue
-        for (line, indent, slug), heading in zip(entries[i1:i2], body[j1:j2]):
+        for entry, heading in zip(entries[i1:i2], body[j1:j2]):
             expected = 4 * (heading.level - 1)
-            if indent is not None and indent != expected:
+            if entry.indent is not None and entry.indent != expected and heading not in skips:
                 problems.append(
-                    (line, f'TOC entry #{slug} is indented {indent} spaces, '
-                           f'expected {expected} (H{heading.level})')
+                    (entry.line, f'TOC entry #{entry.slug} is indented {entry.indent} spaces, '
+                                 f'expected {expected} (H{heading.level})')
                 )
 
     # An anchor left over on both sides is listed, just not where its heading is.
-    moved = {slug for _, _, slug in stray} & {h.anchor for h in unlisted}
+    moved = {entry.slug for entry in stray} & {h.anchor for h in unlisted}
+    # An entry and a heading facing each other in a replace block of equal length, neither
+    # listed elsewhere, are one stale anchor.
+    stale = [(e, h) for e, h in facing if e.slug not in moved and h.anchor not in moved]
+    for entry, heading in stale:
+        problems.append(
+            (entry.line, f"TOC entry #{entry.slug} does not match heading '{heading.text}'"
+                         f' (#{heading.anchor}, line {heading.line})')
+        )
+    stale_entries = {entry for entry, _ in stale}
+    stale_headings = {heading for _, heading in stale}
     for heading in unlisted:
-        if heading.anchor not in moved:
+        if heading.anchor not in moved and heading not in stale_headings:
             problems.append(
                 (heading.line, f"heading '{heading.text}' (#{heading.anchor}) has no TOC entry")
             )
-    for line, _, slug in stray:
-        if slug in moved:
-            moved.discard(slug)
-            problems.append((line, f'TOC entry #{slug} is out of order'))
-        else:
-            problems.append((line, f'TOC entry #{slug} matches no heading'))
+    for entry in stray:
+        if entry.slug in moved:
+            problems.append((entry.line, f'TOC entry #{entry.slug} is out of order'))
+        elif entry not in stale_entries:
+            problems.append((entry.line, f'TOC entry #{entry.slug} matches no heading'))
     return problems
 
 

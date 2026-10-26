@@ -5,10 +5,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this repository is
 
 A personal, hand-maintained Ubuntu Desktop configuration guide. It is documentation plus
-companion config files, not an application. There is no build, test, lint, or package step.
-The primary deliverable is `README.md`: a long (~2,900 line) step-by-step walkthrough for
-setting up a fresh Ubuntu LTS install (system tweaks, package installs, dev tooling, GUI
-fixes). Everything else in the repo exists to support that guide.
+companion config files, not an application. There is no build or package step; the one check
+is `bin/check-readme` (see Editing README.md). The primary deliverable is `README.md`: a long
+(~2,900 line) step-by-step walkthrough for setting up a fresh Ubuntu LTS install (system
+tweaks, package installs, dev tooling, GUI fixes). Everything else in the repo exists to
+support that guide.
 
 ## Branches are release channels, not features
 
@@ -39,9 +40,16 @@ tailored to that release (the first line names the version, e.g. "Configuration 
 - `files/`: binary assets the guide links to (e.g. emulator BIOS). Linked with `?raw=1`.
 - `fonts/` and `notes/`: a font with its author's notes, and standalone how-to notes. Neither is
   linked from the README on this branch (the font steps install from `~/Downloads/Fonts`).
+- `bin/check-readme`: checks the README's TOC and links. Its tests are in `tests/`, and
+  `.github/workflows/readme.yml` runs both on every push and pull request to `24.04`.
+- `docs/superpowers/`: design docs and implementation plans.
 
 ## Editing README.md
 
+- After editing, run `bin/check-readme`, and `python3 -m unittest discover -s tests` after
+  changing the checker. It requires the TOC to list every heading in order with the right
+  anchor and indentation, every in-page and repo link to resolve, and no link to be
+  branch-relative.
 - It opens with a hand-maintained **Table of Contents** built from in-page anchor links
   (`[Section](#section)`). When you add, remove, or rename a heading, update the matching TOC
   entry and verify the anchor slug: GitHub lowercases, drops punctuation except `-` and `_`,

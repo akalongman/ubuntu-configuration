@@ -1,0 +1,22 @@
+name: README check
+
+on:
+  push:
+    branches: ['24.04']
+  pull_request:
+    branches: ['24.04']
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Test the checker
+        run: python3 -m unittest discover -s tests -v
+      - name: Check README.md
+        run: bin/check-readme

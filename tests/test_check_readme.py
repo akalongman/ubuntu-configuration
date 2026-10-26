@@ -265,6 +265,22 @@ class LinkTest(CheckTestCase):
             files=('files/bios.bin', 'notes/a b.md'),
         )
 
+    def test_root_relative_link_resolves_in_the_repository(self):
+        self.assertClean(BASE + '\n[x](/os/x)\n', files=('os/x',))
+
+    def test_root_relative_link_missing_file(self):
+        self.assertProblems(
+            BASE + '\n[x](/os/missing)\n',
+            ["README.md:14: link target '/os/missing' does not exist"],
+        )
+
+    def test_link_outside_the_repository(self):
+        self.assertProblems(
+            BASE + '\n[o](../outside.md)\n',
+            ["README.md:14: link target '../outside.md' points outside the repository"],
+            files=('../outside.md',),
+        )
+
     def test_repo_link_fragment_is_stripped(self):
         self.assertClean(BASE + '\n[n](notes/a.md#section)\n', files=('notes/a.md',))
 

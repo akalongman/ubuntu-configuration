@@ -204,7 +204,15 @@ def check_links(
                 )
             else:
                 path = unquote(target.partition('?')[0].partition('#')[0])
-                if not (base_dir / path).exists():
+                # The repository is the README's directory, and a leading `/` names its root,
+                # as on GitHub. normpath works on the text, so unlike Path.resolve() it keeps
+                # a symlinked checkout or folder inside the repository.
+                relative = os.path.normpath(path.removeprefix('/'))
+                if os.path.isabs(relative) or relative.split(os.sep)[0] == os.pardir:
+                    problems.append(
+                        (index + 1, f"link target '{target}' points outside the repository")
+                    )
+                elif not (base_dir / relative).exists():
                     problems.append((index + 1, f"link target '{target}' does not exist"))
     return problems
 

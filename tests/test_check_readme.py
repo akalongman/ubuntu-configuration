@@ -295,6 +295,11 @@ class TocTest(CheckTestCase):
             with self.subTest(text=text):
                 self.assertClean(BASE + f'\n{text}\n---\n')
 
+    def test_underline_under_html_or_table_line_is_not_a_heading(self):
+        for text in ('<br>', '| a | b |'):
+            with self.subTest(text=text):
+                self.assertClean(BASE + f'\n{text}\n---\n')
+
     def test_heading_in_list_or_quote_fails(self):
         for line in ('> ## Quoted', '> > # Deeper', '- ## Listed', '1) ### Numbered'):
             with self.subTest(line=line):

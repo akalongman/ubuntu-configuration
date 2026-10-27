@@ -296,6 +296,41 @@ class TocTest(CheckTestCase):
                     ["README.md:14: heading 'Delta' (#delta) has no TOC entry"],
                 )
 
+    def test_multi_line_setext_heading_is_reported(self):
+        # GitHub's anchor drops the line break between the lines, and the TOC entry names
+        # that anchor, so the span message is the only one.
+        readme = BASE.replace(
+            '- [Gamma](#gamma)\n', '- [Gamma](#gamma)\n    - [First](#first-linesecond-line)\n'
+        )
+        self.assertProblems(
+            readme + '\nFirst line\nsecond line\n---\n',
+            ['README.md:15: setext heading spans 2 lines; check its anchor by hand'],
+        )
+
+    def test_multi_line_setext_heading_text_joins_its_lines(self):
+        # Messages show the stripped lines joined by one space, at the paragraph's first line.
+        self.assertProblems(
+            BASE + '\nFirst line\n  second line\n---\n',
+            ['README.md:14: setext heading spans 2 lines; check its anchor by hand',
+             "README.md:14: heading 'First line second line' (#first-linesecond-line)"
+             ' has no TOC entry'],
+        )
+
+    def test_setext_text_starts_after_a_fence_heading_or_underline(self):
+        # A closing fence, an ATX heading and an underline are not paragraph text, so each
+        # heading here has one line.
+        cases = [
+            ('\n```\ncode\n```\nDelta\n---\n',
+             ["README.md:17: heading 'Delta' (#delta) has no TOC entry"]),
+            ('Delta\n---\n', ["README.md:13: heading 'Delta' (#delta) has no TOC entry"]),
+            ('\nDelta\n---\nEpsilon\n---\n',
+             ["README.md:14: heading 'Delta' (#delta) has no TOC entry",
+              "README.md:16: heading 'Epsilon' (#epsilon) has no TOC entry"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertProblems(BASE + text, expected)
+
     def test_thematic_break_after_blank_line_is_not_a_heading(self):
         self.assertClean(BASE + '\nSome prose.\n\n---\n')
 

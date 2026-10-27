@@ -68,10 +68,11 @@ REPO_URL = 'https://github.com/akalongman/ubuntu-configuration/'
 
 
 class Heading(NamedTuple):
-    line: int  # 1-based
+    line: int  # 1-based; a setext heading's first line
     level: int
     text: str
     anchor: str
+    span: int = 1  # lines of heading text; more than 1 only for a setext heading
 
 
 class TocLine(NamedTuple):
@@ -153,26 +154,43 @@ def is_paragraph(line: str) -> bool:
     )
 
 
+def paragraph_text(lines: list[str]) -> list[bool]:
+    """For every line, True when it is paragraph text: outside fenced code (fences included)
+    and a plain paragraph line."""
+    return [not in_fence and is_paragraph(line) for _, line, in_fence, _ in fenced(lines)]
+
+
 def parse_headings(lines: list[str]) -> list[Heading]:
     """Every ATX and setext heading outside fenced code, with GitHub's `-1`, `-2` suffixes on
-    repeats."""
+    repeats.
+
+    A setext heading's text is the paragraph above its underline: the run of paragraph text
+    lines ending there. Its text joins the stripped lines with one space; its anchor joins
+    them with a line break, which the anchor rule drops, as GitHub does.
+    """
     headings = []
     taken = {}
+    text_lines = paragraph_text(lines)
     for index, line in outside_fences(lines):
         match = HEADING.match(line)
         below = SETEXT.match(lines[index + 1]) if index + 1 < len(lines) else None
         if match:
-            level, text = len(match[1]), match[2]
-        elif below and is_paragraph(line):
-            level, text = 1 if below[1][0] == '=' else 2, line.strip()
+            start, level, text, slug_text = index, len(match[1]), match[2], match[2]
+        elif below and text_lines[index]:
+            start = index
+            while start and text_lines[start - 1]:
+                start -= 1
+            parts = [part.strip() for part in lines[start:index + 1]]
+            level = 1 if below[1][0] == '=' else 2
+            text, slug_text = ' '.join(parts), '\n'.join(parts)
         else:
             continue
-        base = slug = anchor(text)
+        base = slug = anchor(slug_text)
         while slug in taken:
             taken[base] += 1
             slug = f'{base}-{taken[base]}'
         taken[slug] = 0
-        headings.append(Heading(index + 1, level, text, slug))
+        headings.append(Heading(start + 1, level, text, slug, index + 1 - start))
     return headings
 
 
@@ -215,6 +233,10 @@ def check_headings(lines: list[str], headings: list[Heading]) -> list[tuple[int,
                  ' check it by hand')
         for h in headings
         if MARKUP.search(h.text)
+    ] + [
+        (h.line, f'setext heading spans {h.span} lines; check its anchor by hand')
+        for h in headings
+        if h.span > 1
     ] + [
         (index + 1, 'heading inside a list or quote is not modeled; check it by hand')
         for index, line in outside_code(lines)

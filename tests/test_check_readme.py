@@ -374,8 +374,9 @@ class TocTest(CheckTestCase):
         # in any case.
         for text in ('<br>', '</details>', '   <div class="note" hidden>', '<br />  ',
                      'Intro.\n\n<br>', 'Some text\n<div>', 'Some text\n<DETAILS>',
-                     'Some text\n</Summary>', 'Some text\n<p/>', 'Some text\n<source type="video/mp4">',
-                     'Some text\n<div>\n<br>', 'Some text\n<br>\n<div>'):
+                     'Some text\n</Summary>', 'Some text\n<p/>',
+                     'Some text\n<source type="video/mp4">', 'Some text\n<div>\n<br>',
+                     'Some text\n<br>\n<div>'):
             with self.subTest(text=text):
                 self.assertClean(BASE + f'\n{text}\n---\n')
 

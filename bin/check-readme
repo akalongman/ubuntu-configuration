@@ -48,7 +48,7 @@ BLOCK_TAGS = frozenset((
     ' noframes ol optgroup option p param section source summary table tbody td tfoot th'
     ' thead title tr track ul'
 ).split())
-# The underline that makes the paragraph line above it a setext heading: `=` for H1, `-` for H2.
+# The underline that makes the paragraph above it a setext heading: `=` for H1, `-` for H2.
 SETEXT = re.compile(r'^ {0,3}(=+|-+)[ \t]*$')
 # An ATX heading inside a blockquote or a list item, which GitHub renders as a heading.
 NESTED_HEADING = re.compile(r'^ {0,3}(>\s*)+#{1,6}\s|' + LIST_ITEM.pattern + r'\s*#{1,6}\s')

@@ -33,6 +33,22 @@ mistakes on the line that caused them, and the same command runs locally before 
 - A passing run while GitHub renders a broken link. Where the check cannot be sure, it
   fails with a message that says so.
 
+## Known limits
+
+These inputs pass while GitHub builds a different anchor, against the second anti-goal.
+They were accepted on 2026-10-27 as too rare to model; none occurs in the README.
+
+- A `--` line inside setext heading text (`Intro.`, blank, `--`, `foo`, `---` is one H2,
+  `#--foo`, on GitHub): the checker starts the heading at `foo`, so a TOC entry `#foo`
+  passes.
+- Non-ASCII whitespace and long ordered markers in setext heading text: a no-break space
+  after a list marker (`*\xa0foo`), an ordered marker longer than nine digits, or a line of
+  only no-break spaces ends the checker's paragraph early, so an anchor built from the last
+  lines alone passes.
+
+Comparing the TOC against the anchor ids GitHub itself renders (`gh api markdown` in
+`markdown` mode emits them) would close this whole class; it was not adopted.
+
 ## Constraints
 
 - Python standard library only. No package files are added to the repository.

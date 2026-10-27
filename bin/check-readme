@@ -28,13 +28,24 @@ INDENTED = re.compile(r'( {4}|\t)')
 LIST_ITEM = re.compile(r'^\s*([-*+]|\d+[.)])\s')
 QUOTE = re.compile(r'^ {0,3}>')
 # A line holding one complete HTML tag (opening, closing or self-closing, with attributes)
-# and nothing else, which opens an HTML block on GitHub, so the setext rule does not take it
-# as heading text. Inline HTML with text beside it stays paragraph text.
+# and nothing else; group 1 (opening) or 2 (closing) is its name. As in GFM's HTML blocks, it
+# opens a block, so the setext rule does not take it as heading text, when its name is in
+# BLOCK_TAGS or the line above it is not paragraph text; otherwise it continues the
+# paragraph. Inline HTML with text beside it stays paragraph text.
 HTML_TAG_LINE = re.compile(
-    r'^ {0,3}(?:<[A-Za-z][A-Za-z0-9-]*'
+    r'^ {0,3}(?:<([A-Za-z][A-Za-z0-9-]*)'
     r'(?:\s+[A-Za-z_:][A-Za-z0-9_.:-]*(?:\s*=\s*(?:[^\s"\'=<>`]+|\'[^\']*\'|"[^"]*"))?)*'
-    r'\s*/?>|</[A-Za-z][A-Za-z0-9-]*\s*>)\s*$'
+    r'\s*/?>|</([A-Za-z][A-Za-z0-9-]*)\s*>)\s*$'
 )
+# GFM's block-level tag names (HTML block type 6, GFM spec 0.29), lowercase: a tag with one
+# of them opens an HTML block even right after paragraph text.
+BLOCK_TAGS = frozenset((
+    'address article aside base basefont blockquote body caption center col colgroup dd'
+    ' details dialog dir div dl dt fieldset figcaption figure footer form frame frameset'
+    ' h1 h2 h3 h4 h5 h6 head header hr html iframe legend li link main menu menuitem nav'
+    ' noframes ol optgroup option p param section source summary table tbody td tfoot th'
+    ' thead title tr track ul'
+).split())
 # The underline that makes the paragraph line above it a setext heading: `=` for H1, `-` for H2.
 SETEXT = re.compile(r'^ {0,3}(=+|-+)[ \t]*$')
 # An ATX heading inside a blockquote or a list item, which GitHub renders as a heading.
@@ -156,12 +167,15 @@ def is_paragraph(line: str) -> bool:
 
 def continues_paragraph(line: str) -> bool:
     """True for a line that is paragraph text only right after paragraph text, because the
-    block it would open cannot interrupt a paragraph: an indented line (indented code) or an
-    ordered list item whose number is not 1."""
+    block it would open cannot interrupt a paragraph: an indented line (indented code), an
+    ordered list item whose number is not 1, or a lone HTML tag whose name is not in
+    BLOCK_TAGS."""
     if INDENTED.match(line):
         return True
-    item = LIST_ITEM.match(line)
-    return bool(item) and item[1][0].isdigit() and int(item[1][:-1]) != 1
+    if item := LIST_ITEM.match(line):
+        return item[1][0].isdigit() and int(item[1][:-1]) != 1
+    tag = HTML_TAG_LINE.match(line)
+    return bool(tag) and (tag[1] or tag[2]).lower() not in BLOCK_TAGS
 
 
 def paragraph_text(lines: list[str]) -> list[bool]:

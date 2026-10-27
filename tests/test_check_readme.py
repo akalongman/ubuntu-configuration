@@ -369,10 +369,40 @@ class TocTest(CheckTestCase):
                 self.assertClean(BASE + f'\n{text}\n---\n')
 
     def test_underline_under_a_lone_html_tag_is_not_a_heading(self):
-        # A line holding one HTML tag and nothing else opens an HTML block on GitHub.
-        for text in ('<br>', '</details>', '   <div class="note" hidden>', '<br />  '):
+        # A line holding one HTML tag and nothing else opens an HTML block on GitHub after a
+        # blank line, and after paragraph text too when its name is a block name (type 6),
+        # in any case.
+        for text in ('<br>', '</details>', '   <div class="note" hidden>', '<br />  ',
+                     'Intro.\n\n<br>', 'Some text\n<div>', 'Some text\n<DETAILS>',
+                     'Some text\n</Summary>', 'Some text\n<p/>', 'Some text\n<source type="video/mp4">',
+                     'Some text\n<div>\n<br>', 'Some text\n<br>\n<div>'):
             with self.subTest(text=text):
                 self.assertClean(BASE + f'\n{text}\n---\n')
+
+    def test_lone_inline_tag_continues_setext_text(self):
+        # A lone tag whose name is not a block name cannot interrupt a paragraph, so GitHub
+        # takes it into the heading, and a run of them stays one paragraph. `search` is not a
+        # block name in GFM 0.29, which GitHub follows.
+        cases = [
+            ('Some text\n<br>',
+             ["README.md:14: heading 'Some text <br>' contains markup whose anchor is not"
+              ' modeled; check it by hand',
+              'README.md:14: setext heading spans 2 lines; check its anchor by hand',
+              "README.md:14: heading 'Some text <br>' (#some-textbr) has no TOC entry"]),
+            ('Some text\n<br>\n<br>',
+             ["README.md:14: heading 'Some text <br> <br>' contains markup whose anchor is not"
+              ' modeled; check it by hand',
+              'README.md:14: setext heading spans 3 lines; check its anchor by hand',
+              "README.md:14: heading 'Some text <br> <br>' (#some-textbrbr) has no TOC entry"]),
+            ('Some text\n<search>',
+             ["README.md:14: heading 'Some text <search>' contains markup whose anchor is not"
+              ' modeled; check it by hand',
+              'README.md:14: setext heading spans 2 lines; check its anchor by hand',
+              "README.md:14: heading 'Some text <search>' (#some-textsearch) has no TOC entry"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertProblems(BASE + f'\n{text}\n---\n', expected)
 
     def test_underline_under_inline_html_or_table_line_is_a_heading(self):
         # Inline HTML with text, and a table row whose delimiter row is missing, are

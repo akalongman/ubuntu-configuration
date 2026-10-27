@@ -24,6 +24,8 @@ mistakes on the line that caused them, and the same command runs locally before 
 - Generating or rewriting the TOC. 36 entries carry hand-written notes after the link and
   11 use labels that differ from the heading text.
 - Markdown or prose style, and files other than `README.md`.
+- Modeling the anchor of a setext heading whose text spans several lines (it is reported
+  instead).
 
 ## Anti-goals
 
@@ -82,7 +84,9 @@ Calls made in design, for review:
     indentation is not checked. Links in indented code blocks (4 spaces or a tab after a
     blank line, outside a list) are skipped. A paragraph line underlined with `=` or `-` is
     a setext heading; a heading inside a list or quote fails with a "check it by hand"
-    message. A TOC line that looks like a list item but is not a space-indented
+    message. A setext heading whose text spans several lines is reported for a manual
+    anchor check, and a lone HTML tag line counts as a block start only under GFM's
+    HTML-block rules. A TOC line that looks like a list item but is not a space-indented
     `- [label](#anchor)` item fails at its line. Reference definitions and HTML `href` and
     `src` attributes are checked like inline links, and code spans are skipped. An empty
     `(#)` link fails, and a target with any URI scheme is external. Links in a TOC line's

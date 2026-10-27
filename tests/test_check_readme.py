@@ -353,6 +353,17 @@ class TocTest(CheckTestCase):
                     ['README.md:15: setext heading spans 2 lines; check its anchor by hand'],
                 )
 
+    def test_whitespace_only_line_ends_setext_text(self):
+        # A line of only spaces or tabs is blank on GitHub, however far it is indented, so
+        # it ends the paragraph above it.
+        for blank in ('    ', '\t'):
+            with self.subTest(blank=blank):
+                self.assertClean(BASE + f'\nSome text\n{blank}\n---\n')
+        self.assertClean(
+            BASE.replace('- [Gamma](#gamma)\n', '- [Gamma](#gamma)\n    - [Delta](#delta)\n')
+            + '\nPara one\n    \nDelta\n---\n'
+        )
+
     def test_empty_list_item_continues_setext_text(self):
         # An empty list item cannot interrupt a paragraph, so GitHub takes it into the
         # heading; after a blank line it opens a list. Each TOC entry names GitHub's anchor.

@@ -2513,48 +2513,72 @@ These are solutions to fix problems I've encountered.
 
 ## Ubuntu Infinite Login
 
-When you try to login to Ubuntu and it relogs you back into the login screen, this is an infinite loop. 
-The only way I was able to fix it despite all the guides was combining a few of these together.
+The login screen accepts your password, the screen goes dark for a moment, and the login screen comes back. GDM started your session and the session ended at once. These checks assume the default session (GNOME on Wayland, started by GDM). Work through them in order and stop at the first one that finds the problem.
 
-The first step is to login to a terminal.
+Switch to a text console and log in there as your user (`CTRL + ALT + F1` returns to the login screen):
 
-    CTRL + ALT + F1  (Or F3)
-    
-Next, Login as your user who must be able to run sudo.    
+    CTRL + ALT + F3
 
-- **Home Folder Permissions**
-  - `ls -ld ~` should have these permission exactly as: `drwxr-xr-x`
-  - The user:group must be your, e.g. `john:john`
-  - To Fix: `sudo chmod 755 ~` and `sudo chown -R john:john ~`
-- **Temp Folder Permissions**
-  - `ls -ld /tmp` should have these permission exactly as: `drwxrwxrwt`
-  - The user:group must be `root:root` on `/tmp`
-  - To Fix: `sudo chmod a+wt /tmp`
-- **Xauthority Ownership**
-  - `ls -lta | grep .Xa` should be owned by your user, for example `john john`
-   - If it is `root root` or anything than your user/group it's wrong
-   - To Fix: `sudo chown john:john .Xauthority`
-- **Xsession Errors**
-  - This is just to make sure there are no syntax errors for your reference:
-    - To Check: `cat ~/.xsession-errors`
-    - You don't need to do anything if there are syntax errors, we will move the file
-- **Try Moving XAuthority**
-  - Sometimes renaming Xauthority is enough for a new one to be generated at login.
-  - To Fix: `sudo mv ~/.Xauthority ~/.Xauthority.bak`
-- **Try Reconfiguring LightDM**
-  - Fix: `dpkg-reconfigure lightdm`, then select lightdm in the menu
-  - Lastly restart lightdm: `sudo service lightdm restart`
-- **Apt Auto Remove Problem**
-  - I read that it's possible `apt-autoremove` may accidentally remove `xubuntu-desktop`, `ubuntu-desktop` and LightDM reports no errors.
-    - The `ubuntu-desktop` will load the Gnome interface
-    - The `xubuntu-desktop` will load a different interface I'm not familiar with
-    - To Fix: `sudo apt install ubuntu-desktop`
-  - **If you are using Gnome**, try following the post at [OMGUbuntu](http://www.omgubuntu.co.uk/2016/05/install-gnome-3-20-ubuntu-16-04-lts)
-    - After the Above Try: `sudo apt autoremove gnome-software && sudo apt install gnome-software`
-    - I was able to get Gnome-Classic working but not Gnome
-- **How to Ensure it Works**
-  - You might be able to login after one of the steps above if you don't reboot. However, to be certain, 
-    you want to reboot to ensure it is fixed, otherwise you'll be doing this over and over   
+**Read the error.** The journal holds the last messages from GDM and from your session, and they often name the cause:
+
+    journalctl -b -u gdm -n 30 --no-pager
+    journalctl -b _UID=$(id -u) -p warning -n 50 --no-pager
+
+**Check free disk space.** A full file system stops the session from writing its runtime files. If `/` or `/home` shows 100% use, free some space (`sudo apt clean` and `sudo journalctl --vacuum-size=200M` are quick wins) and log in again:
+
+    df -h / /home
+
+**Find out whether only your account is affected.** Create a throwaway user and log in as it on the login screen:
+
+    sudo adduser logintest
+
+If `logintest` gets a desktop, the problem is in your home folder, so work through the next three checks. If it loops too, skip to the `/tmp` check. Remove the user when you are done:
+
+    sudo deluser --remove-home logintest
+
+**Check ownership in your home folder.** Running a graphical app with `sudo` can leave root-owned files that the session cannot write. List what you do not own at the top of your home folder and in the folders the session writes to:
+
+    find ~ -maxdepth 1 -not -user "$USER"
+    find ~/.cache ~/.config ~/.local -not -user "$USER"
+
+Take the session folders back, then each root-owned path from the first list (for example `sudo chown "$USER": ~/.Xauthority`):
+
+    sudo chown -R "$USER": ~/.cache ~/.config ~/.local
+
+**Check your login profile.** The session starts through your login shell, which reads `~/.profile` (or `~/.bash_profile` instead, when that file exists). A line there that exits, waits for input or breaks `PATH` ends the session at once. Start the login shell the way the session does:
+
+    bash -l -c 'echo profile OK'
+
+If it does not print `profile OK` right away, undo your latest edit to that file, or put the default `~/.profile` back:
+
+    mv ~/.profile ~/.profile.bak && cp /etc/skel/.profile ~/
+
+**Turn off your GNOME Shell extensions.** An extension that breaks after an upgrade can crash the shell at login. Turn off the extensions you installed (the ones Ubuntu ships stay on):
+
+    gsettings set org.gnome.shell disable-user-extensions true
+
+If you can log in now, open the Extensions app, turn **Use Extensions** back on and enable your extensions one at a time to find the broken one.
+
+**Check `/tmp`.** `ls -ld /tmp` must show `drwxrwxrwt` owned by `root root`. If it does not:
+
+    sudo chown root:root /tmp && sudo chmod 1777 /tmp
+
+**Try the Xorg session.** If the session still loops, the graphics stack may fail under Wayland, most often an NVIDIA driver after a kernel update. On the login screen select your user, click the gear at the bottom right and pick **Ubuntu on Xorg**. If that session works, reinstall the driver (see [Install Nvidia Drivers](#install-nvidia-drivers)) or let Ubuntu pick one:
+
+    sudo ubuntu-drivers install
+
+**Reinstall the desktop.** `sudo apt autoremove` after removing a desktop package can take parts of the session with it. Install the default desktop and display manager again:
+
+    sudo apt install ubuntu-desktop-minimal gdm3
+
+If you switched to another display manager (LightDM, SDDM) and want GDM back, select it again and restart it:
+
+    sudo dpkg-reconfigure gdm3
+    sudo systemctl restart gdm3
+
+**Reboot to confirm.** A fix can hold until the next boot and fail after it, for example when a driver module was not rebuilt. Reboot and log in once more:
+
+    sudo reboot
 
 ## PCI Device Is Not Recognized Correctly
 

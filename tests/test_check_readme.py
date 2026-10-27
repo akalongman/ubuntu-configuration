@@ -379,6 +379,16 @@ class TocTest(CheckTestCase):
             with self.subTest(text=text):
                 self.assertClean(BASE + f'\n{text}\n---\n')
 
+    def test_no_break_space_is_not_tag_whitespace(self):
+        # Whitespace in a tag is ASCII only, so `<br\xa0>` is text and GitHub renders it as
+        # an H2 (#br).
+        self.assertProblems(
+            BASE + '\n<br\xa0>\n---\n',
+            ["README.md:14: heading '<br\xa0>' contains markup whose anchor is not modeled;"
+             ' check it by hand',
+             "README.md:14: heading '<br\xa0>' (#br) has no TOC entry"],
+        )
+
     def test_lone_inline_tag_continues_setext_text(self):
         # A lone tag whose name is not a block name cannot interrupt a paragraph, so GitHub
         # takes it into the heading, and a run of them stays one paragraph. `search` is not a

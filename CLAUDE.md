@@ -18,8 +18,13 @@ Each Ubuntu LTS release lives on its own long-lived branch: `16.04`, `18.04`, `2
 tailored to that release (the first line names the version, e.g. "Configuration of Ubuntu
 24.04 LTS").
 
-- GitHub's default branch is `16.04` (`origin/HEAD` points at it); active work currently
-  happens on `24.04`.
+- GitHub's default branch is `24.04`, where active work happens. The ruleset defined in
+  `.github/rulesets/protect-24.04.json` blocks deleting the branch and force pushes. It
+  requires no pull request or status check, so direct pushes still land. It deliberately
+  omits a signature rule, which would block every pull request from a fork whose commits are
+  unsigned, squash merges included. After editing the file, apply it with
+  `gh api --method PUT repos/akalongman/ubuntu-configuration/rulesets/<id> --input <file>`
+  (the id is listed by `gh api repos/akalongman/ubuntu-configuration/rulesets`).
 - There is no `22.04` branch. `24.04` was forked from `20.04` (merge base `5830995`), so
   `20.04` is its parent when comparing releases.
 - Version-specific changes (a package that moved PPAs, a command that changed between

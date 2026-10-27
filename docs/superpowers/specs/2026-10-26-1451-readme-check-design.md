@@ -53,8 +53,8 @@ Comparing the TOC against the anchor ids GitHub itself renders (`gh api markdown
 
 - Python standard library only. No package files are added to the repository.
 - The workflow exists only on `24.04`, so only that branch is checked.
-- `24.04` is unprotected and receives direct pushes, so the check reports after the README
-  is published. It cannot block a push.
+- `24.04` requires no status check and receives direct pushes, so the check reports after
+  the README is published. It cannot block a push.
 
 ## Approaches
 

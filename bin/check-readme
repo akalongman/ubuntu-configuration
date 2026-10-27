@@ -154,10 +154,26 @@ def is_paragraph(line: str) -> bool:
     )
 
 
+def continues_paragraph(line: str) -> bool:
+    """True for a line that is paragraph text only right after paragraph text, because the
+    block it would open cannot interrupt a paragraph: an indented line (indented code) or an
+    ordered list item whose number is not 1."""
+    if INDENTED.match(line):
+        return True
+    item = LIST_ITEM.match(line)
+    return bool(item) and item[1][0].isdigit() and int(item[1][:-1]) != 1
+
+
 def paragraph_text(lines: list[str]) -> list[bool]:
-    """For every line, True when it is paragraph text: outside fenced code (fences included)
-    and a plain paragraph line."""
-    return [not in_fence and is_paragraph(line) for _, line, in_fence, _ in fenced(lines)]
+    """For every line, True when it is paragraph text: outside fenced code (fences included),
+    and a plain paragraph line or one that continues the paragraph text above it."""
+    found = []
+    for _, line, in_fence, _ in fenced(lines):
+        after_text = bool(found) and found[-1]
+        found.append(
+            not in_fence and (is_paragraph(line) or (after_text and continues_paragraph(line)))
+        )
+    return found
 
 
 def parse_headings(lines: list[str]) -> list[Heading]:

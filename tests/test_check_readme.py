@@ -331,6 +331,35 @@ class TocTest(CheckTestCase):
             with self.subTest(text=text):
                 self.assertProblems(BASE + text, expected)
 
+    def test_indented_or_numbered_line_continues_setext_text(self):
+        # Indented code and a list not starting at 1 cannot interrupt a paragraph, so GitHub
+        # takes these lines into the heading. Each TOC entry names GitHub's anchor.
+        cases = [
+            ('    more', 'some-textmore'),
+            ('\tmore', 'some-textmore'),
+            ('    - foo', 'some-text--foo'),
+            ('2. item', 'some-text2-item'),
+            ('2) item', 'some-text2-item'),
+            ('0. item', 'some-text0-item'),
+        ]
+        for text, slug in cases:
+            with self.subTest(text=text):
+                readme = BASE.replace(
+                    '- [Gamma](#gamma)\n', f'- [Gamma](#gamma)\n    - [Some](#{slug})\n'
+                )
+                self.assertProblems(
+                    readme + f'\nSome text\n{text}\n---\n',
+                    ['README.md:15: setext heading spans 2 lines; check its anchor by hand'],
+                )
+
+    def test_indented_or_numbered_line_after_a_blank_is_not_setext_text(self):
+        # After a blank line these lines open indented code or a list, and a list starting at
+        # 1 interrupts a paragraph, so each underline here is a thematic break.
+        for text in ('Some text\n\n    code', 'Some text\n\n2. item', 'Some text\n1. item',
+                     'Some text\n01. item'):
+            with self.subTest(text=text):
+                self.assertClean(BASE + f'\n{text}\n---\n')
+
     def test_thematic_break_after_blank_line_is_not_a_heading(self):
         self.assertClean(BASE + '\nSome prose.\n\n---\n')
 

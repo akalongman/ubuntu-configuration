@@ -28,26 +28,33 @@ INDENTED = re.compile(r'( {4}|\t)')
 LIST_ITEM = re.compile(r'^\s*([-*+]|\d+[.)])\s')
 QUOTE = re.compile(r'^ {0,3}>')
 # A line holding one complete HTML tag (opening, closing or self-closing, with attributes)
-# and nothing else; group 1 (opening) or 2 (closing) is its name. As in GFM's HTML blocks, it
-# opens a block, so the setext rule does not take it as heading text, when its name is in
-# BLOCK_TAGS or the line above it is not paragraph text; otherwise it continues the
-# paragraph. Inline HTML with text beside it stays paragraph text. Whitespace in and after a
-# tag is ASCII only, as in GFM, so a no-break space makes the line text.
+# and nothing else. As in GFM's HTML blocks, it opens a block, so the setext rule does not
+# take it as heading text, when HTML_BLOCK_START matches it or the line above it is not
+# paragraph text; otherwise it continues the paragraph. Inline HTML with text beside it
+# stays paragraph text. Whitespace in and after a tag is ASCII only, as in GFM, so a
+# no-break space makes the line text.
 HTML_TAG_LINE = re.compile(
-    r'^ {0,3}(?:<([A-Za-z][A-Za-z0-9-]*)'
+    r'^ {0,3}(?:<[A-Za-z][A-Za-z0-9-]*'
     r'(?:\s+[A-Za-z_:][A-Za-z0-9_.:-]*(?:\s*=\s*(?:[^\s"\'=<>`]+|\'[^\']*\'|"[^"]*"))?)*'
-    r'\s*/?>|</([A-Za-z][A-Za-z0-9-]*)\s*>)\s*$',
+    r'\s*/?>|</[A-Za-z][A-Za-z0-9-]*\s*>)\s*$',
     re.ASCII,
 )
-# GFM's block-level tag names (HTML block type 6, GFM spec 0.29), lowercase: a tag with one
-# of them opens an HTML block even right after paragraph text.
-BLOCK_TAGS = frozenset((
+# GFM's block-level tag names (HTML block type 6, GFM spec 0.29).
+BLOCK_TAGS = (
     'address article aside base basefont blockquote body caption center col colgroup dd'
     ' details dialog dir div dl dt fieldset figcaption figure footer form frame frameset'
     ' h1 h2 h3 h4 h5 h6 head header hr html iframe legend li link main menu menuitem nav'
     ' noframes ol optgroup option p param section source summary table tbody td tfoot th'
     ' thead title tr track ul'
-).split())
+).split()
+# The start of an HTML block that can interrupt a paragraph, as cmark-gfm scans it, in any
+# case: an opening `pre`, `script`, `style` or `textarea` tag (type 1; `<pre/>` is not one),
+# or an opening, closing or self-closing tag with a block-level name (type 6).
+HTML_BLOCK_START = re.compile(
+    r'^ {0,3}<(?:(?:pre|script|style|textarea)[\s>]'
+    r'|/?(?:' + '|'.join(BLOCK_TAGS) + r')(?:\s|/?>))',
+    re.ASCII | re.IGNORECASE,
+)
 # The underline that makes the paragraph above it a setext heading: `=` for H1, `-` for H2.
 SETEXT = re.compile(r'^ {0,3}(=+|-+)[ \t]*$')
 # An ATX heading inside a blockquote or a list item, which GitHub renders as a heading.
@@ -170,25 +177,32 @@ def is_paragraph(line: str) -> bool:
 def continues_paragraph(line: str) -> bool:
     """True for a line that is paragraph text only right after paragraph text, because the
     block it would open cannot interrupt a paragraph: an indented line (indented code), an
-    ordered list item whose number is not 1, or a lone HTML tag whose name is not in
-    BLOCK_TAGS."""
+    empty list item (a marker and only spaces or tabs), an ordered list item whose number
+    is not 1, or a lone HTML tag that HTML_BLOCK_START does not match."""
     if INDENTED.match(line):
         return True
     if item := LIST_ITEM.match(line):
-        return item[1][0].isdigit() and int(item[1][:-1]) != 1
-    tag = HTML_TAG_LINE.match(line)
-    return bool(tag) and (tag[1] or tag[2]).lower() not in BLOCK_TAGS
+        empty = not line[item.end():].strip(' \t')
+        return empty or (item[1][0].isdigit() and int(item[1][:-1]) != 1)
+    return bool(HTML_TAG_LINE.match(line)) and not HTML_BLOCK_START.match(line)
 
 
 def paragraph_text(lines: list[str]) -> list[bool]:
     """For every line, True when it is paragraph text: outside fenced code (fences included),
-    and a plain paragraph line or one that continues the paragraph text above it."""
+    and a plain paragraph line, a line that continues the paragraph text above it, or a `=`
+    underline shape that does not follow paragraph text."""
     found = []
     for _, line, in_fence, _ in fenced(lines):
         after_text = bool(found) and found[-1]
-        found.append(
-            not in_fence and (is_paragraph(line) or (after_text and continues_paragraph(line)))
-        )
+        if in_fence:
+            text = False
+        elif underline := SETEXT.match(line):
+            # Under paragraph text it is the underline. Elsewhere a `=` line is paragraph
+            # text, and a `-` line is a thematic break or an empty list item.
+            text = not after_text and underline[1][0] == '='
+        else:
+            text = is_paragraph(line) or (after_text and continues_paragraph(line))
+        found.append(text)
     return found
 
 

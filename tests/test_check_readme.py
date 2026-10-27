@@ -288,8 +288,9 @@ class TocTest(CheckTestCase):
         self.assertClean('# Guide\n\n# Table of Contents\n- [Alpha](#alpha)\n\nAlpha\n=====\n')
 
     def test_setext_heading_missing_from_toc(self):
-        # A second `---` under the underline is a thematic break, not another heading.
-        for underline in ('=====', '-', '---\n---'):
+        # A `---` under the underline is a thematic break, not another heading, and `- ` is an
+        # underline, not an empty list item.
+        for underline in ('=====', '-', '---\n---', '- \n---', '===\n---'):
             with self.subTest(underline=underline):
                 self.assertProblems(
                     BASE + f'\nDelta\n{underline}\n',
@@ -352,6 +353,34 @@ class TocTest(CheckTestCase):
                     ['README.md:15: setext heading spans 2 lines; check its anchor by hand'],
                 )
 
+    def test_empty_list_item_continues_setext_text(self):
+        # An empty list item cannot interrupt a paragraph, so GitHub takes it into the
+        # heading; after a blank line it opens a list. Each TOC entry names GitHub's anchor.
+        for text, slug in (('* ', 'some-text'), ('1. ', 'some-text1'), ('+\t', 'some-text')):
+            with self.subTest(text=text):
+                readme = BASE.replace(
+                    '- [Gamma](#gamma)\n', f'- [Gamma](#gamma)\n    - [Some](#{slug})\n'
+                )
+                self.assertProblems(
+                    readme + f'\nSome text\n{text}\n---\n',
+                    ['README.md:15: setext heading spans 2 lines; check its anchor by hand'],
+                )
+        self.assertClean(BASE + '\nIntro.\n\n* \n---\n')
+
+    def test_equals_line_not_under_paragraph_text_is_text(self):
+        # A `=` underline shape after a blank line or a heading is paragraph text, so the
+        # `---` under it makes an H2 (GitHub gives `===` an empty anchor).
+        cases = [
+            ('\nIntro.\n\n===\n---\n', ["README.md:16: heading '===' (#) has no TOC entry"]),
+            ('===\n---\n', ["README.md:13: heading '===' (#) has no TOC entry"]),
+            ('\nIntro.\n\n===\nfoo\n---\n',
+             ['README.md:16: setext heading spans 2 lines; check its anchor by hand',
+              "README.md:16: heading '=== foo' (#foo) has no TOC entry"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertProblems(BASE + text, expected)
+
     def test_indented_or_numbered_line_after_a_blank_is_not_setext_text(self):
         # After a blank line these lines open indented code or a list, and a list starting at
         # 1 interrupts a paragraph, so each underline here is a thematic break.
@@ -370,13 +399,15 @@ class TocTest(CheckTestCase):
 
     def test_underline_under_a_lone_html_tag_is_not_a_heading(self):
         # A line holding one HTML tag and nothing else opens an HTML block on GitHub after a
-        # blank line, and after paragraph text too when its name is a block name (type 6),
-        # in any case.
+        # blank line, and after paragraph text too when it is a block-level tag (type 6) or
+        # an opening `pre`, `script`, `style` or `textarea` tag (type 1), in any case.
         for text in ('<br>', '</details>', '   <div class="note" hidden>', '<br />  ',
                      'Intro.\n\n<br>', 'Some text\n<div>', 'Some text\n<DETAILS>',
                      'Some text\n</Summary>', 'Some text\n<p/>',
                      'Some text\n<source type="video/mp4">', 'Some text\n<div>\n<br>',
-                     'Some text\n<br>\n<div>'):
+                     'Some text\n<br>\n<div>', 'Some text\n<pre>', 'Some text\n<pre />',
+                     'Some text\n<Script>', 'Some text\n<style media="print">',
+                     'Some text\n<TEXTAREA>'):
             with self.subTest(text=text):
                 self.assertClean(BASE + f'\n{text}\n---\n')
 
@@ -391,9 +422,10 @@ class TocTest(CheckTestCase):
         )
 
     def test_lone_inline_tag_continues_setext_text(self):
-        # A lone tag whose name is not a block name cannot interrupt a paragraph, so GitHub
+        # A lone tag that does not start a block cannot interrupt a paragraph, so GitHub
         # takes it into the heading, and a run of them stays one paragraph. `search` is not a
-        # block name in GFM 0.29, which GitHub follows.
+        # block name in GFM 0.29, which GitHub follows, and a closing or a self-closing `pre`
+        # tag does not start a type 1 block.
         cases = [
             ('Some text\n<br>',
              ["README.md:14: heading 'Some text <br>' contains markup whose anchor is not"
@@ -410,6 +442,16 @@ class TocTest(CheckTestCase):
               ' modeled; check it by hand',
               'README.md:14: setext heading spans 2 lines; check its anchor by hand',
               "README.md:14: heading 'Some text <search>' (#some-textsearch) has no TOC entry"]),
+            ('Some text\n</pre>',
+             ["README.md:14: heading 'Some text </pre>' contains markup whose anchor is not"
+              ' modeled; check it by hand',
+              'README.md:14: setext heading spans 2 lines; check its anchor by hand',
+              "README.md:14: heading 'Some text </pre>' (#some-textpre) has no TOC entry"]),
+            ('Some text\n<pre/>',
+             ["README.md:14: heading 'Some text <pre/>' contains markup whose anchor is not"
+              ' modeled; check it by hand',
+              'README.md:14: setext heading spans 2 lines; check its anchor by hand',
+              "README.md:14: heading 'Some text <pre/>' (#some-textpre) has no TOC entry"]),
         ]
         for text, expected in cases:
             with self.subTest(text=text):
